@@ -253,3 +253,67 @@ def test_manual_download_message_names_url_path_and_checksum():
     assert "https://h/x" in msg and "/store/raw/IMU.zip" in msg
     assert "12 bytes" in msg and "md5 " + "ab" * 16 in msg
     assert isinstance(e, transports.FetchError)
+
+
+# -- daphnet, hd_accel_jnet, monipar: the three more library recipes ---------
+
+def test_five_library_recipes_are_registered():
+    for did in ("fog_star", "fog_turning_filho", "daphnet", "hd_accel_jnet", "monipar"):
+        r = recipes.recipe(did)
+        assert r.kind == "library", did
+
+
+def test_daphnet_ingest_from_a_synthetic_archive(tmp_path):
+    root = str(tmp_path)
+    raw = tmp_path / "datasets" / "imu" / "daphnet" / "raw"
+    raw.mkdir(parents=True)
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w") as z:
+        # 11 columns: time, 9 accelerometer channels in mg, annotation
+        lines = "\n".join(" ".join(str(v) for v in [i * 15] + [1000] * 9 + [1]) for i in range(64))
+        z.writestr("dataset_fog_release/dataset/S01R01.txt", lines)
+        z.writestr("dataset_fog_release/dataset/S02R01.txt", lines)
+        z.writestr("dataset_fog_release/doc/readme.txt", "not data")
+    (raw / "daphnet.zip").write_bytes(buf.getvalue())
+    out, n = recipes.ingest("daphnet", root=root)
+    assert n == 2
+    rec = records.load(out)[0]
+    assert rec["subject_ns"] == "daphnet:S01" and rec["fps"] == 64.0
+    assert rec["signal"].shape == (64, 3, 9)                # ankle, thigh, trunk
+    assert abs(float(rec["signal"][0, 0, imu.CH_I["acc_x"]]) - 1.0) < 1e-6   # mg -> g
+    assert rec["label"].shape == (64,)
+
+
+def test_hd_accel_ingest_from_synthetic_csvs(tmp_path):
+    pd = pytest.importorskip("pandas")
+    root = str(tmp_path)
+    raw = tmp_path / "datasets" / "imu" / "hd_accel_jnet" / "raw"
+    raw.mkdir(parents=True)
+    pd.DataFrame({"x": [0.1] * 20, "y": [0.2] * 20, "z": [0.9] * 20,
+                  "label": [0] * 20}).to_csv(raw / "7.csv", index=False)
+    pd.DataFrame({"id": [7], "age": [60]}).to_csv(raw / "metadata.csv", index=False)
+    out, n = recipes.ingest("hd_accel_jnet", root=root)
+    assert n == 1
+    rec = records.load(out)[0]
+    assert rec["subject_ns"] == "hd_accel:7" and rec["fps"] is None
+    assert rec["signal"].shape == (20, 1, 9)
+
+
+def test_monipar_ingest_from_a_synthetic_mat(tmp_path):
+    sio = pytest.importorskip("scipy.io")
+    root = str(tmp_path)
+    raw = tmp_path / "datasets" / "imu" / "monipar" / "raw"
+    raw.mkdir(parents=True)
+    t = np.arange(0, 2000, 20.0)                            # ms, 50 Hz
+    cell = np.column_stack([t, np.full_like(t, 0.0), np.full_like(t, 0.0),
+                            np.full_like(t, 9.81), np.zeros_like(t)])
+    cells = np.empty((6, 8), dtype=object)
+    for i in range(6):
+        for j in range(8):
+            cells[i, j] = cell if (i, j) != (0, 1) else np.zeros((3, 5))   # one too-short cell
+    sio.savemat(str(raw / "MONIPAR_PD_SUPERVISED.mat"), {"SUPERVISED_RAWDATA": cells})
+    out, n = recipes.ingest("monipar", root=root)
+    assert n == 47
+    rec = records.load(out)[0]
+    assert rec["subject_ns"] == "monipar:sup_r0c0" and abs(rec["fps"] - 50.0) < 1e-6
+    assert abs(float(rec["signal"][0, 0, imu.CH_I["acc_z"]]) - 1.0) < 1e-3   # m/s^2 -> g

@@ -134,7 +134,7 @@ DOCS = [
     "datasets_index.csv", "license_matrix.csv", "taxonomy_map.csv",
     "hpo_movement_terms.csv", "mask_statistics.csv", "registry_cells.csv",
     "interventions.csv", "citations.bib", "citations.csv",
-    "citation_overrides.csv",
+    "citation_overrides.csv", "demographics_curated.csv",
 ]
 
 # The resource paper does not ship. Until 2026-09-15 the tree carried
@@ -382,6 +382,8 @@ SCAN_ALLOW = {
     "tools/registry/gen_datacards.py": {"email"},
     "tools/registry/build_citations.py": {"email"},
     "docs/datasets_index.csv": {"email", "french"},
+    # verbatim quotes of source papers and record pages, with their URLs
+    "docs/demographics_curated.csv": {"email", "french", "emdash"},
     "docs/license_matrix.csv": {"email", "french"},
     "docs/registry_cells.csv": {"french"},
 }

@@ -1,98 +1,172 @@
 dataset_id,event_date,event,channel,outcome,latency_days,requires_dua,requires_account,identifiable_media,bytes_expected,bytes_received,note,evidence
 accel_fluctuations,2026-07-09,access_denied,synapse,refused,,yes,yes,no,,,SynapseUnmetAccessRestrictions on LDOPA_DATA syn20681036; download token does not bypass ManagedACTAccessRequirement (certified user + validated profile + IDU),
 accel_fluctuations,2026-07-10,dua_accepted,synapse,pending,,yes,yes,no,,,owner submitted access request on syn20681036; ACT review stated ~2 days,
+aihub_path_gait,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+aihub_pd_imaging,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
 alameda_tremor,2026-07-07,download_completed,direct_url,success,,unknown,no,no,,5771741,date from max on-disk mtime (stat); 1 raw files,derived:stat;datasets/_download_log.csv
+allen_cell_types,,discovered,direct_url,pending,,unknown,no,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
 allen_human_brain,2026-08-24,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 6 raw files,derived:stat
 alphasyn_catwalk,2026-09-02,download_attempted,elsevier_cdn,partial,,no,no,no,,11206,index mmc1.xlsx only: 3 sheets list 120 run filenames but the runs are absent from PMC and the CDN (mmc2-5 probed; ScienceDirect 403s automation); owner browser check pending,docs/ACCESS_BARRIERS_CASES.md case 11
+alphasyn_catwalk,2026-09-02,download_completed,email,success,,unknown,unknown,unknown,,,date from max on-disk mtime (stat); 1 raw files,derived:stat
 amass,2026-07-10,download_completed,google_form,success,,yes,yes,no,,,date from max on-disk mtime (stat); 24 raw files,derived:stat
+ankle_fog_4tu,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+asdpose,2026-09-05,download_completed,email,success,,unknown,unknown,unknown,,,date from max on-disk mtime (stat); 2 raw files,derived:stat
+asdpose,2026-09-07,licence_verified,europepmc_api,success,,no,no,no,,,JAMA Supplement-2 Data Sharing Statement read: deidentified data / for everyone / for any purpose / online via GitHub - permissive scope but no formal data-licence instrument; internal+eval cleared; redistribution = owner decision; PMC direct PDF is behind a secure-cookie interstitial - Europe PMC supplementaryFiles API served the zip cleanly,datasets/pose/asdpose/JAMA_data_sharing_statement_s002.pdf
 ataxie_kinect_dib,2026-07-07,download_completed,direct_url,success,,unknown,no,unknown,,24540,date from max on-disk mtime (stat); 1 raw files,derived:stat;datasets/_download_log.csv
 babypose,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
 beijing_sleep_lfp,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
 calms21,2026-09-02,downloaded,caltechdata,success,,no,no,no,3757320000,3757320000,licence verified CC BY 4.0 on record page (browser); pose+features+annotations fetched md5-verified; videos deliberately skipped (106 GB),datasets/animal/calms21/downloads.sha256
+calms21,2026-09-02,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 6 raw files,derived:stat
 camcan,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
 cap_sleep,2026-08-24,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 136 raw files,derived:stat
-capture24,2026-07-07,download_completed,direct_url,success,,unknown,no,no,,7269954749,date from max on-disk mtime (stat); 2 raw files,derived:stat;datasets/_download_log.csv
 capture24,2026-07-07,download_failed,direct_url,failure,,unknown,no,no,,,curl failure code(s) FAIL(rc=56); date = _download_log.csv mtime (approx),datasets/_download_log.csv
+capture24,,discovered,direct_url,pending,,unknown,no,no,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
 care_pd,2026-07-07,download_completed,email,success,,unknown,unknown,no,,,date from max on-disk mtime (stat); 36 raw files,derived:stat
 cdystonia,2026-08-22,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 1 raw files,derived:stat
 cellxgene_pd_multiregion,,discovered,direct_url,pending,,unknown,no,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
 cervical_motion_multiplanar,2026-08-22,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 1 raw files,derived:stat
 chop_gma_features,2026-08-22,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 13 raw files,derived:stat
 chorea_acanthocytosis_mri,2026-09-01,download_completed,dryad_api,success,,no,no,no,,18720483,version-level endpoint; CC0 via API,downloads.sha256
+chu_pd_moseq,2026-09-01,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 3 raw files,derived:stat
+cis_pd,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
 clinical_gait_multipatho,2026-07-07,download_completed,direct_url,success,,unknown,no,no,,2188374385,date from max on-disk mtime (stat); 1 raw files,derived:stat;datasets/_download_log.csv
 clinical_gait_signals_2025,,discovered,direct_url,pending,,unknown,no,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
 clinical_scales,,discovered,direct_url,pending,,unknown,no,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
-clinvar,,discovered,direct_url,pending,,unknown,no,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+clinvar,2026-08-26,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 1 raw files,derived:stat
+cody_1,2025-06-16,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 125 raw files,derived:stat
+cody_2,2026-06-04,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 137 raw files,derived:stat
+cody_3,2026-06-12,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 703 raw files,derived:stat
 cody_3,2026-09-01,deposit_published,zenodo_api,success,,no,no,no,,15400000000,CODY v1.0.0 (10.5281/zenodo.22232610): 8 files 15.4 GB; post-publication audit found provenance gaps (case 12),docs/ACCESS_BARRIERS_CASES.md case 12
 cody_3,2026-09-04,deposit_published,zenodo_api,success,,no,no,no,,15400000000,CODY v1.1.0 correction (10.5281/zenodo.22275553): archives renamed to carry study+pipeline (YOLOv8/SAM3); pediatric YOLO keypoints added (48 MB); phantom models.zip listing removed; API-verified 9 files,KINEFM_HANDOFF_19.md
+dabi_movement_ephys,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
 dandi_m1_mptp_units,2026-09-01,download_completed,dandi_api,success,,no,no,no,6417876637,6420000000,"447/447 assets, published version",downloads.sha256
 dandi_patchseq_000020,2026-09-01,deferred,dandi_api,pending,,no,no,no,141900000000,,disk decision with 000947,docs/HUNT_2026-09-01.md
 dandi_patchseq_000020,2026-09-03,download_completed,dandi_api,success,,no,no,no,142000000000,141900000000,4435/4435 assets digest-verified against dandi:sha2-256 (verify_dandi_local.py); pulled over the new ethernet line at ~30 GB/h,_paris_logs/dandi000020_pc_single.log
 dandi_pd_macaque_units,2026-09-01,deferred,dandi_api,pending,,no,no,no,1000000000000,,1 TB vs 273 GB free: disk decision,docs/HUNT_2026-09-01.md
+dandi_pd_macaque_units,2026-09-07,download_completed,dandi_api,success,6,no,no,no,976800000000,976800000000,378/378 assets digest-verified against dandi:sha2-256 (verify_dandi_local.py: 378 OK / 0 BAD / 0 unverifiable / 0 orphan); 6-day pull 2026-09-01 -> 09-07 across PC ethernet + Mac Wi-Fi weekend with two frozen-socket kills and one DANDI API 503 outage survived by the self-restarting wrapper; last 23 files overnight on the PC,_paris_logs/verify947_pc_20260907.log
 daphnet,2026-07-07,download_completed,direct_url,success,,unknown,no,no,,21443961,date from max on-disk mtime (stat); 1 raw files,derived:stat;datasets/_download_log.csv
+dataversenl_pd_ema,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+dbsmatchmaker,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+drummer_tremor_model,2026-09-05,download_completed,email,success,,unknown,unknown,unknown,,,date from max on-disk mtime (stat); 136 raw files,derived:stat
+dryad_irbd_smartphone,2026-09-05,download_completed,email,success,,unknown,unknown,unknown,,,date from max on-disk mtime (stat); 1 raw files,derived:stat
+dryad_pd_5imu_adl,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+dryad_stn_kinematics,2026-09-07,download_blocked,dryad_api,blocked,,no,no,no,6471453733,0,scripted route closed: dataset /download 401 and version /download 405 (large-dataset sync refusal) - one probe each; licence CC0-1.0 read from the API; owner browser route documented,docs/datasets_index.csv
+dryad_vim_et_intraop,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
 dystonia_alcohol_bfm,2026-09-01,download_completed,dryad_api,success,,no,no,no,,167488,per-file links 401 anonymously; version-level zip endpoint served (adjacent phenomenon),downloads.sha256
+dystonia_coalition,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
 dystonia_mri_ds006395,2026-09-01,download_completed,s3_unsigned,success,,no,no,no,66350000000,66440000000,full sync 1368 files,fetch_openneuro_s3.py
+ebrains_rat_lfp_atlas,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+enroll_hd_family,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
 fog_star,2026-07-07,download_completed,direct_url,success,,unknown,no,no,,119750670,date from max on-disk mtime (stat); 5 raw files,derived:stat;datasets/_download_log.csv
 fog_turning_filho,2026-07-07,download_completed,direct_url,success,,unknown,no,yes,,159922834,date from max on-disk mtime (stat); 2 raw files,derived:stat;datasets/_download_log.csv
 foxinsight,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
-gait120,,discovered,direct_url,pending,,unknown,no,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+gait120,2026-08-28,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 15 raw files,derived:stat
 gaitdb,2026-07-07,download_completed,direct_url,success,,unknown,no,no,,372572,date from max on-disk mtime (stat); 1 raw files,derived:stat;datasets/_download_log.csv
 gaitndd,2026-07-07,download_completed,direct_url,success,,unknown,no,no,,18788912,date from max on-disk mtime (stat); 1 raw files,derived:stat;datasets/_download_log.csv
-gaitrec,,discovered,direct_url,pending,,unknown,no,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+gaitrec,2026-08-27,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 23 raw files,derived:stat
 gavd,2026-07-07,download_completed,direct_url,success,,unknown,no,yes,,,date from max on-disk mtime (stat); 22 raw files,derived:stat;datasets/_download_log.csv
+gin_pd_rat_dbs,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
 goodwin_smm,2026-09-01,download_completed,git_clone,success,,unknown,no,no,,305390000,anonymous clone 1276 files; NO data licence exists (instruction doc archived): INTERNAL-ONLY,instruction_doc_20260901.txt
+haspa_spasticity,2026-09-05,download_completed,email,success,,unknown,unknown,unknown,,,date from max on-disk mtime (stat); 2 raw files,derived:stat
 hd_accel_jnet,2026-07-07,download_completed,direct_url,success,,unknown,no,no,,129029755,date from max on-disk mtime (stat); 36 raw files,derived:stat;datasets/_download_log.csv
 hpo,2026-08-22,download_completed,email,success,,unknown,unknown,unknown,,,date from max on-disk mtime (stat); 4 raw files,derived:stat
 hubu_fis_fingertap,2026-08-22,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 1 raw files,derived:stat
+iceberg_icm,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
 ilg_ataxia_tables,2026-08-22,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 9 raw files,derived:stat
 imu_inthewild_iprognosis,2026-07-07,download_completed,direct_url,success,,unknown,no,no,,1887103603,date from max on-disk mtime (stat); 1 raw files,derived:stat;datasets/_download_log.csv
 infant_pose_chambers,2026-09-01,download_completed,figshare_api,success,,no,no,no,,1425000000,12/12 files md5 MATCH; CC BY 4.0 via API,downloads.sha256
 ixi_mri,,discovered,direct_url,pending,,unknown,no,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
 kaggle_fog,2026-07-07,download_completed,direct_url,success,,unknown,no,no,,,date from max on-disk mtime (stat); 1046 raw files,derived:stat
 kaggle_spiral,2019-10-22,download_completed,direct_url,success,,unknown,no,no,,,date from max on-disk mtime (stat); 1 raw files,derived:stat
-kamath_snpc_geo,,discovered,direct_url,pending,,unknown,no,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+kamath_snpc_geo,2026-08-26,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 3 raw files,derived:stat
 koa_pd_nm,2026-07-07,download_completed,direct_url,success,,unknown,no,yes,,4092295524,date from max on-disk mtime (stat); 195 raw files,derived:stat;datasets/_download_log.csv
+kumar_stride_gait,2026-09-01,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 9 raw files,derived:stat
+lancaster_prehd,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
 lance_adams_myoclonus,2026-09-01,download_completed,zenodo_api,success,,no,no,yes,,10542281,"5/5 files after two 504 throttles; content is supplementary PDFs + patient video, NO raw signal (case 8)",downloads.sha256
+leuven_cp_gait,2026-09-06,download_completed,email,success,,unknown,unknown,unknown,,,date from max on-disk mtime (stat); 1 raw files,derived:stat
 li_taati,2018-11-09,download_completed,direct_url,success,,unknown,no,no,,,date from max on-disk mtime (stat); 10 raw files,derived:stat
-ltmm,,discovered,direct_url,pending,,unknown,no,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+locomouse_ataxia,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+ltmm,2026-08-25,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 296 raw files,derived:stat
+mass_sleep,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
 mdsgene,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
-mini_rgbd,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
-mmasd,,discovered,direct_url,pending,,unknown,no,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+meei_voice_db,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+mendeley_et_accel,2026-09-05,download_completed,email,success,,unknown,unknown,unknown,,,date from max on-disk mtime (stat); 1 raw files,derived:stat
+mindts_tourette,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+mini_rgbd,2026-08-25,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 2 raw files,derived:stat
+mmasd,2023-08-13,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 7 raw files,derived:stat
+mobile_gaitlab,2026-09-06,download_completed,email,success,,unknown,unknown,unknown,,,date from max on-disk mtime (stat); 460 raw files,derived:stat
+mobilityapp_atypical,2026-09-05,download_completed,email,success,,unknown,unknown,unknown,,,date from max on-disk mtime (stat); 1 raw files,derived:stat
 modys_video,2026-07-07,download_completed,direct_url,success,,unknown,no,yes,,90387622,date from max on-disk mtime (stat); 7 raw files,derived:stat;datasets/_download_log.csv
 monipar,2026-07-07,download_completed,direct_url,success,,unknown,no,no,,35409632,date from max on-disk mtime (stat); 9 raw files,derived:stat;datasets/_download_log.csv
+moseq_pharmacobehavior,2026-09-01,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 3 raw files,derived:stat
 motion_x,2026-07-10,download_completed,google_form,success,,yes,yes,unknown,,,date from max on-disk mtime (stat); 145 raw files,derived:stat
+mpower,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+mrc_lfp_dystonia,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
 multimodal_fog,2026-07-07,download_completed,direct_url,success,,unknown,no,no,,7501062763,date from max on-disk mtime (stat); 58 raw files,derived:stat;datasets/_download_log.csv
+natmeg_pd,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+nbia_tircon,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+ncer_pd_gait,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
 neuromorpho_bg,2026-09-01,download_started,neuromorpho_api,pending,,no,no,no,,,metadata 7842 complete; swc fetch running; region vocabulary matched only striatum (adjacent phenomenon),_paris_logs/neuromorpho_fetch.log
-nhanes_accel,,discovered,direct_url,pending,,unknown,no,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
-ninapro,,discovered,google_form,pending,,unknown,yes,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
-nonan_gaitprint,,discovered,direct_url,pending,,unknown,no,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+neuromorpho_bg,2026-09-01,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 7577 raw files,derived:stat
+newhandpd,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+nhanes_accel,2026-08-26,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 5 raw files,derived:stat
+ninapro,2026-08-25,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 67 raw files,derived:stat
+nlb_mc_maze,2026-09-01,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 2 raw files,derived:stat
+nonan_gaitprint,2026-08-28,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 44 raw files,derived:stat
+nonan_gaitprint_young,2026-08-28,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 40 raw files,derived:stat
+nordic_walking_pd,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
 nqmitcsxpd,2026-07-07,download_completed,direct_url,success,,unknown,no,no,,7673805,date from max on-disk mtime (stat); 1 raw files,derived:stat;datasets/_download_log.csv
+nsrr_plm_psg,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
 ntu_rgbd,2026-07-13,download_completed,google_form,success,,yes,yes,yes,,,date from max on-disk mtime (stat); 4 raw files,derived:stat
+obf_psychiatric,2026-09-05,download_completed,email,success,,unknown,unknown,unknown,,,date from max on-disk mtime (stat); 1 raw files,derived:stat
+opdc_discovery,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+open_dbs_pd,2026-09-07,page_verified,scidb_browser,success,,no,yes,no,,,still PUBLIC/CC0 (no withdrawal statement); now V2 updated 2025-12-19 at 571.16 GB / 12413 files; file-list API is login-walled portal-wide (User Not Login to anonymous browser session) so fetch needs a ScienceDB account + the disk size decision - both owner gates,docs/ACCESS_BARRIERS_CASES.md case 13
+openneuro_cd_ctbs_174,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+openneuro_pd_rest_eeg_768,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+opensim_wrist_tremor,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
 osdb,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+osf_fmd_eeg,2026-09-05,download_completed,email,success,,unknown,unknown,unknown,,,date from max on-disk mtime (stat); 87 raw files,derived:stat
+osf_fmd_kinematics,2026-09-05,download_completed,email,success,,unknown,unknown,unknown,,,date from max on-disk mtime (stat); 24 raw files,derived:stat
+osf_tic_video_46vxm,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+osf_tremor_amplitude,2026-09-05,download_completed,email,success,,unknown,unknown,unknown,,,date from max on-disk mtime (stat); 699 raw files,derived:stat
 oulp_age,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
-oxford_dystonia_lfp,,discovered,google_form,pending,,unknown,yes,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+oxford_dystonia_lfp,2026-08-25,download_completed,google_form,success,,unknown,yes,unknown,,,date from max on-disk mtime (stat); 3 raw files,derived:stat
 oxford_stn_onoff_dbs,2026-09-01,queued,portal_login,pending,,no,yes,no,,,CC BY-SA 4.0 page-verified; awaits the owner MRC login session,docs/HUNT_2026-09-01.md
 pads,2026-07-07,download_failed,direct_url,failure,,no,no,no,735000000,61000000,PhysioNet get-zip returned 61MB archive instead of 735MB announced; unzip -t failed,datasets/_pads_redl.log
 pads,2026-07-07,download_completed,direct_url,success,,no,no,no,,12000000000,recovered file-by-file via SHA256SUMS manifest; 12689 files 0 checksum failures,datasets/_pads_mirror2.log
+pahaw,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
 pallidal_units_dystonia,2026-09-01,download_completed,zenodo_api,success,,no,no,no,482545,482545,CC BY 4.0 confirmed via API at fetch,downloads.sha256
 panelapp,2026-08-25,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 5 raw files,derived:stat
 park_fingertap,2026-07-07,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 7 raw files,derived:stat;datasets/_download_log.csv
-pd_biostamprc21,,discovered,ieee_dataport,pending,,unknown,yes,no,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+pd_biostamprc21,2026-08-25,download_completed,ieee_dataport,success,,unknown,yes,no,,,date from max on-disk mtime (stat); 3 raw files,derived:stat
 pd_meg_stn_lfp_ds004998,2024-09-09,download_completed,email,success,,unknown,unknown,unknown,,,date from max on-disk mtime (stat); 638 raw files,derived:stat
 pd_rest_eeg_ds004584,2023-06-07,download_completed,email,success,,unknown,unknown,unknown,,,date from max on-disk mtime (stat); 1049 raw files,derived:stat
 pd_rest_eeg_onoff_ds002778,2026-09-01,download_completed,s3_unsigned,success,,no,no,no,,570000000,"full sync 332 files, size-verified",fetch_openneuro_s3.py
 pd_walking_eeg_ds007526,2026-06-08,download_completed,email,success,,unknown,unknown,unknown,,,date from max on-disk mtime (stat); 1825 raw files,derived:stat
 pdbp,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+pearl_pd,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
 physionet_gaitpdb,2026-07-07,download_completed,direct_url,success,,unknown,no,no,,302436928,date from max on-disk mtime (stat); 1 raw files,derived:stat;datasets/_download_log.csv
+physionet_multimodal_gait,2026-09-07,download_completed,physionet_files,success,2,no,no,no,6931692266,6931692266,713/713 files verified against the record's own SHA256SUMS.txt (fetch_physionet.py, 4 workers
 physionet_semg_walking,2026-08-22,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 67 raw files,derived:stat
+piet_essential_tremor,2026-09-07,download_blocked,scidb_browser,blocked,,no,yes,no,30585040003,0,WITHDRAWN at source: Dataset Withdrawal Statement in the download section (hospital requirements; contact corresponding authors) while PUBLIC/CC0 badges and DataCite metadata still assert openness; had been page-verified PUBLIC/CC0 2026-09-05; 21486 file downloads recorded before closure; author contact = owner decision (no-emails rule),docs/ACCESS_BARRIERS_CASES.md case 13
+ppmi_sensors,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+ppp_radboud,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+psp_msa_vowels,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
 rat7m,2026-09-03,download_blocked,figshare,blocked,,no,no,no,15346143022,,videos 403 Forbidden to scripted clients (browser UA included) while mocap article had served; case-5 pattern; no retry storm,datasets/animal/rat7m/datacard.md
 rat7m,2026-09-04,download_completed,figshare,success,1,no,no,no,15346143022,15346143022,one spaced probe ~14h later returned 206; 2028 mp4 across 7 video articles pulled clean with sha256 journal; zero errors,_paris_logs/rat7m_videos_20260903.log
-remap_open,,discovered,direct_url,pending,,unknown,no,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+real_pd,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+remap_open,2026-08-25,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 3917 raw files,derived:stat
+rempark_staton,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
 s3_semiology,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
 seizeit2,2025-03-17,download_completed,email,success,,unknown,unknown,unknown,,,date from max on-disk mtime (stat); 24874 raw files,derived:stat
+sensefog,2026-09-07,download_completed,mendeley_api,success,2,no,no,no,2010764258,2566000000,false case-11 resolved: the 2026-09-05 empty-via-API verdict was a folder-tree API artifact (root listing shows zero files); browser check found Download All 1.87 GB / CC BY 4.0; folder-walking fetch landed 277 files 2.45 GB unpacked - every file verified against Mendeley per-file sha256; record zip endpoint 403s scripted clients (per-file URLs work); one folder name has a Windows-illegal trailing space,datasets/eeg/sensefog/downloads.sha256
+shanghai_child_gait3d,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
 sixmwt_lifespan,2026-08-22,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 1 raw files,derived:stat
 ssbd,2026-09-01,download_completed,direct_url,success,,no,no,no,,1764211,"release zip + licence PDF; annotations only, YouTube videos deliberately not fetched (identifiable children + ToS)",docs/HUNT_2026-09-01.md
-stroke_gait_vancriekinge,,discovered,direct_url,pending,,unknown,no,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+stil_orthosis_tremor,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+striatal_gait_6ohda,2026-09-01,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 1 raw files,derived:stat
+stroke_gait_vancriekinge,2026-08-27,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 13 raw files,derived:stat
+svd_spasmodic_dysphonia,2026-09-05,download_completed,email,success,,unknown,unknown,unknown,,,date from max on-disk mtime (stat); 1 raw files,derived:stat
 syrip,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
 tappy_keystroke,2026-07-07,download_completed,direct_url,success,,unknown,no,no,,146064,date from max on-disk mtime (stat); 2 raw files,derived:stat;datasets/_download_log.csv
 tappy_keystroke,2026-07-07,download_failed,direct_url,failure,,unknown,no,no,,,curl failure code(s) FAIL(rc=56); date = _download_log.csv mtime (approx),datasets/_download_log.csv
@@ -101,7 +175,11 @@ toronto_neuroface,,discovered,email,pending,,unknown,unknown,yes,,,"gated, not y
 tremordb,2026-08-22,download_completed,direct_url,success,,unknown,no,no,,3654880,date from max on-disk mtime (stat); 126 raw files,derived:stat;datasets/_download_log.csv
 tuh_eeg,,discovered,direct_url,pending,,unknown,no,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
 uci_parkinson_voix,2026-07-07,download_completed,direct_url,success,,unknown,no,no,,912513,date from max on-disk mtime (stat); 1 raw files,derived:stat;datasets/_download_log.csv
+uci_spiral_isenkul,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+ukb_accelerometry,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
+uncommonvoice,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
 vidimu,2026-08-22,download_completed,direct_url,success,,unknown,no,yes,,3058303154,date from max on-disk mtime (stat); 2006 raw files,derived:stat;datasets/_download_log.csv
 visionmd,2025-11-20,download_completed,direct_url,success,,unknown,no,unknown,,,date from max on-disk mtime (stat); 31 raw files,derived:stat
+watch_pd,,discovered,email,pending,,unknown,unknown,unknown,,,"gated, not yet obtained; no request date establishable (unknown)",derived:catalogue
 weargait_pd,2026-07-09,download_started,synapse,success,,no,yes,no,,,syncFromSynapse launched with personal access token; syn52540892,datasets/_weargait_download.log
 weargait_pd,2026-07-10,download_completed,synapse,success,,no,yes,no,,48000000000,1816 files 48GB 0 errors; downloaded with token only no DUA prompt,datasets/_weargait_download.log

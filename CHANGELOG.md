@@ -17,7 +17,10 @@ pre-launch. Dataset counts are the value measured on the date of the entry
   `moveatlas.recipe(id)` says beforehand whether a recipe runs in the
   library, exists only as repository scripts (then the exact commands are
   the error message), or is not needed. Library recipes today: `fog_star`
-  (Zenodo origin; rebuilt byte-identical to the corpus's records) and
+  (Zenodo origin; rebuilt byte-identical to the corpus's records),
+  `daphnet` (UCI), `hd_accel_jnet` and `monipar` (Zenodo; each rebuilt
+  from its origin and equal to the corpus's records on every field the
+  corpus carries) and
   `fog_turning_filho` (figshare origin, which answers programs with a
   browser challenge: `fetch()` then names the file to save where and
   accepts it once there). A `moveatlas` command line (`list`, `info`,
@@ -31,6 +34,33 @@ pre-launch. Dataset counts are the value measured on the date of the entry
   access case as executed on 2026-09-15, the record format, subject-level
   splits, paradigms) beside the data-first pages; the API lists the
   recipes, the store and the command line.
+
+- `ds.files()` and `ds.path(name)` on every dataset: what a dataset holds
+  (locally or in its published record) and a local, verified path to one
+  file. Nineteen published records carry tables, archives or documents
+  rather than canonical records; `get_data()` on those now says so and
+  lists the files instead of naming an ingestion script. `moveatlas files`
+  and `moveatlas get` on the command line. Site: a *Troubleshooting* page
+  listing every error by situation.
+- Tests for the three riskiest scripts (validate_canonical.py's record
+  checks and family walk, including the Windows backslash defect proven
+  on posix; mask_statistics.py's walker; upload_zenodo.py's offline
+  paths), a portability guard on the canonical manifests, a drift guard
+  pinning the bundled registry snapshot to docs/. 250 tests.
+- `gen_datacards.py` refuses to shrink the registry (its 108 entries
+  against 170 rows used to drop 62 datasets silently); the EEG, EMG and
+  sensefog builders write forward-slash record paths on every platform.
+- `datasets/_catalogue.csv` rebuilt to the registry's 170 rows (it had 80
+  since the hunts); the paper tables that read it are re-run at the freeze.
+- `docs/OPERATIONS.md` now holds what a reader needs (pipeline, gates,
+  record format, access log); the owner's two-machine procedure moved to
+  `docs/MACHINES.md`, which does not ship. `temporary/` (17 GB of
+  builder input) is `builder_inputs/`.
+
+- The Data Descriptor frozen and assembled as a submission package
+  (paper/package/): manuscript v3 on the frozen numbers
+  (paper/freeze_numbers.json), five figures, five tables, supplementary
+  information, cover letter, bibliography for Zotero.
 
 ### Changed
 

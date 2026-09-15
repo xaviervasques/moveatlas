@@ -56,7 +56,7 @@ def parse_name(basename):
         return None
     num, coh, seq, sev = m.groups()
     sev = sev or "NA"
-    subject_ns = f"koa_{coh}_{sev}_{num}"       # severity partitions subjects
+    subject_ns = f"koa_pd_nm:{coh}_{sev}_{num}"   # namespaced source:subject (2026-09-15); severity partitions subjects
     return subject_ns, coh, sev, seq
 
 

@@ -123,7 +123,31 @@ def _registry_counts():
     import glob as _glob
     n_examples = len(_glob.glob(os.path.join(
         _REPO, "site", "examples", "*", "plot_*.py")))
+    # what the published records actually serve (LAUNCH_PLAN 1.9): the
+    # harmonized records split by availability, computed from the registry,
+    # the records table and the exhaustive mask pass, never typed
+    from moveatlas.registry import records_table as _records_table
+    served = _records_table()
+    per = {}
+    for r in mask:
+        if r.get("source"):
+            per[r["source"]] = per.get(r["source"], 0) + int(r["n_records_seen"] or 0)
+    reg_by = {r["id"]: r for r in reg}
+    split = {"served": [0, 0], "recipe": [0, 0], "unstaged": [0, 0]}
+    for did, k in per.items():
+        red = (reg_by.get(did, {}).get("redistribution") or "").strip().lower()
+        key = ("served" if did in served else
+               "unstaged" if red.startswith("yes") else "recipe")
+        split[key][0] += 1
+        split[key][1] += k
     return {
+        "n_served_datasets": f"{split['served'][0]:,}",
+        "n_served_records": f"{split['served'][1]:,}",
+        "n_recipe_datasets": f"{split['recipe'][0]:,}",
+        "n_recipe_records": f"{split['recipe'][1]:,}",
+        "n_unstaged_datasets": f"{split['unstaged'][0]:,}",
+        "n_unstaged_records": f"{split['unstaged'][1]:,}",
+        "n_published_records": f"{len(served):,}",
         "n_catalogued": f"{len(reg):,}",
         "n_human": f"{len(reg) - n_animal:,}",
         "n_animal": f"{n_animal:,}",

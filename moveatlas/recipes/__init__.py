@@ -177,6 +177,132 @@ def _ingest_fog_star(root):
     return out, len(recs)
 
 
+def _fetch_daphnet(root):
+    from moveatlas.recipes import transports
+    # the UCI archive serves one zip for the whole dataset (CC BY 4.0)
+    return transports.urls(
+        root, "datasets/imu/daphnet",
+        {"daphnet.zip": "https://archive.ics.uci.edu/static/public/245/"
+                        "daphnet+freezing+of+gait.zip"})
+
+
+def _ingest_daphnet(root):
+    import glob
+    import zipfile
+    import numpy as np
+    from moveatlas.recipes import imu
+    zips = glob.glob(os.path.join(root, "datasets", "imu", "daphnet", "raw", "*.zip"))
+    if not zips:
+        raise FileNotFoundError("daphnet: no zip under raw/; run "
+                                "moveatlas.fetch('daphnet') first")
+    z = zipfile.ZipFile(zips[0])
+    recs = []
+    for n in sorted(x for x in z.namelist() if x.endswith(".txt") and "/S" in "/" + x):
+        base = os.path.basename(n)
+        if not (base[0] == "S" and "R" in base):
+            continue
+        a = np.array([[float(v) for v in ln.split()]
+                      for ln in z.read(n).decode().splitlines() if ln.strip()])
+        if a.size == 0:
+            continue
+        g = a[:, 1:10] / 1000.0                     # mg -> g; ankle, thigh, trunk
+        loc = {"ankle_L": {"acc_x": g[:, 0], "acc_y": g[:, 1], "acc_z": g[:, 2]},
+               "thigh_L": {"acc_x": g[:, 3], "acc_y": g[:, 4], "acc_z": g[:, 5]},
+               "trunk": {"acc_x": g[:, 6], "acc_y": g[:, 7], "acc_z": g[:, 8]}}
+        subj = base[:3]                             # S01
+        recs.append(imu.make_record(loc, 64.0, f"daphnet:{subj}", base[:-4],
+                                    "daphnet", a[:, 10]))
+    out = imu.save(root, "daphnet", recs)
+    return out, len(recs)
+
+
+def _fetch_hd_accel(root):
+    from moveatlas.recipes import transports
+    # Zenodo 14384260: one CSV per participant plus metadata.csv, CC BY 4.0
+    return transports.zenodo_record(root, "datasets/imu/hd_accel_jnet", 14384260)
+
+
+def _ingest_hd_accel(root):
+    import glob
+    from moveatlas.recipes import imu
+    try:
+        import pandas as pd
+    except ImportError as e:
+        raise ImportError("hd_accel_jnet ingestion reads CSV with pandas: "
+                          "pip install pandas") from e
+    files = sorted(glob.glob(os.path.join(root, "datasets", "imu", "hd_accel_jnet",
+                                          "raw", "*.csv")))
+    if not files:
+        raise FileNotFoundError("hd_accel_jnet: no CSV under raw/; run "
+                                "moveatlas.fetch('hd_accel_jnet') first")
+    recs = []
+    for f in files:
+        b = os.path.basename(f)
+        if b.startswith("._") or "metadata" in b:
+            continue
+        df = pd.read_csv(f)
+        if not {"x", "y", "z"} <= set(df.columns):
+            continue
+        loc = {"wrist_L": {"acc_x": df["x"].values, "acc_y": df["y"].values,
+                           "acc_z": df["z"].values}}
+        lab = df["label"].values if "label" in df.columns else None
+        # the source declares no sampling rate: fps stays None, as in the corpus
+        recs.append(imu.make_record(loc, None, f"hd_accel:{b[:-4]}", b[:-4],
+                                    "hd_accel_jnet", lab))
+    out = imu.save(root, "hd_accel_jnet", recs)
+    return out, len(recs)
+
+
+def _fetch_monipar(root):
+    from moveatlas.recipes import transports
+    # Zenodo 8104853, CC BY 4.0: the supervised-session .mat the corpus
+    # ingests, its labels and the README; the remote and control sessions
+    # stay at the origin
+    return transports.zenodo_record(
+        root, "datasets/imu/monipar", 8104853,
+        only=["MONIPAR_PD_SUPERVISED.mat", "MONIPAR_PD_SUPERVISED_TREMOR_LABEL.mat",
+              "Monipar_README.txt"])
+
+
+def _ingest_monipar(root):
+    import numpy as np
+    from moveatlas.recipes import imu
+    try:
+        from scipy.io import loadmat
+    except ImportError as e:
+        raise ImportError("monipar ingestion reads MATLAB files with scipy: "
+                          "pip install scipy") from e
+    p = os.path.join(root, "datasets", "imu", "monipar", "raw", "MONIPAR_PD_SUPERVISED.mat")
+    if not os.path.exists(p):
+        raise FileNotFoundError("monipar: no MONIPAR_PD_SUPERVISED.mat under raw/; "
+                                "run moveatlas.fetch('monipar') first")
+    d = loadmat(p, squeeze_me=True, struct_as_record=False)
+    cells = d["SUPERVISED_RAWDATA"]          # (6, 8) cell array of (T, 5)
+
+    def acc_to_g(a):
+        norm = np.linalg.norm(a, axis=1)
+        if not np.isfinite(norm).any():
+            return a
+        return a / imu.G if np.nanmedian(norm) > 5 else a
+
+    recs = []
+    for i in range(cells.shape[0]):
+        for j in range(cells.shape[1]):
+            c = np.asarray(cells[i, j])
+            if c.ndim != 2 or c.shape[1] < 4 or c.shape[0] < 10:
+                continue
+            t = c[:, 0]
+            dt = np.median(np.diff(t))            # time in ms
+            fps = float(1000.0 / dt) if dt > 1e-6 else None
+            acc = acc_to_g(c[:, 1:4])
+            loc = {"wrist_L": {"acc_x": acc[:, 0], "acc_y": acc[:, 1], "acc_z": acc[:, 2]}}
+            lab = c[:, 4] if c.shape[1] >= 5 else None
+            recs.append(imu.make_record(loc, fps, f"monipar:sup_r{i}c{j}", f"r{i}c{j}",
+                                        "monipar", lab))
+    out = imu.save(root, "monipar", recs)
+    return out, len(recs)
+
+
 # -- the script recipes (not ported; the commands are the repository's) -------
 
 _CLONE = "git clone https://github.com/xaviervasques/moveatlas && cd moveatlas"
@@ -262,6 +388,18 @@ _LIBRARY = {
         "fog_star", fetch_fn=_fetch_fog_star, ingest_fn=_ingest_fog_star,
         notes="Zenodo 17838806 (CC BY 4.0): sensor_data.csv 120 MB; also "
               "served from its MoveAtlas record, so get_data() alone works"),
+    "daphnet": Recipe(
+        "daphnet", fetch_fn=_fetch_daphnet, ingest_fn=_ingest_daphnet,
+        notes="UCI archive 245 (CC BY 4.0): one 21 MB zip; also served from "
+              "its MoveAtlas record"),
+    "hd_accel_jnet": Recipe(
+        "hd_accel_jnet", fetch_fn=_fetch_hd_accel, ingest_fn=_ingest_hd_accel,
+        notes="Zenodo 14384260 (CC BY 4.0): 35 per-participant CSVs, 124 MB; "
+              "also served from its MoveAtlas record"),
+    "monipar": Recipe(
+        "monipar", fetch_fn=_fetch_monipar, ingest_fn=_ingest_monipar,
+        notes="Zenodo 8104853 (CC BY 4.0): the supervised-session MATLAB file, "
+              "9 MB, read with scipy; also served from its MoveAtlas record"),
 }
 
 
