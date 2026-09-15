@@ -212,10 +212,23 @@ def test_repo_root_autodetects_from_package_location(tmp_path, monkeypatch):
     fake_pkg = tmp_path / "repo" / "moveatlas"
     fake_pkg.mkdir(parents=True)
     monkeypatch.setattr(store_mod, "__file__", str(fake_pkg / "store.py"))
-    with pytest.raises(FileNotFoundError, match="set MOVEATLAS_REPO"):
-        store_mod._repo_root()
+    # no datasets/ beside the package: the USER store, created on demand
+    # (since 2026-09-15 a fresh install has an empty store, never an error)
+    monkeypatch.setenv("MOVEATLAS_STORE", str(tmp_path / "userstore"))
+    assert store_mod._repo_root() == str(tmp_path / "userstore")
+    assert (tmp_path / "userstore" / "datasets").is_dir()
+    assert store_mod._repo_root(create=False) == str(tmp_path / "userstore")
+    # a source tree that holds datasets/ wins over the user store
     (tmp_path / "repo" / "datasets").mkdir()
     assert store_mod._repo_root() == str(tmp_path / "repo")
+
+
+def test_user_store_root_env_and_default(tmp_path, monkeypatch):
+    monkeypatch.setenv("MOVEATLAS_STORE", str(tmp_path / "s"))
+    assert store_mod.user_store_root() == str(tmp_path / "s")
+    monkeypatch.delenv("MOVEATLAS_STORE", raising=False)
+    assert store_mod.user_store_root().endswith(
+        os.path.join(".moveatlas", "store"))
 
 
 def test_open_store_prefers_local_when_repo_found(tmp_path, monkeypatch):

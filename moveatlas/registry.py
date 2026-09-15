@@ -34,6 +34,25 @@ def snapshot_info():
         return {}
 
 
+_RECORDS = None
+
+
+def records_table():
+    """dataset id -> {"record": zenodo record id, "doi": ...}: the published
+    MoveAtlas records, shipped with the package
+    (moveatlas/data/zenodo_records.json, written by build_records_table.py).
+    {} when the file is absent. Read once per process."""
+    global _RECORDS
+    if _RECORDS is None:
+        p = os.path.join(_HERE, "data", "zenodo_records.json")
+        try:
+            with open(p, encoding="utf-8") as f:
+                _RECORDS = json.load(f)
+        except (OSError, ValueError):
+            _RECORDS = {}
+    return _RECORDS
+
+
 def _docs_dir():
     cand = []
     env = os.environ.get("MOVEATLAS_REPO")
@@ -72,7 +91,13 @@ def access_case(row):
     if lic.startswith("private"):
         return "local_only"
     if redist.startswith("yes"):
-        return "hosted"
+        # Since the 53 records went public (2026-09-15) "hosted" means
+        # exactly "served from a published MoveAtlas record". A
+        # redistributable dataset without a record is fetched at its
+        # origin like any recipe until it is staged and published.
+        if row.get("id") in records_table():
+            return "hosted"
+        return "recipe"
     up = status.upper()
     if ("DOCUMENTED BARRIER" in up or "WRITTEN OFF" in up
             or "HUMAN QUEUE" in up):

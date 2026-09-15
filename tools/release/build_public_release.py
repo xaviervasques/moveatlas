@@ -643,11 +643,19 @@ moveatlas.list_datasets()                   # the catalogue with access cases
 ds = moveatlas.dataset("nonan_gaitprint")   # a hosted CC-BY dataset
 records, meta = ds.get_data()               # canonical records + metadata
 moveatlas.to_frame(records[0]).head()       # a tidy, named, masked frame
+
+moveatlas.fetch("fog_star")                 # a recipe: fetched at its origin, journaled
+moveatlas.ingest("fog_star")                # harmonized on your machine, same code as the corpus
+moveatlas.recipe("ninapro")                 # what a recipe needs before you run it
 ```
 
 Hosted datasets download on demand from their Zenodo record into a local
-cache and are verified against the record's own sha256 manifest. Nothing
-needs credentials.
+cache and are verified against the record's own sha256 manifest. Recipe
+datasets are fetched from their origin host and harmonized into the store
+(`~/.moveatlas/store`, or `$MOVEATLAS_STORE`). Nothing needs credentials.
+The same verbs exist on the command line: `moveatlas list | info <id> |
+fetch <id> | ingest <id> | where`. The site's *Getting started* and *User
+guide* walk one complete example per access case.
 
 ## The four access cases
 

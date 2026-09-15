@@ -71,10 +71,16 @@ def test_dataset_info_unknown_id_lists_known_ids():
     # private wins over anything else
     ({"license": "Private tier", "redistribution": "yes",
       "status": "DOCUMENTED BARRIER"}, "local_only"),
-    ({"license": "CC BY 4.0", "redistribution": "yes",
+    # redistributable AND served from a published MoveAtlas record: hosted
+    ({"id": "modys_video", "license": "CC BY 4.0", "redistribution": "yes",
       "status": "INGESTED v1"}, "hosted"),
-    ({"license": "CC BY-SA 3.0", "redistribution": "Yes (share-alike)",
-      "status": ""}, "hosted"),
+    ({"id": "cody_3", "license": "CC BY-SA 3.0",
+      "redistribution": "Yes (share-alike)", "status": ""}, "hosted"),
+    # redistributable but no record yet (2026-09-15): fetched at its origin
+    ({"id": "fog_turning_filho", "license": "CC0", "redistribution": "yes",
+      "status": "INGESTED v1"}, "recipe"),
+    ({"license": "CC BY 4.0", "redistribution": "yes",
+      "status": "INGESTED v1"}, "recipe"),
     ({"license": "custom", "redistribution": "no",
       "status": "DOCUMENTED BARRIER (owner, 2026-08-28)"}, "barrier"),
     ({"license": "", "redistribution": "no",
@@ -93,7 +99,7 @@ def test_access_case_branches(row, expected):
 
 def test_access_case_covers_all_four_branches():
     rows = [{"license": "private"},
-            {"redistribution": "yes"},
+            {"id": "modys_video", "redistribution": "yes"},
             {"redistribution": "no", "status": "DOCUMENTED BARRIER"},
             {"redistribution": "no", "status": "downloaded"}]
     assert {access_case(r) for r in rows} == ACCESS_CASES
@@ -142,7 +148,8 @@ def test_registry_reads_docs_under_moveatlas_repo(tmp_path, monkeypatch):
     # license filled from the matrix when the index has no license column
     assert rows["toy_a"]["license"] == "CC BY 4.0"
     assert rows["toy_a"]["portal_action"] == "host_copy_ok"
-    assert rows["toy_a"]["access_case"] == "hosted"
+    # redistributable, but toy_a has no published record: fetched at origin
+    assert rows["toy_a"]["access_case"] == "recipe"
     assert rows["toy_b"]["license"] == ""
     assert rows["toy_b"]["access_case"] == "barrier"
     assert dataset_info("toy_b")["title"] == "Toy B"

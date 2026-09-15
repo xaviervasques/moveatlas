@@ -86,7 +86,10 @@ def main():
 
     refused, hard, n_ok = [], [], 0
     shipped_data = set()
-    for root, _, files in os.walk(args.release_dir):
+    for root, dirs, files in os.walk(args.release_dir):
+        # the release tree is a git clone since 2026-09-15; its own
+        # metadata is not a shipped file. Everything else is walked.
+        dirs[:] = [d for d in dirs if d != ".git"]
         for fn in files:
             if fn.startswith("._") or fn == ".DS_Store":
                 continue

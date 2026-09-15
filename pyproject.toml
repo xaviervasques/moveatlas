@@ -41,6 +41,9 @@ Source = "https://github.com/xaviervasques/moveatlas"
 Issues = "https://github.com/xaviervasques/moveatlas/issues"
 Changelog = "https://github.com/xaviervasques/moveatlas/blob/main/CHANGELOG.md"
 
+[project.scripts]
+moveatlas = "moveatlas.cli:main"
+
 [project.optional-dependencies]
 bench = ["scikit-learn", "scipy"]
 examples = ["matplotlib", "scikit-learn", "scipy", "pyreadr", "mne"]
@@ -49,7 +52,7 @@ docs = ["sphinx", "pydata-sphinx-theme", "sphinx-gallery", "sphinx-design",
         "scipy", "pyreadr", "mne"]
 
 [tool.setuptools]
-packages = ["moveatlas", "moveatlas.datasets", "moveatlas.paradigms", "moveatlas.evaluations", "moveatlas.pipelines"]
+packages = ["moveatlas", "moveatlas.datasets", "moveatlas.paradigms", "moveatlas.evaluations", "moveatlas.pipelines", "moveatlas.recipes"]
 
 [tool.setuptools.package-data]
 moveatlas = ["data/*.csv", "data/*.json"]

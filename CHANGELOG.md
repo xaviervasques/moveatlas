@@ -6,9 +6,50 @@ the project has not yet made a public release, so every section below is
 pre-launch. Dataset counts are the value measured on the date of the entry
 (rows of `docs/datasets_index.csv`), not a running total.
 
-## [Unreleased] (2026-09-08)
+## [Unreleased] (2026-09-15)
 
 ### Added
+
+- The recipe tier as library calls: `moveatlas.fetch(id)` downloads a
+  dataset from its origin host into the store (resumable, sha256-journaled,
+  checksums verified against the host's own manifest) and
+  `moveatlas.ingest(id)` harmonizes it there with the corpus's code;
+  `moveatlas.recipe(id)` says beforehand whether a recipe runs in the
+  library, exists only as repository scripts (then the exact commands are
+  the error message), or is not needed. Library recipes today: `fog_star`
+  (Zenodo origin; rebuilt byte-identical to the corpus's records) and
+  `fog_turning_filho` (figshare origin, which answers programs with a
+  browser challenge: `fetch()` then names the file to save where and
+  accepts it once there). A `moveatlas` command line (`list`, `info`,
+  `fetch`, `ingest`, `where`).
+- The user store: a fresh install has an empty store (`~/.moveatlas/store`
+  or `$MOVEATLAS_STORE`) laid out like the repository; recipes fill it and
+  the published records front it for the hosted tier. `$MOVEATLAS_REPO`
+  remains the developer's override. Nothing raises for lack of a store.
+- Site: *Getting started* (install, first dataset in three lines, the
+  store, the three access cases) and *User guide* (one complete walk per
+  access case as executed on 2026-09-15, the record format, subject-level
+  splits, paradigms) beside the data-first pages; the API lists the
+  recipes, the store and the command line.
+
+### Changed
+
+- `hosted` now means exactly "served from a published MoveAtlas record":
+  a redistributable dataset without a record (`fog_turning_filho`,
+  `seizeit2`) classifies as `recipe` until it is staged and published.
+  Registry counts: 53 hosted, 83 recipe, 34 barrier.
+
+- The 53 harmonized Zenodo records of the hosted tier are PUBLISHED
+  (2026-09-15): every draft was re-verified from the API, its reserved DOI
+  bound and its publication date set on the day, then published one API
+  call each and read back from the public API without a token, 53 of 53.
+  `launch_dryrun.py` says LAUNCH-READY with the hosted tier live.
+  `moveatlas/data/zenodo_records.json` is unchanged: the DOIs reserved at
+  draft time are the published ones.
+- The public repository exists (github.com/xaviervasques/moveatlas,
+  private while colleagues review; one authored commit, CI green on Python
+  3.9, 3.11 and 3.13) with the built site on its `gh-pages` branch. The
+  resource paper does not ship in it.
 
 - `dandi 000947` fetch complete and digest-verified: 378 files, 976.8 GB,
   378 OK / 0 BAD / 0 unverifiable / 0 orphan (`verify_dandi_local.py`).

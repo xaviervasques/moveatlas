@@ -38,7 +38,24 @@ class OfflineError(FileNotFoundError):
     callers that already handle "not here" keep working."""
 
 
-def _repo_root():
+def user_store_root():
+    """The per-user store a pip-installed package writes to:
+    $MOVEATLAS_STORE, else ~/.moveatlas/store. It holds a datasets/ tree
+    laid out exactly like the repository's, so every recipe writes to
+    datasets/<family>/<id>/{raw,processed}/ there and LocalStore serves it."""
+    root = os.environ.get("MOVEATLAS_STORE") or os.path.join(
+        os.path.expanduser("~"), ".moveatlas", "store")
+    return root
+
+
+def _repo_root(create=True):
+    """Where records live, in order: $MOVEATLAS_REPO (the developer's
+    checkout), the source tree this package sits in when it holds
+    datasets/ (an ingestion machine), else the user store
+    (user_store_root(), created on first use). Since 2026-09-15 this
+    never raises: a fresh install has a store, empty, that fetch() and
+    ingest() fill and that the published records front for the hosted
+    tier."""
     env = os.environ.get("MOVEATLAS_REPO")
     if env:
         return env
@@ -46,10 +63,10 @@ def _repo_root():
     root = os.path.abspath(os.path.join(here, ".."))
     if os.path.isdir(os.path.join(root, "datasets")):
         return root
-    raise FileNotFoundError(
-        "MoveAtlas record store not found: set MOVEATLAS_REPO to the repository "
-        "root (the directory containing datasets/), or wait for the "
-        "public release which downloads records on demand")
+    root = user_store_root()
+    if create:
+        os.makedirs(os.path.join(root, "datasets"), exist_ok=True)
+    return root
 
 
 def sha256_of(path, chunk=1 << 22):
