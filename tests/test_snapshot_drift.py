@@ -22,11 +22,18 @@ def test_bundled_snapshot_equals_docs(name):
         pytest.skip("no docs/ here: an installed package")
     dst = os.path.join(DATA, name)
     assert os.path.exists(dst), f"{name} is not bundled"
-    a = open(src, "rb").read().replace(b"\r\n", b"\n")
-    b = open(dst, "rb").read().replace(b"\r\n", b"\n")
-    assert a == b, (f"moveatlas/data/{name} differs from docs/{name}: "
-                    "refresh the snapshot (build_public_release copies it; "
-                    "so does `cp docs/... moveatlas/data/`) and bump SNAPSHOT.json")
+    # compared as CSV, not as bytes: the public tree rewrites docs/ through
+    # a DictWriter (quoting one field differently) and byte-copies the
+    # snapshot; the rows are what must agree
+    import csv
+    with open(src, newline="", encoding="utf-8") as f:
+        a = list(csv.DictReader(f))
+    with open(dst, newline="", encoding="utf-8") as f:
+        b = list(csv.DictReader(f))
+    assert a == b, (f"moveatlas/data/{name} differs from docs/{name} "
+                    f"({len(a)} vs {len(b)} rows): refresh the snapshot "
+                    "(build_public_release copies it; so does "
+                    "`cp docs/... moveatlas/data/`) and bump SNAPSHOT.json")
 
 
 def test_snapshot_json_counts_match_the_files():
