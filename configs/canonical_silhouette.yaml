@@ -1,0 +1,88 @@
+# KineFM canonical SILHOUETTE contract (SAM3 dense-segmentation stream).
+# A THIRD pose-family modality, distinct from the 15-joint skeleton
+# (configs/canonical_skeleton.yaml) and from the signal contracts (imu, force).
+# It exists because SAM3 gives a body-mask outline, not joint positions: no reliable
+# keypoints, but a dense silhouette contour whose shape dynamics carry hyperkinetic
+# movement (chorea, dystonia, tremor of the whole-body outline).
+#
+# Same SAM3 exporter produces both koa_pd_nm and CODY external cohorts
+# (*_sam3_timeseries.xlsx), so ONE contract serves both.
+#
+# Owner decision (2026-07-16): store the 64-point resampled contour + 8 shape scalars.
+# The 12x8 interior grid emitted by SAM3 is dropped (~50% NaN, view/size dependent,
+# redundant with the contour).
+version: 1
+date: 2026-07-16
+
+modality: silhouette
+dim: 2                 # image-plane contour only; no depth. z absent + masked, as in 2D pose.
+
+# ---------------------------------------------------------------------------
+# Per-sample storage (one recording = one video):
+#   contour        (T, 64, 2)  float32   resampled silhouette outline, NORMALIZED (below)
+#   scalars        (T, 8)      float32   shape descriptors (see scalar_channels)
+#   detect_mask    (T,)        bool      per-frame: was the subject segmented this frame
+#   scalar_mask    (8,)        bool      which scalar channels are present (all True here)
+#   fps            float                 native rate of THIS recording (no global resample)
+#   scale          float                 per-recording normalization scale (px) used below
+#   dim            int         2
+#   modality       str         "silhouette"
+#   subject_ns     str         namespaced patient id (leakage key), e.g. koa_KOA_EL_001
+#   cohort         str         diagnosis group (label, eval only)
+#   severity       str         clinical grade (label, eval only)
+#   sequence       str         walk sequence id (01 = L->R, 02 = R->L)
+#   source         str         dataset name
+# Written to datasets/<...>/processed/canonical_silhouette.pkl (list of these dicts)
+# + datasets/_canonical_silhouette_manifest.csv (source of truth for splits).
+# ---------------------------------------------------------------------------
+
+# 64 contour points, arc-length resampled by the SAM3 exporter from a consistent start.
+# Point-to-point temporal correspondence is APPROXIMATE (resampling start can drift by a
+# point or two frame to frame); treat the contour as a set-with-order, not tracked landmarks.
+contour_points: 64
+
+# 8 shape scalars kept per frame, in this fixed order.
+# Size-dependent channels (area, perimeter, major_axis, minor_axis) are normalized by the
+# per-recording scale (area by scale^2, lengths by scale) so they are camera-distance
+# invariant. Dimensionless channels (solidity, extent, aspect_ratio, orientation_deg) are
+# stored raw. Source columns: area_px, perimeter_px, solidity, extent, aspect_ratio,
+# orientation_deg, major_axis_px, minor_axis_px.
+scalar_channels: [area, perimeter, solidity, extent, aspect_ratio, orientation_deg,
+                  major_axis, minor_axis]
+scalar_size_dependent: [area, perimeter, major_axis, minor_axis]
+
+# Normalization order (mirrors the 2D pose contract):
+#   1. center   : subtract per-frame centroid (centroid_x, centroid_y)
+#   2. flip y   : negate y (image y grows downward -> make up positive)
+#   3. scale    : divide by S = median over detected frames of major_axis_px (person height)
+#   4. undetected frames -> zeros, detect_mask = False
+normalization:
+  center: per_frame_centroid
+  flip_image_y: true
+  scale: median_major_axis_px_per_recording
+
+sampling:
+  policy: native_per_sample
+  rationale: preserve fast hyperkinetic dynamics; no global decimation (matches skeleton/imu)
+
+# ---------------------------------------------------------------------------
+# Per-dataset source mappings.
+# ---------------------------------------------------------------------------
+sources:
+  koa_pd_nm:
+    file: "<num>_<COH>_<seq>[_<SEV>]_sam3_timeseries.xlsx"   # 190 videos, 96 subjects
+    sheet: Sheet1
+    fps: from_time_s        # 50 or 30.303 Hz, derived per file from time_s
+    patient_key: "koa_<COH>_<SEV>_<num>"   # severity partitions subjects (numbering restarts)
+    cohorts: {KOA: knee_osteoarthritis, PD: parkinson, NM: healthy}
+    severity: {EL: early, MD: moderate, SV: severe, ML: mild, NA: none}  # KOA:EL/MD/SV PD:ML/MD/SV
+    sequence: "01 = sagittal L->R, 02 = R->L (same subject)"
+    labels: [cohort, severity]   # eval only, never pretraining
+    note: sequence 01/02 are two walks of the SAME subject; do not split across them.
+
+  cody_external:               # same SAM3 exporter; ingest later with the same reader
+    file: "cody_3/raw/06_external_sam3_outputs/dataset_{1,2,3}/P*/**_sam3_timeseries.xlsx"
+    fps: from_time_s
+    patient_key: "cody_ext_ds<d>_<Pxx>"
+    labels: dataset_inference.xlsx (multi-rater diagnosis, subject level)
+    status: not_yet_ingested

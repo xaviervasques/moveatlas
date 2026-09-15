@@ -1,0 +1,214 @@
+{
+ "alameda_tremor": {
+  "doi": "10.5281/zenodo.22310374",
+  "record": 22310374
+ },
+ "alphasyn_catwalk": {
+  "doi": "10.5281/zenodo.22313570",
+  "record": 22313570
+ },
+ "cap_sleep": {
+  "doi": "10.5281/zenodo.22300225",
+  "record": 22300225
+ },
+ "capture24": {
+  "doi": "10.5281/zenodo.22662984",
+  "record": 22662984
+ },
+ "cdystonia": {
+  "doi": "10.5281/zenodo.22300081",
+  "record": 22300081
+ },
+ "cervical_motion_multiplanar": {
+  "doi": "10.5281/zenodo.22310376",
+  "record": 22310376
+ },
+ "chop_gma_features": {
+  "doi": "10.5281/zenodo.22313491",
+  "record": 22313491
+ },
+ "chorea_acanthocytosis_mri": {
+  "doi": "10.5281/zenodo.22313543",
+  "record": 22313543
+ },
+ "clinical_gait_multipatho": {
+  "doi": "10.5281/zenodo.22310387",
+  "record": 22310387
+ },
+ "cody_1": {
+  "doi": "10.5281/zenodo.22313505",
+  "record": 22313505
+ },
+ "cody_2": {
+  "doi": "10.5281/zenodo.22313507",
+  "record": 22313507
+ },
+ "cody_3": {
+  "doi": "10.5281/zenodo.22313509",
+  "record": 22313509
+ },
+ "daphnet": {
+  "doi": "10.5281/zenodo.22310477",
+  "record": 22310477
+ },
+ "drummer_tremor_model": {
+  "doi": "10.5281/zenodo.22358617",
+  "record": 22358617
+ },
+ "dystonia_alcohol_bfm": {
+  "doi": "10.5281/zenodo.22313541",
+  "record": 22313541
+ },
+ "fog_star": {
+  "doi": "10.5281/zenodo.22310487",
+  "record": 22310487
+ },
+ "gait120": {
+  "doi": "10.5281/zenodo.22310188",
+  "record": 22310188
+ },
+ "gaitdb": {
+  "doi": "10.5281/zenodo.22310489",
+  "record": 22310489
+ },
+ "gaitndd": {
+  "doi": "10.5281/zenodo.22310491",
+  "record": 22310491
+ },
+ "gaitrec": {
+  "doi": "10.5281/zenodo.22313441",
+  "record": 22313441
+ },
+ "hd_accel_jnet": {
+  "doi": "10.5281/zenodo.22310581",
+  "record": 22310581
+ },
+ "hpo": {
+  "doi": "10.5281/zenodo.22313503",
+  "record": 22313503
+ },
+ "ilg_ataxia_tables": {
+  "doi": "10.5281/zenodo.22300223",
+  "record": 22300223
+ },
+ "imu_inthewild_iprognosis": {
+  "doi": "10.5281/zenodo.22310591",
+  "record": 22310591
+ },
+ "infant_pose_chambers": {
+  "doi": "10.5281/zenodo.22313572",
+  "record": 22313572
+ },
+ "lance_adams_myoclonus": {
+  "doi": "10.5281/zenodo.22313522",
+  "record": 22313522
+ },
+ "li_taati": {
+  "doi": "10.5281/zenodo.22313475",
+  "record": 22313475
+ },
+ "ltmm": {
+  "doi": "10.5281/zenodo.22659396",
+  "record": 22659396
+ },
+ "modys_video": {
+  "doi": "10.5281/zenodo.22313479",
+  "record": 22313479
+ },
+ "monipar": {
+  "doi": "10.5281/zenodo.22310610",
+  "record": 22310610
+ },
+ "multimodal_fog": {
+  "doi": "10.5281/zenodo.22310616",
+  "record": 22310616
+ },
+ "neuromorpho_bg": {
+  "doi": "10.5281/zenodo.22313520",
+  "record": 22313520
+ },
+ "nonan_gaitprint": {
+  "doi": "10.5281/zenodo.22310799",
+  "record": 22310799
+ },
+ "nonan_gaitprint_young": {
+  "doi": "10.5281/zenodo.22312827",
+  "record": 22312827
+ },
+ "nqmitcsxpd": {
+  "doi": "10.5281/zenodo.22300189",
+  "record": 22300189
+ },
+ "pads": {
+  "doi": "10.5281/zenodo.22310664",
+  "record": 22310664
+ },
+ "pallidal_units_dystonia": {
+  "doi": "10.5281/zenodo.22313518",
+  "record": 22313518
+ },
+ "park_fingertap": {
+  "doi": "10.5281/zenodo.22313481",
+  "record": 22313481
+ },
+ "pd_rest_eeg_ds004584": {
+  "doi": "10.5281/zenodo.22308281",
+  "record": 22308281
+ },
+ "pd_rest_eeg_onoff_ds002778": {
+  "doi": "10.5281/zenodo.22313545",
+  "record": 22313545
+ },
+ "pd_walking_eeg_ds007526": {
+  "doi": "10.5281/zenodo.22307403",
+  "record": 22307403
+ },
+ "physionet_gaitpdb": {
+  "doi": "10.5281/zenodo.22310689",
+  "record": 22310689
+ },
+ "physionet_multimodal_gait": {
+  "doi": "10.5281/zenodo.22663176",
+  "record": 22663176
+ },
+ "physionet_semg_walking": {
+  "doi": "10.5281/zenodo.22310311",
+  "record": 22310311
+ },
+ "remap_open": {
+  "doi": "10.5281/zenodo.22313485",
+  "record": 22313485
+ },
+ "sensefog": {
+  "doi": "10.5281/zenodo.22663103",
+  "record": 22663103
+ },
+ "sixmwt_lifespan": {
+  "doi": "10.5281/zenodo.22310797",
+  "record": 22310797
+ },
+ "stroke_gait_vancriekinge": {
+  "doi": "10.5281/zenodo.22313489",
+  "record": 22313489
+ },
+ "tappy_keystroke": {
+  "doi": "10.5281/zenodo.22300193",
+  "record": 22300193
+ },
+ "tremordb": {
+  "doi": "10.5281/zenodo.22310736",
+  "record": 22310736
+ },
+ "uci_parkinson_voix": {
+  "doi": "10.5281/zenodo.22300217",
+  "record": 22300217
+ },
+ "vidimu": {
+  "doi": "10.5281/zenodo.22313495",
+  "record": 22313495
+ },
+ "weargait_pd": {
+  "doi": "10.5281/zenodo.22310738",
+  "record": 22310738
+ }
+}

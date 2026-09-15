@@ -1,0 +1,109 @@
+jeu,cellules,modalites_m,commentaire
+cdystonia,A4,M12,scores TWSTRS essai (chasse P1)
+kaggle_spiral,A1;B2,M11,spirales d'Archimede
+nqmitcsxpd,B2,M11,frappe clavier
+tappy_keystroke,B2,M11,frappe clavier prodromale
+uci_parkinson_voix,B2,M11,voix auxiliaire
+ilg_ataxia_tables,D2,M2,tables agregees ataxie + SARA (queued)
+clinical_scales,,M12,NINDS CDE echelles motrices machine-lisibles (queued)
+cap_sleep,D6,M5;M6,108 PSG dont 22 TCSP (chasse P1)
+seizeit2,A2;D1,M2;M5;M6,epilepsie focale wearables (chasse P1)
+tuh_eeg,A2;D1,M6,socle EEG clinique ; inscription (chasse P1)
+pd_meg_stn_lfp_ds004998,A1;B1;B2,M5;M6;M7,MEG+STN-LFP+EMG PD med on/off (queued)
+pd_walking_eeg_ds007526,B2;B5,M6,EEG repos+marche 116 PD + 28 temoins (queued)
+pd_rest_eeg_ds004584,B2,M6,EEG repos 100 PD + 49 temoins (queued)
+oxford_dystonia_lfp,A4,M5;M6;M7,LFP+EEG+EMG cou dystonie cervicale (human queue)
+beijing_sleep_lfp,D6,M7,PSG+LFP 121 patients 5 troubles (application)
+gait120,C1,M1;M5,socle sain EMG + locomotion (chasse P1)
+ninapro,C1,M5,EMG main ; inscription (chasse P1)
+physionet_semg_walking,C1,M5,socle sain EMG (chasse P1)
+alameda_tremor,A1,M2,features derivees
+cervical_motion_multiplanar,A4;C1,M2,cou sain normatif torticolis (chasse P1)
+clinical_gait_multipatho,B2;B3;D3;D4;E4,M2,AVC + leuco + neuropathie chimio + ortho
+daphnet,B5,M2,FOG historique
+fog_star,B5,M2,episodes FOG annotes
+gaitdb,B2;B3;C3,M2,vieillissement ; derive (intervalles)
+gaitndd,A7;B2;C1;D2;D3,M3,Huntington + SLA + PD + controles
+hd_accel_jnet,A7,M2,choree Huntington accelerometrie
+imu_inthewild_iprognosis,A1;B2,M2,tremblement vie libre
+kaggle_fog,B5,M2,FOG annote grande cohorte
+ltmm,C3,M2,71 ages 3 jours chuteurs (chasse P1)
+monipar,A1;B2,M2,smartwatch tremblement
+multimodal_fog,B5,M2;M5;M6,seul jeu EEG + EMG + IMU ; formats a debloquer
+nhanes_accel,C1;C3,M2,accelerometrie population (chasse P1)
+pads,A1;B2;D3,M2,labels diagnostic sujet (PD / TE / atypique / SEP)
+pd_biostamprc21,B2;B3,M2,capteurs corps ~2 jours
+physionet_gaitpdb,B2;B3,M3,force plantaire marche PD
+tremordb,A1,M2,tremblement sous DBS on/off ; formats opaques
+weargait_pd,B2;B3;C1,M2;M3,paire IMU + force meme sujets
+sixmwt_lifespan,C1;C3,M2,6MWT 60 sains 21-75 ans par decennie (queued)
+nonan_gaitprint,C3,M2,16 IMU 200 Hz 41 sujets 56+ (queued)
+nonan_gaitprint_young,C1;C3,M2,
+gaitrec,E4,M3,GRF 2084 patients musculo-squelettiques (queued)
+clinical_gait_signals_2025,D3;D4;E4;E6,M2,260 sujets multi-patho ND-license flag (queued)
+osdb,D1,M2,accelerometrie crises epileptiques montre (application)
+ataxie_kinect_dib,D2,M1,table SARA seule sur disque
+babypose,C2,M1,prematures NICU profondeur ; sur demande (chasse P1)
+care_pd,B2;B3,M1,marche Parkinson 3D multi-cohortes
+fog_turning_filho,B5,M1;M2,paire video + IMU synchronisee
+gavd,,M1,annotations videos marche pathologique
+hubu_fis_fingertap,B2,M1,234 videos finger tapping UPDRS (queued)
+koa_pd_nm,B2;B3;C1;E4,M4,silhouettes KOA + PD + normaux
+li_taati,A4;A7;B2;E6,M1,dyskinesies L-DOPA (UDysRS) + bradykinesie
+mini_rgbd,C2,M1,nourrissons synthetiques SMIL ; formulaire (chasse P1)
+modys_video,A4;A6;A7;D3,M1,choreoathetose PC dyskinetique (DIS)
+park_fingertap,B2,M1,features finger tapping MDS-UPDRS
+remap_open,B2;B3,M1,squelettes degrades open ; complet sur dossier
+tim_tremor,A1,M1,retire de 4TU (410)
+toronto_neuroface,D3,M1,SLA + AVC orofacial
+visionmd,,,outil + demo
+stroke_gait_vancriekinge,D3,M1;M3;M5,mocap+EMG+GRF 50 AVC + 138 temoins (queued)
+chop_gma_features,C2,M1,features GMA 1053 nourrissons (queued)
+mmasd,A5;D5,M1;M4,derives video therapie TSA proxy stereotypies (human queue)
+syrip,C2,M1,pose nourrisson synthetique+reel (human queue)
+oulp_age,C1;C2;C3,M4,silhouettes demarche 63846 sujets 2-90 ans (application)
+s3_semiology,D1,M1,438 videos semiologie crises labels ILAE (DUA)
+amass,C1,M1,socle mocap SMPL
+capture24,C1;C3,M2,vie libre ; ages divers
+motion_x,C1,M1,socle aligne texte
+ntu_rgbd,C1,M1,socle actions
+vidimu,C1,M1;M2,paire video + IMU saine (a ingerer)
+kamath_snpc_geo,,M10,snRNA-seq SNpc PD vs temoins (queued)
+clinvar,,M9,variants ClinVar genes mouvement (queued)
+ixi_mri,C1;C3,M8,IRM 600 sains 20-86 ans (queued)
+allen_human_brain,,M10,microarray+histologie 6 donneurs (queued)
+panelapp,,M9,panels de genes mouvement signes (queued)
+cellxgene_pd_multiregion,,M10,atlas 2.1M noyaux PD 5 regions (decision taille)
+mdsgene,,M9,base genotype-phenotype reference seulement
+camcan,C1;C3,M8,IRM+MEG 700 sains 18-88 (application)
+foxinsight,B2,M9;M12,cohorte PD 50k questionnaires+genetique (application)
+pdbp,A1;B1;B2,M8;M9;M12,cohorte NINDS profonde (application)
+hpo,,M9;M12,ontologie pivot semantique etage C (sur disque verifie)
+cody_1,A1;A3;A6;A8,M1,
+cody_2,A1;A8,M1,
+cody_3,A1;A8,M1;M4,
+accel_fluctuations,B2;B4,M2,MJFF Levodopa Response ; demande refusee (ACT)
+ssbd,A5,M1,
+goodwin_smm,A5,M2,
+oxford_stn_onoff_dbs,B1;B2,M2;M6;M7,
+dystonia_mri_ds006395,A4,M8,
+pallidal_units_dystonia,A4,M7;M9,
+dandi_pd_macaque_units,B1;B2,M7,
+dandi_m1_mptp_units,B1;B2,M7,
+neuromorpho_bg,A7;B1;B3,M10,
+allen_cell_types,,M7;M10,
+dandi_patchseq_000020,,M7;M10,
+lance_adams_myoclonus,A2,M5;M6,
+dystonia_alcohol_bfm,A4,M12,
+chorea_acanthocytosis_mri,A7,M8,
+pd_rest_eeg_onoff_ds002778,B2,M6,
+chu_pd_moseq,,,
+moseq_pharmacobehavior,,,
+striatal_gait_6ohda,,,
+nlb_mc_maze,,,
+rat7m,,,
+calms21,,,
+kumar_stride_gait,D1,,
+alphasyn_catwalk,,,
+locomouse_ataxia,,,
+infant_pose_chambers,C2,M1,

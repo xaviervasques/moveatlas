@@ -1,0 +1,49 @@
+# KineFM canonical PLANTAR-FORCE contract (vertical ground reaction force / VGRF).
+# A distinct signal modality from inertial IMU (configs/canonical_imu.yaml). Designed
+# from docs/imu_reconnaissance.md. Native fps per sample (owner decision).
+version: 1
+date: 2026-07-13
+
+# Per-foot: an array of under-insole force sensors plus the foot total.
+# gaitpdb has 8 sensors/insole; gaitndd has only the total per foot (sensor array masked).
+# Canonical layout: standardized 8 anatomical insole positions + 1 total, per foot.
+insole_positions: [hallux, m1, m2, m3, m4, m5, midfoot, heel]   # 8 canonical positions
+feet: [foot_L, foot_R]
+
+# Per-sample storage:
+#   force        (T, 2, 9)  float32   feet x [8 insole positions + total]; absent -> 0
+#   sensor_mask  (2, 9)     bool      which positions present per foot
+#   fps          float                native rate
+#   subject_ns, source, labels(optional)
+units:
+  force: N            # canonical force unit (Newtons); convert per dataset if needed
+sampling:
+  policy: native_per_sample
+tokenization:
+  scheme: time_windows
+  masks: [sensor_mask]
+
+sources:
+  physionet_gaitpdb:
+    file: "Ga/Ju/Si + Co/Pt + id .txt (tab), 19 cols"; fps: 100
+    columns: "time, L1..L8, R1..R8, total_L, total_R"
+    map: "L1..L8 -> foot_L insole positions (Ohio/Bauby layout), R1..R8 -> foot_R, "
+         "total_L/total_R -> per-foot total"
+    sensors_present: full   # 8 per foot + total
+
+  gaitndd:
+    file: "wfdb (.hea/.let/.rit), 2 channels, 300 Hz"; note: force-sensitive switches
+    columns: "left-foot force, right-foot force"
+    map: "left-foot -> foot_L total, right-foot -> foot_R total"
+    sensors_present: totals_only   # no per-position array; insole positions masked
+
+  weargait_pd:
+    file: "**/CSV files/*.csv (347 cols), 100 Hz"; note: instrumented insoles
+    columns: "LPressure1..16, RPressure1..16, LTotalForce, RTotalForce, L/R CoP_X/Y"
+    map: "LTotalForce -> foot_L total, RTotalForce -> foot_R total"
+    sensors_present: totals_only   # 16 per-foot pressure cells have UNDOCUMENTED
+                                    # cell->anatomy layout -> NOT mapped (mis-map risk);
+                                    # only the unambiguous per-foot total is ingested.
+    deferred: "16-cell insole array + CoP (needs the insole product's cell layout doc)"
+
+# Excluded: gaitdb (stride-interval dynamics, not raw force).

@@ -1,0 +1,434 @@
+# KineFM canonical skeleton
+# Declarative harmonization config for the movement foundation model.
+# Designed from the REAL joint sets of the processed datasets, not assumptions:
+#   - SMPL / CARE-PD  : 24 joints, 3D, meters, y up (datasets/pose/care_pd/processed)
+#   - Li/Taati        : 15 joints, 2D, pixels  (datasets/pose/li_taati/processed)
+#   - CODY (COCO-17)  : 17 joints, 2D, pixels  (datasets/pose/cody_*, build_cody_manifest)
+# Decisions here follow Handoff 3 section 4 (already tranched, do not reopen):
+#   no 2D->3D lifting; per-sample dimensionality flag; no global fps decimation.
+version: 1
+date: 2026-07-10
+
+# ---------------------------------------------------------------------------
+# Canonical joint set = anatomical INTERSECTION shared across the three sources.
+# 15 joints. Joints a source lacks are DERIVED (documented) or masked per sample;
+# they are never invented by 2D->3D lifting.
+# ---------------------------------------------------------------------------
+canonical_joints:
+  - pelvis          # 0  root
+  - neck            # 1
+  - head            # 2
+  - left_shoulder   # 3
+  - right_shoulder  # 4
+  - left_elbow      # 5
+  - right_elbow     # 6
+  - left_wrist      # 7
+  - right_wrist     # 8
+  - left_hip        # 9
+  - right_hip       # 10
+  - left_knee       # 11
+  - right_knee      # 12
+  - left_ankle      # 13
+  - right_ankle     # 14
+
+root_joint: pelvis
+# Reference segment for scale normalization (see normalization.scale).
+reference_segment: [pelvis, neck]   # torso length; robust and present in all sources
+
+# ---------------------------------------------------------------------------
+# Per-source mapping to the canonical joints.
+# Each canonical joint resolves to one of:
+#   direct:  <source joint name>            copy the coordinate
+#   midpoint: [<jointA>, <jointB>]          mean of two source joints
+#   proxy:   <source joint name>            anatomical stand-in (flagged as proxy)
+# Joints not listed here are DROPPED from canonical (kept only in raw/processed).
+# ---------------------------------------------------------------------------
+sources:
+
+  smpl_carepd:
+    space: 3d
+    units: meters
+    up_axis: y
+    orientation: canonicalized        # CARE-PD is already orientation-canonical, reuse
+    storage: "datasets/pose/care_pd/processed/<cohort>_positions.pkl"
+    layout: "dict[subject][take] -> ndarray (T, 24, 3), SMPL joint order"
+    joint_map:
+      pelvis:         {direct: pelvis}
+      neck:           {direct: neck}
+      head:           {direct: head}
+      left_shoulder:  {direct: left_shoulder}
+      right_shoulder: {direct: right_shoulder}
+      left_elbow:     {direct: left_elbow}
+      right_elbow:    {direct: right_elbow}
+      left_wrist:     {direct: left_wrist}
+      right_wrist:    {direct: right_wrist}
+      left_hip:       {direct: left_hip}
+      right_hip:      {direct: right_hip}
+      left_knee:      {direct: left_knee}
+      right_knee:     {direct: right_knee}
+      left_ankle:     {direct: left_ankle}
+      right_ankle:    {direct: right_ankle}
+    dropped: [spine1, spine2, spine3, left_collar, right_collar,
+              left_foot, right_foot, left_hand, right_hand]
+
+  li_taati:
+    space: 2d
+    units: pixels
+    image_y: down                     # image row increases downward; harmonized later
+    storage: "datasets/pose/li_taati/processed/{communication,drinking,leg_agility}_pose.pkl"
+    layout: "dict[record] -> {joints2d (T,15,2), joint_names(15), subject, take, ...}"
+    joint_map:
+      pelvis:         {midpoint: [Lhip, Rhip]}
+      neck:           {direct: neck}
+      head:           {direct: head}
+      left_shoulder:  {direct: Lsho}
+      right_shoulder: {direct: Rsho}
+      left_elbow:     {direct: Lelb}
+      right_elbow:    {direct: Relb}
+      left_wrist:     {direct: Lwri}
+      right_wrist:    {direct: Rwri}
+      left_hip:       {direct: Lhip}
+      right_hip:      {direct: Rhip}
+      left_knee:      {direct: Lkne}
+      right_knee:     {direct: Rkne}
+      left_ankle:     {direct: Lank}
+      right_ankle:    {direct: Rank}
+    dropped: [face]
+    notes: >
+      The leg_agility task carries 21 columns with _rst/_act suffixes (resting vs
+      active limb state, NOT distinct anatomical joints). Map the base joint names;
+      treat _rst/_act as a per-frame state annotation, not a joint. Coordinates are
+      image PIXELS (e.g. 56..609), not normalized 0..1.
+
+  cody_coco17:
+    space: 2d
+    units: pixels
+    image_y: down
+    storage: "datasets/pose/cody_*/raw (COCO-17 label files) + build_cody_manifest.py"
+    layout: "xlsx: time + 17 COCO keypoints x/y + per-frame phenomenology labels"
+    joint_map:
+      pelvis:         {midpoint: [left_hip, right_hip]}
+      neck:           {midpoint: [left_shoulder, right_shoulder]}
+      head:           {proxy: nose}
+      left_shoulder:  {direct: left_shoulder}
+      right_shoulder: {direct: right_shoulder}
+      left_elbow:     {direct: left_elbow}
+      right_elbow:    {direct: right_elbow}
+      left_wrist:     {direct: left_wrist}
+      right_wrist:    {direct: right_wrist}
+      left_hip:       {direct: left_hip}
+      right_hip:      {direct: right_hip}
+      left_knee:      {direct: left_knee}
+      right_knee:     {direct: right_knee}
+      left_ankle:     {direct: left_ankle}
+      right_ankle:    {direct: right_ankle}
+    dropped: [left_eye, right_eye, left_ear, right_ear]
+    notes: >
+      SAM3 dense silhouette timeseries (contour features) is a SEPARATE modality and
+      is NOT mapped onto this keypoint skeleton; it enters as its own stream.
+
+  gait120_pig_markers:
+    space: 3d
+    units: mm (converted to m at ingestion)
+    up_axis: y (OpenSim TRC convention; verified on real static trials)
+    storage: "datasets/emg/gait120/raw/*.zip MotionCapture/<task>/TRC/*/Step*.trc + ingest_gait120_pose.py"
+    layout: "39-marker full-body Plug-in-Gait MARKER set (surface markers, not model outputs), per-step TRC segments at 100 Hz"
+    joint_map:
+      # PELV_C and HEAD_C are VIRTUAL markers computed at ingestion
+      # (centroid of LASI/RASI/LPSI/RPSI and LFHD/RFHD/LBHD/RBHD):
+      # the resolve() semantics support two-point midpoints only.
+      pelvis:         {direct: PELV_C}
+      neck:           {midpoint: [LSHO, RSHO]}
+      head:           {direct: HEAD_C}
+      left_shoulder:  {direct: LSHO}
+      right_shoulder: {direct: RSHO}
+      left_elbow:     {proxy: LELB}     # lateral epicondyle marker
+      right_elbow:    {proxy: RELB}
+      left_wrist:     {midpoint: [LWRA, LWRB]}
+      right_wrist:    {midpoint: [RWRA, RWRB]}
+      left_hip:       {proxy: LASI}     # ASIS marker, not the joint centre
+      right_hip:      {proxy: RASI}
+      left_knee:      {proxy: LKNE}     # lateral femoral epicondyle
+      right_knee:     {proxy: RKNE}
+      left_ankle:     {proxy: LANK}     # lateral malleolus
+      right_ankle:    {proxy: RANK}
+    dropped: [C7, T10, CLAV, STRN, RBAK, LUPA, RUPA, LFRM, RFRM, LFIN,
+              RFIN, LTHI, RTHI, LTIB, RTIB, LHEE, RHEE, LTOE, RTOE]
+    notes: >
+      Added 2026-09-03 with the gait120 MotionCapture pass. These are
+      raw surface markers, so hip/knee/ankle/elbow are PROXIES
+      (documented above), unlike pig_vancriekinge whose C3Ds carry the
+      model's joint-centre outputs. The dataset's own OpenSim joint
+      ANGLES (.mot) ride as aux shards, not canonical records.
+
+  chambers_coco18:
+    space: 2d
+    units: pixels
+    image_y: down
+    storage: "datasets/pose/infant_pose_chambers/raw (long-format CSVs) + ingest_infant_pose_chambers.py"
+    layout: "long rows (video, bp, frame, x, y, fps); COCO-18 part names; YouTube normative + CHOP clinical cohorts"
+    joint_map:
+      pelvis:         {midpoint: [LHip, RHip]}
+      neck:           {direct: Neck}       # COCO-18 carries a real neck
+      head:           {proxy: Nose}
+      left_shoulder:  {direct: LShoulder}
+      right_shoulder: {direct: RShoulder}
+      left_elbow:     {direct: LElbow}
+      right_elbow:    {direct: RElbow}
+      left_wrist:     {direct: LWrist}
+      right_wrist:    {direct: RWrist}
+      left_hip:       {direct: LHip}
+      right_hip:      {direct: RHip}
+      left_knee:      {direct: LKnee}
+      right_knee:     {direct: RKnee}
+      left_ankle:     {direct: LAnkle}
+      right_ankle:    {direct: RAnkle}
+    dropped: [LEye, REye, LEar, REar]
+    notes: >
+      Added 2026-09-01 with the infant_pose_chambers ingestion; missing
+      detections are empty cells -> valid_mask False, never (0,0).
+
+  ntu_kinect25:
+    space: 3d
+    units: meters
+    up_axis: y
+    storage: "datasets/socle/ntu_rgbd/raw/nturgbd_skeletons_s*.zip (.skeleton text)"
+    layout: "per-frame 25 Kinect v2 joints x 3D, up to 2 bodies; SxxxCxxxPxxxRxxxAxxx"
+    # .skeleton files are index-ordered; joint_order gives the Kinect v2 index->name.
+    joint_order: [SpineBase, SpineMid, Neck, Head, ShoulderLeft, ElbowLeft, WristLeft,
+                  HandLeft, ShoulderRight, ElbowRight, WristRight, HandRight, HipLeft,
+                  KneeLeft, AnkleLeft, FootLeft, HipRight, KneeRight, AnkleRight,
+                  FootRight, SpineShoulder, HandTipLeft, ThumbLeft, HandTipRight,
+                  ThumbRight]
+    joint_map:
+      pelvis:         {direct: SpineBase}
+      neck:           {direct: Neck}
+      head:           {direct: Head}
+      left_shoulder:  {direct: ShoulderLeft}
+      right_shoulder: {direct: ShoulderRight}
+      left_elbow:     {direct: ElbowLeft}
+      right_elbow:    {direct: ElbowRight}
+      left_wrist:     {direct: WristLeft}
+      right_wrist:    {direct: WristRight}
+      left_hip:       {direct: HipLeft}
+      right_hip:      {direct: HipRight}
+      left_knee:      {direct: KneeLeft}
+      right_knee:     {direct: KneeRight}
+      left_ankle:     {direct: AnkleLeft}
+      right_ankle:    {direct: AnkleRight}
+    dropped: [SpineMid, HandLeft, FootLeft, HandRight, FootRight, SpineShoulder,
+              HandTipLeft, ThumbLeft, HandTipRight, ThumbRight]
+    notes: >
+      Healthy base, all 15 canonical joints map DIRECTLY (Kinect v2 is a superset).
+      3D meters, y up. Apply the missing-skeleton exclusion lists before ingestion.
+      Multi-body frames: keep the primary tracked body (or split per body id).
+
+  modys_dlc:
+    space: 2d
+    units: pixels
+    image_y: down
+    storage: "datasets/pose/modys_video/raw/data_stickfigure_coordinates_lying.zip (DLC csv)"
+    layout: "DeepLabCut csv: per bodypart x,y,likelihood; side-view lying protocol"
+    joint_map:
+      pelvis:         {midpoint: [hip1, hip2]}
+      neck:           {midpoint: [shoulder1, shoulder2]}
+      head:           {proxy: forehead}
+      left_shoulder:  {direct: shoulder1}
+      right_shoulder: {direct: shoulder2}
+      left_elbow:     {direct: elbow1}
+      right_elbow:    {direct: elbow2}
+      left_wrist:     {direct: wrist1}
+      right_wrist:    {direct: wrist2}
+      left_hip:       {direct: hip1}
+      right_hip:      {direct: hip2}
+      left_knee:      {direct: knee1}
+      right_knee:     {direct: knee2}
+      left_ankle:     {direct: ankle1}
+      right_ankle:    {direct: ankle2}
+    dropped: [chin]
+    notes: >
+      Chorea/dystonia (dyskinetic CP), side-view lying. The 1/2 suffix is near/far side,
+      NOT guaranteed anatomical left/right: mapped 1->left, 2->right but do not trust the
+      L/R label clinically. DLC likelihood used as the per-joint validity mask.
+
+  h36m17_remap:
+    space: 2d_and_3d                    # per-episode input_2D (T,34) + input_3D (T,51)
+    units: coarsened pixels (2D) / VideoPose3D output space (3D)
+    image_y: down                       # 2D only
+    storage: "datasets/pose/remap_open/raw/.../Turning_coarsen_CSV/<episode>/ and STS_2D_skeletons_coarsened/<episode>.csv"
+    # EVIDENCE for this identification (2026-08-25): REMAP's own visualization
+    # notebook (Turning/Code/2D_data_generation) hard-codes 17 joints with the
+    # exact bone list and left/right split of VideoPose3D's Human3.6M skeleton
+    # (joints_left 4,5,6,11,12,13; joints_right 1,2,3,14,15,16), and the
+    # literature using REMAP states the 17 keypoints are "originally defined by
+    # the Human3.6M data set" with VideoPose3D as the lifting model.
+    joint_order: [Hip, RHip, RKnee, RAnkle, LHip, LKnee, LAnkle, Spine, Thorax,
+                  NeckNose, Head, LShoulder, LElbow, LWrist, RShoulder, RElbow,
+                  RWrist]
+    joint_map:
+      pelvis:         {direct: Hip}
+      neck:           {direct: Thorax}   # the joint the arms branch from, base of neck
+      head:           {direct: Head}
+      left_shoulder:  {direct: LShoulder}
+      right_shoulder: {direct: RShoulder}
+      left_elbow:     {direct: LElbow}
+      right_elbow:    {direct: RElbow}
+      left_wrist:     {direct: LWrist}
+      right_wrist:    {direct: RWrist}
+      left_hip:       {direct: LHip}
+      right_hip:      {direct: RHip}
+      left_knee:      {direct: LKnee}
+      right_knee:     {direct: RKnee}
+      left_ankle:     {direct: LAnkle}
+      right_ankle:    {direct: RAnkle}
+    dropped: [Spine, NeckNose]
+    notes: >
+      The released 3D was lifted from the coarsened 2D BY THE SOURCE with
+      VideoPose3D; our no-lifting policy is about lifting WE would do, so both
+      streams are ingested with the 3D records carrying
+      lift_provenance=videopose3d_by_source, and the pretraining pool config
+      decides what uses them. Coordinates are coarsened (privacy grid), fps not
+      declared in the deposit: fps stays None until the data descriptor settles it.
+
+  body25_remap_sts:
+    space: 2d
+    units: coarsened pixels
+    image_y: down
+    storage: "datasets/pose/remap_open/raw/.../SitToStand/Data/STS_2D_skeletons_coarsened/<episode>.csv"
+    # EVIDENCE (2026-08-25): 52 columns = frame index + timestamp (seconds) +
+    # 25 keypoint pairs. Identified as OpenPose BODY_25 two ways: the shipped
+    # sts_analysis.py uses BODY_25 semantics for its joint indices (head
+    # fallbacks 0,15-18,2,1,5; hip fallbacks 9,8,12), and the per-joint median
+    # heights under this reading are anatomically monotone head -> feet, with
+    # the six toe/heel points at the bottom and the eyes 93 percent missing
+    # (filmed from behind). Missing keypoints are (0,0), OpenPose convention.
+    # The timestamp column gives each episode its own measured fps.
+    joint_order: [Nose, Neck, RShoulder, RElbow, RWrist, LShoulder, LElbow,
+                  LWrist, MidHip, RHip, RKnee, RAnkle, LHip, LKnee, LAnkle,
+                  REye, LEye, REar, LEar, LBigToe, LSmallToe, LHeel, RBigToe,
+                  RSmallToe, RHeel]
+    joint_map:
+      pelvis:         {direct: MidHip}
+      neck:           {direct: Neck}
+      head:           {proxy: Nose}
+      left_shoulder:  {direct: LShoulder}
+      right_shoulder: {direct: RShoulder}
+      left_elbow:     {direct: LElbow}
+      right_elbow:    {direct: RElbow}
+      left_wrist:     {direct: LWrist}
+      right_wrist:    {direct: RWrist}
+      left_hip:       {direct: LHip}
+      right_hip:      {direct: RHip}
+      left_knee:      {direct: LKnee}
+      right_knee:     {direct: RKnee}
+      left_ankle:     {direct: LAnkle}
+      right_ankle:    {direct: RAnkle}
+    dropped: [REye, LEye, REar, LEar, LBigToe, LSmallToe, LHeel, RBigToe,
+              RSmallToe, RHeel]
+
+  pig_vancriekinge:
+    space: 3d
+    units: mm -> m at ingestion
+    up_axis: z
+    storage: "datasets/pose/stroke_gait_vancriekinge/raw/*.zip (Plug-in Gait C3D per trial)"
+    # EVIDENCE (2026-08-27): joint identities established by MEASURING median
+    # vertical positions across healthy standing/walking trials, not from
+    # documentation memory: PiG segment origins (O) sit at each segment's
+    # DISTAL joint (LFEO 432 mm ~ LKNE 426 = knee; LTIO 78 ~ LANK 73 = ankle;
+    # LRAO 800 ~ LWRA 818 = wrist; LHUO 1020 ~ LELB 1027 = elbow) and the
+    # proximal axis points (P) sit at the PROXIMAL joint (LFEP 772 = hip at
+    # pelvis height, LFEP-LFEO = 340 mm = a thigh). Shoulders use the acromion
+    # markers (no modeled shoulder centre is exported); neck is the shoulder
+    # midpoint per the cody precedent.
+    # EVIDENCE ADDENDUM (2026-08-28): 192 healthy C3Ds carry the SAME model
+    # outputs under a 'SUBJECTID:' label prefix (birthdate-based Vicon IDs;
+    # stripped at ingestion, never propagated). Identities re-measured on the
+    # prefixed files: LFEO-LKNE diff 0.3-11 mm, LTIO-LANK 3-4 mm, LRAO-LWRA
+    # 7-11 mm, LHUO-LELB 1-4 mm. A few trials export no head/elbow/wrist
+    # outputs; those joints are NaN-filled and masked invalid, not guessed.
+    joint_map:
+      pelvis:         {direct: PELO}
+      neck:           {midpoint: [LSHO, RSHO]}
+      head:           {direct: HEDO}
+      left_shoulder:  {proxy: LSHO}
+      right_shoulder: {proxy: RSHO}
+      left_elbow:     {direct: LHUO}
+      right_elbow:    {direct: RHUO}
+      left_wrist:     {direct: LRAO}
+      right_wrist:    {direct: RRAO}
+      left_hip:       {direct: LFEP}
+      right_hip:      {direct: RFEP}
+      left_knee:      {direct: LFEO}
+      right_knee:     {direct: RFEO}
+      left_ankle:     {direct: LTIO}
+      right_ankle:    {direct: RTIO}
+    dropped: [all raw markers except LSHO/RSHO, all A/L axis points, all
+              angle outputs, force-plate analogs (kept for a force/EMG pass)]
+
+# ---------------------------------------------------------------------------
+# Dimensionality: no 2D->3D lifting (Handoff 3, decision 7.3/7.5).
+# ---------------------------------------------------------------------------
+dimensionality:
+  policy: no_lifting
+  rationale: >
+    Lifting 2D to 3D fabricates data and introduces an unmeasurable depth bias.
+    Keep native dimensionality; the model handles the missing axis via masking.
+  per_sample_flag: dim                 # 2 or 3
+  storage_shape: [T, J, 3]             # J = 15; z-channel masked when dim == 2
+  masks:
+    coordinate_mask: true              # marks the absent z-axis for 2D samples
+    joint_presence_mask: true          # marks derived/proxy/absent joints per source
+  modality_embedding: true             # a learned token per source-space {2d_pixel, 3d_meter}
+
+# ---------------------------------------------------------------------------
+# Temporal sampling: no global decimation (Handoff 3, decision 7.6).
+# ---------------------------------------------------------------------------
+sampling:
+  policy: no_global_decimation
+  fps: per_sample_attribute            # store native fps with each sample
+  rationale: >
+    A myoclonic jerk lasts 20-100 ms; resampling to 25-30 fps erases it. Preserve
+    high-frequency subsets. Any resampling is opt-in and recorded per sample.
+  known_fps:
+    cody: 33.3                         # dt = 0.03 s, measured
+    li_taati: unknown                  # to confirm per record
+    care_pd: unknown                   # mocap-derived; confirm per cohort
+
+# ---------------------------------------------------------------------------
+# Normalization / harmonization pipeline (applied after mapping).
+# ---------------------------------------------------------------------------
+normalization:
+  order: [root_center, y_axis_harmonize, scale, orient]
+  root_center:
+    op: subtract_root_per_frame
+    joint: pelvis
+  y_axis_harmonize:
+    op: flip_image_y_to_up
+    applies_to: [li_taati, cody_coco17]  # image y is down; flip so +y is up like SMPL
+  scale:
+    op: divide_by_reference_length
+    segment: [pelvis, neck]            # torso length; per sample
+    note: makes 2D pixel and 3D metric samples scale-comparable
+  orient:
+    op: procrustes_align
+    applies_to: [smpl_carepd]          # 3D only; CARE-PD already canonical, reuse
+    optional: true
+
+# ---------------------------------------------------------------------------
+# Tokenization plan for the encoder.
+# ---------------------------------------------------------------------------
+tokenization:
+  scheme: spatiotemporal_patches
+  patch_axes: [joints, time]
+  channels_per_token: [x, y, z, coordinate_mask, joint_presence_mask]
+  side_tokens: [modality_embedding, dim_flag, fps]
+  masked_pretraining: true             # masked-patch reconstruction; masks respect presence
+
+# ---------------------------------------------------------------------------
+# Labels: never enter pretraining. For fine-tuning / evaluation probes only.
+# ---------------------------------------------------------------------------
+labels:
+  cody_phenomenology: [Dystonia, Tremor, Myoclonus, Chorea, Tics, Athetosis,
+                       Ballismus, Stereotypie]
+  use: [fine_tuning, phenotype_probe]  # see eval protocol (Handoff 3 section 2.3)
+  never: pretraining

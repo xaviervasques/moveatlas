@@ -1,0 +1,135 @@
+# KineFM canonical INERTIAL contract (body-worn accel / gyro / magnetometer).
+# Separate from the pose skeleton (these are signals, not joint positions) and from the
+# plantar-force contract (configs/canonical_force.yaml). Designed from the real formats
+# in docs/imu_reconnaissance.md. Owner decisions: 9-channel block + masks, 14-location
+# taxonomy, NATIVE fps per sample (no global resampling).
+version: 1
+date: 2026-07-13
+
+# Per-sensor channel block (fixed 9). Channels a dataset lacks are masked, not dropped.
+channels: [acc_x, acc_y, acc_z, gyro_x, gyro_y, gyro_z, mag_x, mag_y, mag_z]
+units:
+  acc: g            # canonical accel unit; convert per dataset (mg->g, m/s2 -> /9.80665)
+  gyro: deg_per_s   # canonical gyro unit
+  mag: uT           # canonical magnetometer unit
+
+# Canonical sensor-location taxonomy (14). A dataset populates the locations it has;
+# the rest are absent (location_presence_mask).
+locations: [head, trunk, lower_back, wrist_L, wrist_R, thigh_L, thigh_R,
+            shank_L, shank_R, ankle_L, ankle_R, foot_L, foot_R, pocket]
+
+# Per-sample storage:
+#   signal              (T, 14, 9)  float32   locations x channels; absent -> 0
+#   location_mask       (14,)       bool      which locations are present
+#   channel_mask        (14, 9)     bool      which channels present per location
+#   fps                 float                 native sampling rate of THIS sample
+#   subject_ns, task, source, labels(optional, eval only)
+sampling:
+  policy: native_per_sample     # owner decision; rates span 64-500 Hz
+  rationale: preserve tremor (100 Hz+) and myoclonus; no global decimation
+tokenization:
+  scheme: time_windows          # fixed-duration windows (seconds), fps-aware
+  masks: [location_mask, channel_mask]
+
+# ---------------------------------------------------------------------------
+# Per-dataset source mappings. Fields verified from disk are filled; "to_read"
+# marks values to confirm at ingestion (format read then). Labels are eval-only.
+# ---------------------------------------------------------------------------
+sources:
+  daphnet:
+    file: "S<subj>R<run>.txt (space-separated)"; fps: 64; unit_acc: mg
+    columns: "time, ankle(x,y,z), upperleg(x,y,z), trunk(x,y,z), annotation"
+    locations: {ankle_L: ankle, thigh_L: upperleg, trunk: trunk}  # side not specified
+    channels_present: [acc_x, acc_y, acc_z]
+    label: annotation   # 0 not-part, 1 no-freeze, 2 freeze
+
+  kaggle_fog:
+    file: "tdcsfog/*.csv (128 Hz), defog/*.csv (100 Hz)"; unit_acc: m_per_s2
+    columns: "Time, AccV, AccML, AccAP"
+    locations: {lower_back: sensor}
+    axis_map: {acc_z: AccV, acc_y: AccML, acc_x: AccAP}  # V=vertical, ML, AP
+    channels_present: [acc_x, acc_y, acc_z]
+    label: "Event/StartHesitation/Turn/Walking (from events.csv)"
+
+  capture24:
+    file: "P###.csv.gz"; fps: 100; unit_acc: g
+    columns: "time, x, y, z, annotation"
+    locations: {wrist_L: axivity}   # wrist (dominant not specified)
+    channels_present: [acc_x, acc_y, acc_z]
+    label: annotation   # free-living activity labels
+
+  fog_star:
+    file: "sensor_data.csv"; fps: to_read; unit_acc: to_read
+    columns: "timestamp, <loc>_acc_(x,y,z), <loc>_gyro_(x,y,z) for ankleL, ankleR, ..."
+    locations: {ankle_L: ankleL, ankle_R: ankleR}   # + 2 more, to_read
+    channels_present: [acc_x, acc_y, acc_z, gyro_x, gyro_y, gyro_z]
+
+  clinical_gait_multipatho:
+    file: "<code>_raw_data_<LOC>.txt (tab), 6780 files"; fps: ~100; sensor: Xsens 9-axis
+    columns: "PacketCounter, Acc_XYZ, Gyr_XYZ, Mag_XYZ"
+    locations: {foot_R: RF, foot_L: LF, shank_R: RS, shank_L: LS}  # decode LOC suffix
+    channels_present: [acc_x, acc_y, acc_z, gyro_x, gyro_y, gyro_z, mag_x, mag_y, mag_z]
+
+  hd_accel_jnet:
+    file: "<subj>.csv"; fps: to_read; unit_acc: to_read
+    columns: "x, y, z, label"
+    locations: {wrist_L: sensor}
+    channels_present: [acc_x, acc_y, acc_z]
+    label: label   # HD vs healthy per subject (also metadata.csv)
+
+  multimodal_fog:            # RESOLVED 2026-08-22, verified signal by signal
+    file: "hash__task_<n>.txt (61 cols: index, wall-clock, 25 EEG, 5 EMG/ECG/EOG,
+           4x7 IMU blocks, dense FoG label)"; fps: 500
+    locations: {shank_L: LShank, shank_R: RShank, lower_back: Waist, wrist_L: Arm}
+    channels_present: [acc_x, acc_y, acc_z, gyro_x, gyro_y, gyro_z]
+    unit_acc: counts_selfcal   # gravity-norm per sensor (~8600 counts/g, MPU6050 +-4g)
+    unit_gyro: counts/131      # +-250 dps assumption, flagged in audit
+    note: "active blocks DETECTED per file (2- vs 4-sensor patients); patient ids by
+           wall-clock grouping; ingest_multimodal_fog.py; evidence in
+           docs/multimodal_fog_mapping.md; EEG/EMG -> canonical_eeg / canonical_emg"
+    label: "FoG 0/1 dense 500 Hz (eval/segmentation only)"
+
+  pads:                      # RESOLVED 2026-08-22 (raw/movement is self-describing;
+                             # the v1 doubt was about raw/preprocessed, ignore it)
+    file: "movement/observation_<id>.json declares everything; timeseries/
+           <id>_<Task>_<Wrist>.txt = comma CSV (t, acc xyz, gyro xyz), 2048 rows"
+    fps: 100                 # declared per observation and verified (dt 10 ms)
+    unit_acc: g_no_gravity   # CoreMotion userAcceleration: gravity REMOVED at
+                             # source (median |acc| ~0.004 g); flagged per record
+                             # as acc_content=linear_no_gravity
+    unit_gyro: rad_per_s     # converted to deg/s at ingestion (x 180/pi)
+    locations: {wrist_L: LeftWrist, wrist_R: RightWrist}
+    channels_present: [acc_x, acc_y, acc_z, gyro_x, gyro_y, gyro_z]
+    note: "one record PER WRIST (watches not co-sampled); ingest_pads.py;
+           11-task battery; 469 subjects with differential diagnoses (labels
+           eval-only, subject table in processed/)"
+
+  weargait_pd:
+    file: "MAT files (13 IMU + pressure insoles)"; fps: to_read
+    locations: to_read       # 13-IMU layout to decode from MAT; insoles -> force contract
+    channels_present: to_read
+
+  monipar:
+    file: "MONIPAR_PD_*.mat (smartwatch)"; fps: to_read
+    locations: {wrist_L: watch}
+    channels_present: to_read
+    label: "tremor label .mat"
+
+  imu_inthewild_iprognosis:
+    file: "tremor_dataset.pickle (list of 45 subjects)"; fps: to_read
+    locations: {pocket: phone}
+    channels_present: [acc_x, acc_y, acc_z]
+
+  tremordb:
+    file: "wfdb (.hea/.let/.rit), 8 channels, 100 Hz"; note: accel/EMG, DBS on/off
+    locations: to_read
+    channels_present: to_read
+
+  fog_turning_filho:
+    file: "SUB##_*.txt (IMU); the .csv is a binary xls"; unit: g / deg_per_s
+    columns: "Frame, Time[s], ACC ML/AP/SI [g], GYR ML/AP [deg/s]"
+    locations: to_read
+    channels_present: [acc_x, acc_y, acc_z, gyro_x, gyro_y]
+
+# Excluded from raw-signal ingestion (documented in docs/imu_reconnaissance.md):
+#   gaitdb (stride intervals, derived), alameda_tremor (99 precomputed features).

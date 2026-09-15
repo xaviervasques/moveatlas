@@ -1,0 +1,120 @@
+# KineFM canonical EEG contract (scalp EEG; wearable behind-the-ear included).
+# NEW FAMILY (WBS 1.4), additive: v1 contracts untouched. LFP/ECoG is NOT this
+# contract (invasive electrophysiology stays in inversion_testbed/ and will get its
+# own contract at phase 2.4; rule R1 keeps it out of movement pretraining anyway).
+# Designed from the real sources inventoried 2026-08-22: multimodal_fog (verified
+# signal by signal), CAP Sleep (EDF PSG), TUH EEG (EDF, registration filed),
+# SeizeIT2 (behind-the-ear wearable).
+version: 1
+date: 2026-08-22
+status: draft_for_G2   # design decisions C-EEG-1..6 in configs/README_canonical_eeg.md
+
+# ---------------------------------------------------------------------------
+# Channel model. EEG heterogeneity lives in the MONTAGE: the same site can be
+# recorded against a common reference (TUH), a mastoid (sleep labs), a bipolar
+# neighbor (CAP sleep montages, F4-C4), or an ear (SeizeIT2). Re-referencing in
+# software is a silent-corruption risk, so the contract STORES AS RECORDED and
+# makes the montage explicit per channel:
+#   signal        (T, C) float32   as-recorded, one column per channel
+#   channels      list of C dicts:
+#     site        positive site, from the site vocabulary below (modern 10-10 names)
+#     ref         reference: a site id, AVG (common average), LE (linked ears),
+#                 LM (linked mastoids, i.e. the TP9/TP10 average),
+#                 REF_COMMON_UNKNOWN (single unknown common reference), or the
+#                 second site of a bipolar pair
+#     kind        eeg  (only eeg channels live in this contract; co-recorded
+#                 EOG / ECG / chin EMG / resp are ROUTED to their own homes:
+#                 chin EMG -> canonical_emg, the rest -> aux stream, same time base)
+#   fps           float            native sampling rate of THIS record
+#   unit          uV               canonical; EDF headers are verified at ingestion,
+#                                  conversion applied and logged when a source
+#                                  stores mV
+#   filters       {hp_hz, lp_hz, notch_hz} when documented (null = unknown)
+#   subject_ns, task, source, n_frames, labels (optional, EVAL ONLY:
+#                 sleep stages, CAP phases, seizure marks, FoG)
+#
+# Storage: one pkl PER RECORD (a single PSG night at 256 Hz x 15 ch is ~0.5 GB;
+# a monolithic pickle cannot hold a corpus) under
+# datasets/eeg/<set>/processed/canonical_eeg/ + manifest rows in
+# datasets/_canonical_eeg_manifest.csv.
+
+units:
+  canonical: uV
+  policy: EDF physical dimensions are read and enforced per channel; a channel
+    whose header unit is not uV/mV fails ingestion loudly (no silent guess)
+
+sampling:
+  policy: native_per_sample      # 100-128 Hz (some PSG) to 500 Hz (fog) to 1 kHz
+  rationale: same primitive as every other family; continuous-time RoPE makes the
+    rate a per-record attribute, and sleep vs wake corpora differ by design
+
+tokenization:
+  scheme: time_windows           # (channel, time-patch) tokens per the v2 spec
+  channel_identity: (site, ref) pair embedding; site and ref share the site
+    vocabulary plus the special references; unknown reference is its own token
+  note: masked reconstruction + band-power targets are the stage A objectives
+
+# Site vocabulary: modern 10-10 names. ALIASES ARE NORMALIZED AT INGESTION:
+# T3->T7, T4->T8, T5->P7, T6->P8 (TUH and older labs use the old names).
+# A1/A2 (ear lobes) and M1/M2 (mastoids) are distinct entries on purpose.
+# Extended 2026-08-22 to the full 10-10 set actually observed in the OpenNeuro
+# 63/65-channel caps (ds004584, ds007526). Names are added only when a real
+# corpus uses them, never speculatively.
+sites: [FP1, FP2, FPZ, F1, F2, F3, F4, F7, F8, FZ, C3, C4, CZ, T7, T8, P3, 
+        P4, P7, P8, PZ, O1, O2, OZ, AF3, AF4, AF7, AF8, AFZ, F5, F6, F9, 
+        F10, FC1, FC2, FC3, FC4, FC5, FC6, FCZ, FT7, FT8, FT9, FT10, C1, 
+        C2, C5, C6, CP1, CP2, CP3, CP4, CP5, CP6, CPZ, TP7, TP8, TP9, TP10, 
+        P1, P2, P5, P6, P9, P10, PO3, PO4, PO7, PO8, POZ, I1, I2, IZ, T9, 
+        T10, A1, A2, M1, M2, EAR_L, EAR_R, UNKNOWN]
+references_special: [AVG, LE, LM, REF_COMMON_UNKNOWN]
+# LM: linked mastoids. Added 2026-08-22 for multimodal_fog, whose bundled
+# README states the TP9/TP10 mastoid average was used as the reference.
+
+# ---------------------------------------------------------------------------
+# Per-dataset source mappings.
+# ---------------------------------------------------------------------------
+sources:
+  multimodal_fog:                # IMPLEMENTED and tested on real samples 2026-08-22
+    input: datasets/imu/multimodal_fog/processed/streams_eeg_emg.pkl
+    fps: 500 (verified, dt 2.00 ms); unit: uV (amplitude-verified, 46-293 max abs)
+    channels: "25 named sites: FP1 FP2 F3 F4 C3 C4 P3 P4 O1 O2 F7 F8 P7 P8 FZ CZ
+               PZ FC1 FC2 CP1 CP2 FC5 FC6 CP5 CP6; reference RESOLVED 2026-08-22
+               from the bundled README.docx: the TP9/TP10 mastoid average -> LM.
+               TP9/TP10 themselves are not distributed as data channels."
+    filters: {hp_hz: 0.5, lp_hz: 100, notch_hz: 50}   # README, assumed at source
+    labels: dense FoG 0/1 (eval/segmentation only)
+    note: the EEG side of the program's ONLY EEG+EMG+IMU paired asset (stage B)
+
+  cap_sleep:                     # D6 opener (22 TCSP/RBD + controls)
+    input: EDF (+ .txt annotations) under datasets/eeg/cap_sleep/raw/
+    fps: per_edf_header (varies per record); unit: from_edf_header
+    channels: "sleep montages, mostly bipolar (e.g. F4-C4, C4-A1) and named PSG
+               channels; the label parser in build_canonical_eeg.py splits
+               'SITE1-SITE2' pairs, normalizes aliases, routes non-eeg kinds out
+               (chin EMG -> canonical_emg submentalis, EOG/ECG -> aux stream)"
+    labels: sleep stages + CAP cycling alternating pattern annotations (eval only)
+    status: awaiting download (fetch_p2_lot.py --only cap_sleep --cap-subset rbd,n)
+    reader_status: EDF reader written 2026-08-22, UNTESTED ON REAL DATA until the
+      subset lands; hard assertions + audit make the first run the verification
+
+  tuh_eeg:                       # M6 socle for the stage A EEG encoder
+    input: EDF under datasets/eeg/tuh_eeg/raw/ (registration filed, human queue)
+    fps: per_edf_header (250-500 typical); unit: from_edf_header
+    channels: "referential montages ('EEG FP1-REF' or '-LE'); parser maps suffix
+               REF -> REF_COMMON_UNKNOWN, LE -> LE; old temporal names normalized"
+    labels: none at ingestion (session-level pathology later, eval only)
+    status: awaiting TUH approval; corpus cut decision at G2 (storage plan)
+
+  seizeit2:                      # D1 + the second wearable paired asset
+    input: datasets/eeg/seizeit2/raw/ (BIDS-like)
+    fps: to_read; unit: to_read
+    channels: "behind-the-ear electrodes -> sites EAR_L / EAR_R with placement
+               detail kept verbatim; crosshead bipolar pairs as (EAR_L, EAR_R)"
+    labels: seizure annotations (eval only)
+    status: link resolve pending (fetch_p2_lot.py)
+
+# Deliberately NOT in this contract:
+#   - LFP / ECoG / DBS electrodes (inversion_testbed, future phase 2.4 contract).
+#   - Evoked-potential or event-locked epoching: the contract stores continuous
+#     recordings; windows are a tokenization concern.
+#   - Any software re-referencing or interpolation to a virtual montage.

@@ -1,0 +1,159 @@
+# KineFM canonical EMG contract (surface electromyography and co-recorded aux channels).
+# NEW FAMILY (WBS 1.3), additive: nothing in the v1 contracts (pose / imu / force /
+# silhouette) changes. Designed from the real sources inventoried on 2026-08-22
+# (datacards under datasets/emg/ and datasets/eeg/, docs/multimodal_fog_mapping.md).
+# Owner rules honored: native fps per record, no silent unit guess, labels eval-only,
+# patient-level namespaced subjects, better unknown than wrong (unresolved is a status,
+# not an excuse to invent identities).
+version: 2
+date: 2026-08-28
+status: draft_for_G2   # design decisions C-EMG-1..6 listed in configs/README_canonical_emg.md
+# v2: muscle vocabulary extended for gait120 (soleus_medialis, soleus_lateralis,
+# peroneus_brevis: the source names the heads explicitly, so flattening them to
+# soleus/peroneus_longus would DESTROY resolved identity); gait120 source block
+# filled with verified facts (mat-io unlocked the MCOS tables, 2026-08-28).
+
+# ---------------------------------------------------------------------------
+# Channel model. EMG has no fixed sensor grid (unlike the 14x9 IMU block):
+# channel count and identity vary per dataset and sometimes per patient.
+# A record therefore carries a VARIABLE channel table, not a fixed-size block.
+#   signal        (T, C) float32     as-recorded values, one column per channel
+#   channels      list of C dicts:
+#     kind        emg | ecg | eog | aux | unresolved_emg_ecg
+#     muscle      id from the muscle vocabulary below (emg only; "unknown" allowed)
+#     side        L | R | midline | unknown
+#     placement   free-text source label (verbatim from the dataset)
+#     resolved    bool: identity certain (false = usable for SSL, excluded from
+#                 muscle-specific analyses until resolved)
+#   fps           float              native sampling rate of THIS record
+#   unit          mV | uV | unknown  canonical target is mV; store what is proven
+#   unit_scale    factor applied at ingestion (1.0 if stored as-recorded)
+#   signal_kind   raw | bandpassed | envelope | rectified   NEVER mix silently:
+#                 envelopes and raw EMG are different objects for the stem
+#   filters       {hp_hz, lp_hz, notch_hz} when documented (null = unknown)
+#   subject_ns, task, source, n_frames, labels (optional, EVAL ONLY)
+#
+# Storage: one pkl PER RECORD under datasets/<family>/<set>/processed/canonical_emg/
+# plus manifest rows in datasets/_canonical_emg_manifest.csv. Per-record files break
+# with the v1 single-pkl pattern ON PURPOSE: EMG corpora arrive in GB (gait120,
+# ninapro) and a monolithic pickle would not scale. v1 families are untouched.
+
+units:
+  canonical: mV
+  policy: convert only when the source documents its unit; otherwise keep values
+    as-recorded with unit unknown and flag in the audit (the stem normalizes per
+    channel, so scale honesty matters more than scale uniformity)
+
+sampling:
+  policy: native_per_sample      # 500 Hz (fog) to 2000 Hz (semg) and above
+  rationale: myoclonus and tremor bursts need the native rate; the taxonomy sets
+    EMG >= 1000 Hz as the CAPTURE requirement for myoclonus, so decimating would
+    destroy exactly what the modality is for
+
+tokenization:
+  scheme: time_windows           # fixed-duration windows, fps-aware (v1 primitive)
+  channel_identity: muscle + side embedding, with an explicit unknown bucket
+  note: one token = one channel at one time-patch, continuous-time RoPE clock
+
+# Muscle vocabulary (SENIAM-style). Extensible by version bump, never by silent
+# addition. Covers current and expected sources: gait (TA, GS, SOL, quadriceps,
+# hamstrings), cervical dystonia (SCM, splenius, trapezius), sleep atonia
+# (submentalis), facial (masseter, orbicularis), hand/forearm (ninapro arrays).
+muscles: [tibialis_anterior, gastrocnemius, gastrocnemius_lateralis,
+          gastrocnemius_medialis, soleus, soleus_medialis, soleus_lateralis,
+          peroneus_longus, peroneus_brevis,
+          rectus_femoris, vastus_lateralis, vastus_medialis,
+          biceps_femoris, semitendinosus, hamstrings, gluteus_medius,
+          erector_spinae,
+          rectus_abdominis, deltoid_anterior, deltoid_medius, deltoid_posterior,
+          biceps_brachii, triceps_brachii, flexor_carpi_radialis,
+          extensor_carpi_radialis, extensor_carpi_ulnaris, flexor_digitorum,
+          extensor_digitorum, first_dorsal_interosseous, abductor_pollicis_brevis,
+          sternocleidomastoideus, trapezius_superior, splenius_capitis,
+          levator_scapulae, masseter, orbicularis_oculi, submentalis,
+          forearm_array, unknown]
+# hamstrings: head NOT specified by the source (semg_walking headers say only
+# "HAM"); same rule as gastrocnemius below.
+# gastrocnemius: head NOT specified by the source (multimodal_fog README says only
+# "Gastrocnemius muscle of right leg"); never silently promoted to a head.
+# forearm_array: ninapro-style circumferential electrodes; identity is the array
+# slot (placement carries "array_<k>"), not an anatomical muscle.
+
+# ---------------------------------------------------------------------------
+# Per-dataset source mappings. Verified fields are filled; to_read marks values
+# to confirm at ingestion against the dataset's own metadata (self-describing
+# formats are verified at run time by build_canonical_emg.py, hard assertions).
+# ---------------------------------------------------------------------------
+sources:
+  multimodal_fog:                # IMPLEMENTED and tested on real samples 2026-08-22
+    input: datasets/imu/multimodal_fog/processed/streams_eeg_emg.pkl (ingest_multimodal_fog.py)
+    fps: 500; unit: uV_assumed  # amplitudes 340-6000, EEG-grade amplifier; flagged
+    signal_kind: bandpassed; filters: {hp_hz: 10, lp_hz: 500, notch_hz: 50}
+    channels: "5-column block; per-patient order (README table); block index 2 is
+               ALWAYS IO (EOG), verified by amplitude; the other 4 are EMG+ECG in
+               unresolved order -> kind unresolved_emg_ecg, resolved false"
+    resolution_hook: configs/multimodal_fog_channel_order.csv  # fill once the
+      # session -> patient-ID correspondence is established (mapping doc, task 2);
+      # the builder applies it automatically and re-emits with resolved true
+    labels: dense FoG 0/1 at 500 Hz (eval/segmentation only)
+
+  physionet_semg_walking:        # first socle of the family (C1, 31 subjects)
+    input: WFDB records under datasets/emg/physionet_semg_walking/raw/
+    fps: 2000_expected           # datacard; VERIFIED against .hea at ingestion
+    unit: to_read_from_hea       # WFDB headers carry units and gains
+    signal_kind: raw_expected; filters: to_read
+    channels: "10 leg muscles + footswitch + electrogoniometer; sig_name from .hea
+               mapped by the alias table in build_canonical_emg.py; non-muscle
+               channels -> kind aux"
+    reader: wfdb package (pip install wfdb on the tower env); NOT hand-rolled
+    status: awaiting download (fetch_p2_lot.py --only semg_walking)
+
+  gait120:                       # IMPLEMENTED 2026-08-28 (MCOS unlocked by mat-io)
+    input: S###/EMG/RawData.mat inside datasets/emg/gait120/raw/*.zip
+    reader: mat-io (pip install mat-io); decodes the MATLAB 'table' MCOS objects
+      that scipy cannot (barriers case 4 closes); columns carry the muscle names
+    fps: 2000                    # EMGs_info.fs in every RawData.mat, enforced
+    unit: mV                     # source documents VOLTS ("Surface EMG signals
+                                 # were recorded in volts", PMC12177048);
+                                 # converted x1000 at ingestion per the units
+                                 # policy (unit_scale 1000.0 on every record)
+    signal_kind: raw             # EMGs_raw per trial; envelopes/normalized stay in
+                                 # ProcessedData.mat (not ingested, no-resampling)
+    channels: "12 right-leg muscles, names verbatim in the table columns (incl.
+               the source's 'GastrocnemuisMedialis' typo, mapped explicitly);
+               side R per the data descriptor (PMC12177048)"
+    events: TotalFrame / per-step TargetFrame indices are 100 Hz mocap frames
+      (measured: (692-416)/2.77 s = 99.6 Hz on S001 level walking trial 1);
+      carried in the record as gait_events, never used to slice the signal
+    tasks: [LevelWalking, StairAscent, StairDescent, SlopeAscent, SlopeDescent,
+            SitToStand, StandToSit]
+    mvc: MVC_raw calibration pulses NOT emitted as records (not movement);
+      available in the raw zips for a later normalization pass
+
+  ninapro:
+    input: datasets/emg/ninapro/raw/ (per sub-database)
+    fps: to_read; unit: to_read
+    channels: "circumferential forearm arrays -> muscle forearm_array, placement
+               array_<k>; kinematic gloves are NOT emg (route to pose family later)"
+    status: human queue (account creation, _pending_human.csv)
+
+  cap_sleep_chin:                # cross-family: PSG EDF lives in datasets/eeg/cap_sleep
+    input: same EDF files as canonical_eeg; chin EMG channel(s) routed HERE
+    muscle: submentalis; side: midline
+    fps: per_edf_header; unit: from_edf_header (uV or mV, verified)
+    signal_kind: to_read; labels: sleep stages + CAP annotations (eval only)
+    note: REM-atonia reference for D6/TCSP; same time base as the EEG record ->
+      cheap paired asset (EEG chin-EMG) for stage B
+    status: awaiting download (fetch_p2_lot.py --only cap_sleep --cap-subset rbd,n)
+
+  seizeit2:
+    input: datasets/eeg/seizeit2/raw/ (BIDS-like, link being resolved)
+    channels: to_read            # EMG electrode placement from the paper
+    fps: to_read; unit: to_read
+    status: link resolve pending (fetch_p2_lot.py)
+
+# Candidates to re-examine NOW THAT THIS CONTRACT EXISTS (were skipped in v1 for
+# lack of a home, see docs/phase1_remaining.md):
+#   tremordb: 8 wfdb channels accel+EMG, DBS ON/OFF, 16 records. Opaque channel
+#     names blocked v1; with an EMG kind available the re-read is cheap and the
+#     DBS on/off contrast pairs IMU+EMG (stage B interest). Queued in the G2 dossier.

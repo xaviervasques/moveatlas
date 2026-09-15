@@ -1,0 +1,60 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "moveatlas"
+version = "0.1.0.dev0"
+description = "MoveAtlas: the open atlas of human movement data - one API over the movement-disorders corpus"
+readme = "moveatlas/README.md"
+license = { text = "BSD-3-Clause" }
+requires-python = ">=3.9"
+authors = [{ name = "Xavier Vasques" }]
+maintainers = [{ name = "Xavier Vasques" }]
+keywords = ["movement disorders", "gait", "electromyography",
+            "electroencephalography", "inertial sensors", "motion capture",
+            "open data", "benchmark", "neuroscience"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Healthcare Industry",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Scientific/Engineering :: Medical Science Apps.",
+    "Typing :: Typed",
+]
+dependencies = ["numpy>=1.22", "pandas>=1.4"]
+
+[project.urls]
+# These appear on the PyPI project page. Documentation is the Sphinx site
+# under site/, hosted on GitHub Pages from the same repository.
+Homepage = "https://github.com/xaviervasques/moveatlas"
+Documentation = "https://xaviervasques.github.io/moveatlas"
+Source = "https://github.com/xaviervasques/moveatlas"
+Issues = "https://github.com/xaviervasques/moveatlas/issues"
+Changelog = "https://github.com/xaviervasques/moveatlas/blob/main/CHANGELOG.md"
+
+[project.optional-dependencies]
+bench = ["scikit-learn", "scipy"]
+examples = ["matplotlib", "scikit-learn", "scipy", "pyreadr", "mne"]
+docs = ["sphinx", "pydata-sphinx-theme", "sphinx-gallery", "sphinx-design",
+        "sphinx-copybutton", "myst-parser", "matplotlib", "scikit-learn",
+        "scipy", "pyreadr", "mne"]
+
+[tool.setuptools]
+packages = ["moveatlas", "moveatlas.datasets", "moveatlas.paradigms", "moveatlas.evaluations", "moveatlas.pipelines"]
+
+[tool.setuptools.package-data]
+moveatlas = ["data/*.csv", "data/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+xfail_strict = true

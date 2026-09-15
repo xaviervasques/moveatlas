@@ -1,0 +1,61 @@
+# Which canonical sources belong to which pretraining pool.
+#
+# Written 2026-08-23, when the socle manifests were merged into the central ones.
+# Until then amass, motion_x, ntu_rgbd and modys_video kept their own per-dataset
+# manifests and were invisible to every central count: 157,058 records, roughly
+# 166 hours, absent from the index that everything else is measured by. Merging
+# them fixed the visibility problem but would have destroyed a distinction the
+# v2 spec depends on, since docs/KINEFM_V2_SPEC.md names "socle-only pretraining"
+# as a baseline. That distinction lives here instead of in a manifest column,
+# because a column gets dropped the next time a builder rewrites its manifest
+# from a fixed header.
+#
+# Rule of thumb: socle is movement WITHOUT a movement disorder, used to learn what
+# human motion looks like. pathology is the corpus the model is actually for.
+# A source belongs to exactly one pool. Anything absent from both lists is
+# unassigned and should be classified before it is used in a pretraining run.
+version: 1
+date: 2026-08-23
+
+socle:            # healthy / general human motion, the pretraining base
+  - amass         # 17,154 records, 503 subjects, mocap-derived SMPL parameters
+  - motion_x      # 25,865 records; each clip is its OWN subject, identity unknown,
+                  # so this pool cannot support a patient-level split on its own
+  - ntu           # 113,945 records, 106 subjects, scripted daily actions
+                  # (the folder is socle/ntu_rgbd, the manifest source is 'ntu')
+  - capture24     # free-living wrist accelerometry, 151 healthy adults
+  - vidimu        # healthy multimodal reference (pose + IMU)
+  - sixmwt_lifespan   # 60 healthy adults, 10 per decade from 21 to 75
+
+pathology:        # movement disorder cohorts and clinical controls
+  - care_pd
+  - li_taati
+  - cody
+  - cody_external
+  - modys
+  - koa_pd_nm
+  - pads
+  - weargait_pd
+  - clinical_gait_multipatho
+  - imu_inthewild_iprognosis
+  - kaggle_fog
+  - fog_star
+  - fog_turning_filho
+  - multimodal_fog
+  - monipar
+  - hd_accel_jnet
+  - daphnet
+  - physionet_gaitpdb
+  - gaitndd
+  - cap_sleep
+  - cap_sleep_chin
+  - pd_rest_eeg_ds004584
+  - pd_walking_eeg_ds007526
+  - cervical_motion       # healthy cervical ROM, but kept with the clinical lane
+                          # because it exists as a normative comparator for
+                          # cervical dystonia, not as generic motion
+  - semg_walking          # healthy gait EMG, same reasoning: it is the M5 reference
+
+# Leakage note that applies to any split built from these lists: motion_x names a
+# subject per clip because the source cannot do better, so a "patient-level" split
+# over the socle pool is only meaningful for the other five sources.

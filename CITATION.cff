@@ -1,0 +1,42 @@
+# TODO owner: add the author's ORCID (orcid: https://orcid.org/XXXX-XXXX-XXXX-XXXX)
+#             under the author entry once it exists.
+cff-version: 1.2.0
+message: >-
+  If you use this software, cite it using the metadata below, and always
+  cite the source paper of every dataset you use (each data card carries
+  its publications with BibTeX).
+type: software
+title: "MoveAtlas: the open atlas of movement data, human and animal"
+abstract: >-
+  One Python API (moveatlas) over the movement-disorders corpus: a
+  taxonomy-driven registry of catalogued datasets with four enforced
+  access cases, canonical contracts per modality family (pose, IMU, EMG,
+  force, silhouette, EEG), and patient-level evaluation splits.
+authors:
+  - family-names: Vasques
+    given-names: Xavier
+version: 0.1.0.dev0
+date-released: "2026-09-08"
+license: BSD-3-Clause
+repository-code: "https://github.com/xaviervasques/moveatlas"
+keywords:
+  - movement disorders
+  - human movement
+  - motion capture
+  - inertial sensors
+  - electromyography
+  - electroencephalography
+  - foundation models
+  - open data
+references:
+  - type: dataset
+    title: "CODY: clinical dystonia video-derived motion dataset (MoveAtlas)"
+    authors:
+      - family-names: Vasques
+        given-names: Xavier
+    doi: 10.5281/zenodo.22232609
+    year: 2026
+    license: CC-BY-4.0
+    notes: >-
+      Concept DOI of the CODY derived release (keypoints, SAM3 mask time
+      series and labels; no raw video), published on Zenodo on 2026-09-01.

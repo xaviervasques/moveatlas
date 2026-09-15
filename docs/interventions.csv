@@ -1,0 +1,13 @@
+dataset,intervention,states_available,evidence,verified
+li_taati,levodopa (chronic PD treatment; dyskinesias are the outcome),UDysRS dyskinesia scores per clip; communication/drinking/leg_agility tasks,data card and source paper (Li & Taati); scores ride as eval-only labels,2026-08 ingestion
+cdystonia,botulinum toxin B randomized trial (placebo / 5000U / 10000U),TWSTRS total score at weeks 0-2-4-8-12-16 per patient,status 2026-08-28: 631 rows / 109 patients / 9 sites / three arms (hbiostat table),2026-08-28 read with pyreadr
+pd_biostamprc21,levodopa,medication ON/OFF windows and MDS-UPDRS-III assessment windows per subject (eval-only),status 2026-08-26: UPDRS windows and medication ON/OFF kept per subject under processed/annotations/,2026-08-26 ingestion
+pd_meg_stn_lfp_ds004998,levodopa,med ON vs med OFF recording sessions (MEG + STN-LFP),dataset title and OpenNeuro ds004998 description; raw on disk (161.8 GB); invasive lane awaits its contract,2026-08-24 download
+kaggle_fog,levodopa,Medication on/off per recording in defog_metadata.csv and tdcsfog_metadata.csv,column verified inside the raw competition zip,2026-09-01 verified in zip
+tremordb,deep brain stimulation,tremor VELOCITY (laser Doppler) under DBS on/off and washout timepoints per target (GPi/Vim/STN),RESOLVED 2026-09-01: ingested AS AUX by design (processed/tremordb_velocity.pkl; velocity sits outside the acc/gyro IMU contract so no canonical manifest rows are expected),2026-08-22 aux ingestion; clarified 2026-09-01
+oxford_dystonia_lfp,DBS-implanted cohort (STN/thalamic electrodes; recordings),per-hemisphere LFP + EEG + neck EMG + ACC; stimulation-state structure to be established at ingestion,card + MRC deposit structure (P1..P7 zips on disk),2026-08-25 download
+beijing_sleep_lfp,DBS-implanted cohort (pallidal/thalamic electrodes),polysomnography with LFP across 5 sleep disorders,card; application-gated (documented barrier),not held
+accel_fluctuations,levodopa response study (MJFF),motor-fluctuation accelerometry around dosing,recovered into the registry 2026-09-01 (adjudication item 21); access REFUSED (ACT) - documented barrier,not held
+oxford_stn_onoff_dbs,levodopa AND 130 Hz DBS,rest recordings in three therapy states: med ON / med OFF / DBS ON (LFP + EEG + accelerometer),MRC BNDU page verified 2026-09-01 (CC BY-SA 4.0); queued for the owner's portal login,not yet held
+dystonia_alcohol_bfm,ethanol (alcohol responsiveness),BFM ratings with alcohol-responsiveness phenotype across 1258 isolated-dystonia patients,Dryad CC0 confirmed via API at fetch,2026-09-01 downloaded
+pd_rest_eeg_onoff_ds002778,levodopa,within-subject rest EEG sessions ON and OFF medication,OpenNeuro ds002778; full S3 sync,2026-09-01 downloaded

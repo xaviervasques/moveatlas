@@ -1,0 +1,14 @@
+# LF policy travelling with the repo (docs/OPERATIONS.md s3, REVIEW_360 s6):
+# every text file is LF on every machine; only PowerShell launchers stay CRLF.
+* text=auto eol=lf
+*.ps1 text eol=crlf
+
+# binaries: never normalized, never diffed as text
+*.npz binary
+*.pkl binary
+*.png binary
+*.pdf binary
+*.docx binary
+*.zip binary
+*.xlsx binary
+*.edf binary

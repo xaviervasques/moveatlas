@@ -1,0 +1,64 @@
+# KineFM evaluation protocol
+# Linear probes on a FROZEN encoder. Two mandatory probes define, honestly, whether
+# the movement foundation model works (Handoff 3 section 2.3). Runnable now on a toy
+# encoder so the evaluation plumbing exists BEFORE the model does.
+version: 1
+date: 2026-07-10
+
+encoder:
+  mode: frozen                     # probes never backprop into the encoder
+  toy_baseline: masked_pool        # placeholder: masked mean+std pool of canonical coords
+  # swap `toy_baseline` for a real encoder id once trained; the harness API is unchanged
+
+data:
+  canonical:
+    care_pd:  datasets/pose/care_pd/processed/canonical.pkl
+    li_taati: datasets/pose/li_taati/processed/canonical.pkl
+    cody:     datasets/pose/cody_3/processed/canonical.pkl
+  subject_key: subject_ns          # split unit; never split within a subject (leakage)
+
+probes:
+
+  phenotype:
+    must: succeed                  # a working FM makes phenotype linearly decodable
+    target: cody_phenomenology     # per-subject multi-label from CODY frame labels
+    labels: [Dystonia, Tremor, Myoclonus, Chorea, Tics, Athetosis, Ballismus]
+    # NOTE: Stereotypie has no column in cody_3/01_train_labels_raw, so it is absent here.
+    rater_aggregation: union       # union | majority over raters {dd, lc}
+    presence_threshold: 0.20       # subject is positive if symptom is >0 in >= this
+                                   # fraction of its annotated frames. TUNE THIS.
+    min_positive_subjects: 3       # skip a label with too few positives/negatives to score
+    classifier: logistic_regression
+    standardize: true
+    C: 0.1                         # strong L2; few subjects, many toy features
+    cv: leave_one_patient_out
+    metric: auroc
+    ci: bootstrap_2000             # 95% CI by subject-level bootstrap
+
+  site:
+    must: fail                     # a working FM's embedding must NOT reveal the dataset
+    target: source                 # care_pd | li_taati | cody
+    balance: equalize_per_source   # subsample subjects to the smallest source
+    classifier: logistic_regression
+    standardize: true
+    cv: stratified_kfold
+    folds: 5
+    metric: accuracy
+    chance: one_over_n_sources     # balanced chance = 1/3
+    verdict_margin: 0.05           # site probe "passes" (BAD) if acc beats chance+margin
+    ci: wilson
+
+  severity:                        # optional but desirable (Handoff 3)
+    must: optional
+    target: care_pd_updrs_gait     # CARE-PD stores UPDRS_GAIT per record (frequently None)
+    metric: spearman
+    status: deferred               # enable once per-record clinical scores are populated
+
+reporting:
+  out_dir: eval/results
+  files: [phenotype_probe.csv, site_probe.csv, summary.md]
+  rule: >
+    The FM "works" only if the phenotype probe succeeds (AUROC above chance with CI not
+    crossing 0.5 on the common phenomenologies) AND the site probe fails (accuracy not
+    significantly above 1/3 after rebalancing). Report both numbers even when they are
+    bad; a bad baseline from the toy encoder is the point of reference to beat.

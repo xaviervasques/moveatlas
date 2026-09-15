@@ -1,0 +1,22 @@
+# the corpus itself is served from its Zenodo records, never git
+datasets/**/raw/
+datasets/**/processed/
+*.npz
+*.pkl
+
+# build and cache
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+site/_build/
+site/source/auto_examples/
+site/source/_generated/
+paper/_doi_cache.json
+
+# operating system
+.DS_Store
+._*
+Thumbs.db
