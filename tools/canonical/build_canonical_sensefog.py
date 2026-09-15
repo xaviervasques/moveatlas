@@ -181,7 +181,7 @@ def build_sensefog(repo, audit, manifest, emg_manifest):
             try:
                 meta, names, res, units, data, markers = read_brainvision(vhdr)
             except ValueError as e:
-                audit.append(["sensefog", os.path.relpath(vhdr, repo),
+                audit.append(["sensefog", os.path.relpath(vhdr, repo).replace("\\", "/"),
                               subject_ns, task, "", "", "", "", f"READ FAIL: {e}"])
                 print(f"  {subj_d}/{ses_d}: READ FAIL {e}")
                 continue
@@ -234,7 +234,7 @@ def build_sensefog(repo, audit, manifest, emg_manifest):
                 manifest.append(["sensefog", subject_ns, task, float(fs), int(n),
                                  len(eeg_chan),
                                  "|".join(c["site"] for c in eeg_chan),
-                                 os.path.relpath(path, repo)])
+                                 os.path.relpath(path, repo).replace("\\", "/")])
                 n_eeg += 1
             else:
                 p99 = 0.0
@@ -267,7 +267,7 @@ def build_sensefog(repo, audit, manifest, emg_manifest):
                                      int(n), len(chans),
                                      "|".join(f"{c['muscle']}_{c['side']}{c['electrode']}"
                                               for c in chans),
-                                     os.path.relpath(ep, repo)])
+                                     os.path.relpath(ep, repo).replace("\\", "/")])
 
             # --- aux (IPG monitor)
             if aux_cols:
@@ -279,7 +279,7 @@ def build_sensefog(repo, audit, manifest, emg_manifest):
                         "source": "sensefog", "n_frames": int(n)}
                 write_record(aux_dir, arec)
 
-            audit.append(["sensefog", os.path.relpath(vhdr, repo), subject_ns,
+            audit.append(["sensefog", os.path.relpath(vhdr, repo).replace("\\", "/"), subject_ns,
                           task, int(n), len(eeg_chan), round(fs, 1),
                           f"eeg={len(eeg_chan)} emg_ch={sum(len(v) for v in emg_groups.values())} "
                           f"aux={len(aux_cols)} events={len(events)}",

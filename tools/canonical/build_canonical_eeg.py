@@ -234,7 +234,7 @@ def eeg_manifest_row(rec, path, repo):
     sites = "|".join(c["site"] for c in rec["channels"])
     return [rec["source"], rec["subject_ns"], rec["task"], rec["fps"],
             rec["n_frames"], len(rec["channels"]), sites,
-            os.path.relpath(path, repo)]
+            os.path.relpath(path, repo).replace("\\", "/")]
 
 
 # ---------------------------------------------------------------- multimodal_fog
@@ -366,7 +366,7 @@ def build_edf_set(repo, setname, audit, manifest, emg_manifest):
                     kinds = "emg"
                     emg_manifest.append([emg_rec["source"], subj, "sleep", emg_rec["fps"],
                                          emg_rec["n_frames"], 1, kinds,
-                                         os.path.relpath(p, repo)])
+                                         os.path.relpath(p, repo).replace("\\", "/")])
                     routed["emg_chin"] += 1
                 else:
                     aux_streams.append({"label": sg["label"], "kind": kind,
@@ -819,7 +819,7 @@ def build_seizeit2(repo, audit, manifest, emg_manifest):
                                          emg_rec, suffix)
                     emg_manifest.append([emg_rec["source"], subj, task,
                                          emg_rec["fps"], emg_rec["n_frames"], 1,
-                                         "emg", os.path.relpath(ep, repo)])
+                                         "emg", os.path.relpath(ep, repo).replace("\\", "/")])
             except ValueError as e:
                 notes.append(f"EMG file unusable: {e}")
         else:

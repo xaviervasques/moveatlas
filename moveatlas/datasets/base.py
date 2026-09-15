@@ -8,6 +8,7 @@ family (configs/canonical_*.yaml); metadata is a pandas DataFrame with at
 least [dataset, subject_ns, task, modality, n_frames, fps], the contract
 with the evaluation layer.
 """
+import os
 import re
 
 import pandas as pd
@@ -49,6 +50,50 @@ class BaseDataset:
     def __repr__(self):
         return (f"<{type(self).__name__} '{self.code}' "
                 f"[{self.access_case}] {self.title!r}>")
+
+    # -- the dataset's files, canonical or not ---------------------------
+    def files(self):
+        """Store-relative paths of every file this dataset holds: what is
+        on this machine under its registry path, plus, for a hosted
+        dataset, what its published record lists (nothing is downloaded
+        to list). Many hosted records hold tables, archives or documents
+        rather than canonical records; this is how you see them."""
+        if self.access_case in ("barrier", "local_only"):
+            return []
+        store = open_store()
+        base = self.info["path"].replace("\\", "/").rstrip("/")
+        out, stack = [], [base]
+        while stack:
+            d = stack.pop()
+            try:
+                children = store.list_dir(d)
+            except FileNotFoundError:
+                children = []
+            for c in children:
+                if c.endswith("/"):
+                    stack.append(c.rstrip("/"))
+                elif not os.path.basename(c).startswith("._"):
+                    out.append(c)
+        return sorted(set(out))
+
+    def path(self, name):
+        """A local path to one of the dataset's files, by file name or
+        store-relative path: served from this machine when it is there,
+        else downloaded from the published record and sha256-verified.
+        Read a table with pandas, an archive with zipfile, an .npz
+        container with moveatlas.records.load()."""
+        name = name.replace("\\", "/")
+        files = self.files()
+        hits = [f for f in files if f == name or f.endswith("/" + name)]
+        if not hits:
+            known = ", ".join(os.path.basename(f) for f in files[:12])
+            raise FileNotFoundError(
+                f"'{self.code}' has no file named {name!r}; it holds: "
+                f"{known or 'nothing on this machine or in a record'}")
+        if len(hits) > 1:
+            raise ValueError(f"{name!r} is ambiguous in '{self.code}': "
+                             f"{hits}; give the store-relative path")
+        return open_store().path(hits[0])
 
     # -- data --------------------------------------------------------
     def get_data(self, subjects=None, modality=None):
@@ -118,6 +163,24 @@ class GenericDataset(BaseDataset):
                 f"'{self.code}' is not ingested on this machine: run "
                 f"{recipe}. Access: {i['access']}. Status: {i['status']}. "
                 f"Card: {card}")
+        # hosted, but the record holds no canonical container. Nineteen
+        # of the 53 published records are like that (tables, archives,
+        # documents, a non-canonical .npz): say what is there and how to
+        # read it, instead of sending a stranger to an ingestion script
+        # (finding of 2026-09-15, LAUNCH_PLAN 1.1)
+        try:
+            names = [os.path.basename(f) for f in self.files()
+                     if not f.endswith("downloads.sha256")]
+        except Exception:      # listing must never mask the real message
+            names = []
+        if names:
+            shown = ", ".join(names[:8]) + (" ..." if len(names) > 8 else "")
+            return FileNotFoundError(
+                f"'{self.code}' holds files, not canonical records: {shown}. "
+                f"ds.path('<name>') returns a local, verified path to one "
+                f"(downloaded from the record when needed); read a table with "
+                f"pandas, an archive with zipfile, an .npz container with "
+                f"moveatlas.records.load(). Card: {card}")
         return FileNotFoundError(
             f"'{self.code}' is hosted but no canonical container is under "
             f"{i['path']}/processed/ in this store{reason}. If this machine "

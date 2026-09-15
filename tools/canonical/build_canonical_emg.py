@@ -121,7 +121,7 @@ def manifest_row(rec, rid, path, repo):
     kinds = "|".join(sorted({c["kind"] for c in rec["channels"]}))
     return [rec["source"], rec["subject_ns"], rec["task"], rec["fps"],
             rec["n_frames"], len(rec["channels"]), kinds,
-            os.path.relpath(path, repo)]
+            os.path.relpath(path, repo).replace("\\", "/")]
 
 
 # ---------------------------------------------------------------- multimodal_fog

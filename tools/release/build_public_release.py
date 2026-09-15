@@ -155,6 +155,11 @@ EXCLUDED_WITH_REASON = [
      "the owner's backup procedure for a private disk: it describes where "
      "one person's copies live and nothing a reader of this resource can "
      "use or verify"),
+    ("docs/MACHINES.md",
+     "the owner's two-machine ingestion procedure (mounts, line endings, "
+     "AppleDouble, token hygiene, log locations), split out of "
+     "docs/OPERATIONS.md on 2026-09-15 so that what ships is what a reader "
+     "needs: the pipeline, the gates, the record format, the access log"),
     ("docs/REPO_SPLIT_PLAN.md",
      "the plan for the split that produced this repository; once you are "
      "reading this tree the plan has been carried out"),
@@ -178,7 +183,7 @@ EXCLUDED_WITH_REASON = [
     ("arbo.py, download_*.py, extract_care_pd.py, fetch_hunt_*.py, "
      "fetch_animal_*.py, fetch_dandi_000947_sample.py, stop_before_eject.sh",
      "one-shot scaffolding superseded by the generic fetchers"),
-    ("_pipeline_log.txt, _paris_logs/, temporary/, build/, dist/",
+    ("_pipeline_log.txt, _paris_logs/, builder_inputs/, build/, dist/",
      "machine logs and build artifacts"),
     ("aux_status.py, tests/test_aux_status.py",
      "a working-tree staging check for a name reserved on one machine"),

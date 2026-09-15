@@ -5,6 +5,8 @@
     moveatlas info <id>
     moveatlas fetch <id>
     moveatlas ingest <id>
+    moveatlas files <id>
+    moveatlas get <id> <file name>
     moveatlas where
 """
 import argparse
@@ -50,6 +52,18 @@ def cmd_ingest(a):
     print(f"{a.id}: {n} records -> {out}")
 
 
+def cmd_files(a):
+    ds = moveatlas.dataset(a.id)
+    files = ds.files()
+    for f in files:
+        print(f)
+    print(f"{len(files)} file(s); moveatlas get {a.id} <name> fetches one")
+
+
+def cmd_get(a):
+    print(moveatlas.dataset(a.id).path(a.name))
+
+
 def cmd_where(a):
     print(recipes.store_root())
 
@@ -74,6 +88,13 @@ def main(argv=None):
     p = sub.add_parser("ingest", help="harmonize a fetched dataset into the store")
     p.add_argument("id")
     p.set_defaults(fn=cmd_ingest)
+    p = sub.add_parser("files", help="list the files a dataset holds")
+    p.add_argument("id")
+    p.set_defaults(fn=cmd_files)
+    p = sub.add_parser("get", help="a local, verified path to one file of a dataset")
+    p.add_argument("id")
+    p.add_argument("name")
+    p.set_defaults(fn=cmd_get)
     p = sub.add_parser("where", help="print the store directory")
     p.set_defaults(fn=cmd_where)
     a = ap.parse_args(argv)

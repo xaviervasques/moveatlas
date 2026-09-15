@@ -31,7 +31,7 @@ import pandas as pd
 REPO = os.path.dirname(os.path.abspath(__file__))
 
 # default location of the SAM3 outputs the owner produced for koa_pd_nm
-DEFAULT_KOA = os.path.join(REPO, "temporary/KOA-PD-NM/outputs")
+DEFAULT_KOA = os.path.join(REPO, "builder_inputs/KOA-PD-NM/outputs")
 
 SCALARS = ["area", "perimeter", "solidity", "extent",
            "aspect_ratio", "orientation_deg", "major_axis", "minor_axis"]

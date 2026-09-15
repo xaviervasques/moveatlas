@@ -27,7 +27,7 @@ from human_body_prior.body_model.body_model import BodyModel
 REPO = os.path.dirname(os.path.abspath(__file__))
 RAW = os.path.join(REPO, "datasets/socle/amass/raw")
 OUT = os.path.join(REPO, "datasets/socle/amass/processed/canonical")
-WORK = os.path.join(REPO, "temporary/amass_work")
+WORK = os.path.join(REPO, "builder_inputs/amass_work")
 # CPU is robust and, for this small-batch LBS, nearly as fast as MPS (whose padding op
 # is slow and, over a very long run, deadlocks). Force CPU to avoid the MPS hang.
 DEV = "cpu"

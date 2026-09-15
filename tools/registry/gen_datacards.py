@@ -1578,6 +1578,27 @@ def main():
         n_cards += 1
     docs = os.path.join(args.repo, "docs")
     os.makedirs(docs, exist_ok=True)
+    # THE GUARD (LAUNCH_PLAN 1.4, 2026-09-15): DATA holds fewer entries
+    # than the registry on disk has rows (108 vs 170 today), so a full run
+    # used to rewrite docs/datasets_index.csv shorter and drop datasets
+    # without a word. The registry is edited directly; this script only
+    # renders cards. It now refuses to shrink the registry, and a --dry
+    # run reports the gap instead.
+    existing = os.path.join(docs, "datasets_index.csv")
+    if os.path.exists(existing):
+        with open(existing, newline="", encoding="utf-8") as f:
+            on_disk = [r["id"] for r in csv.DictReader(f)]
+        missing = sorted(set(on_disk) - set(ids))
+        if missing:
+            msg = (f"REFUSING to rewrite {existing}: it has {len(on_disk)} rows "
+                   f"and DATA has {len(ids)} entries; {len(missing)} dataset(s) "
+                   f"would be dropped (e.g. {', '.join(missing[:5])}). The "
+                   "registry is the source of truth: edit it directly, or add "
+                   "the missing entries to DATA before running this.")
+            if args.dry:
+                print(msg)
+                return
+            raise SystemExit(msg)
     with open(os.path.join(docs, "datasets_index.csv"), "w", newline="",
               encoding="utf-8") as f:
         w = csv.writer(f, lineterminator="\n")

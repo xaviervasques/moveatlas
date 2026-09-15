@@ -29,6 +29,10 @@ extensions = [
 copybutton_prompt_text = ">>> "
 
 myst_enable_extensions = ["colon_fence"]
+# the hunt ledger (docs/hunt_confirmed_absences.md) is included into
+# taxonomy.rst as a fragment: its "##" headings are right for the fragment
+# and myst's "document starts at H2" check is not about fragments
+suppress_warnings = ["myst.header"]
 
 sphinx_gallery_conf = {
     "examples_dirs": ["../examples"],
