@@ -12,6 +12,15 @@ import moveatlas
 from moveatlas import records
 
 
+@pytest.fixture(autouse=True)
+def _offline(monkeypatch):
+    """The suite is corpus-free AND network-free: with the records table
+    empty the store never asks Zenodo for a listing (CI failed on
+    2026-09-16 when a test reached a record during a Zenodo 504)."""
+    from moveatlas import store as store_mod
+    monkeypatch.setattr(store_mod, "_records_table", lambda: {})
+
+
 @pytest.fixture
 def toy_store(tmp_path, monkeypatch):
     """A local store with alameda_tremor holding one raw table and
@@ -81,10 +90,9 @@ def test_barrier_dataset_lists_no_files_and_still_raises_the_route(toy_store):
 
 def test_empty_hosted_dataset_keeps_the_ingestion_message(toy_store):
     # hosted in the registry, nothing on this machine, and no record
-    # listing reachable (MOVEATLAS_REPO points at the toy store, whose
-    # HybridStore asks the remote only when the table lists a record)
-    ds = moveatlas.dataset("cody_3")
-    files = ds.files()          # remote listing needs the network; either way
-    if not files:
-        with pytest.raises(FileNotFoundError, match="hosted but no canonical"):
-            ds.get_data()
+    # listing (the store's table is empty here, see _offline): the old
+    # message, naming the ingestion recipe, is what remains
+    ds = moveatlas.dataset("fog_star")      # a hosted id on the generic adapter
+    assert ds.files() == []
+    with pytest.raises(FileNotFoundError, match="hosted but no canonical"):
+        ds.get_data()
