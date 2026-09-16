@@ -420,26 +420,101 @@ def _gen_taxonomy():
               encoding="utf-8", newline="\n") as f:
         f.write("\n".join(parts) + "\n")
 
-    # absences ledger: verbatim copy, its own H1 dropped (the page section
-    # is the title) so its H2 headings nest under the section
-    src = open(os.path.join(_REPO, "docs", "hunt_confirmed_absences.md"),
-               encoding="utf-8").read()
-    src = _re.sub(r"\A# .*\n", "", src)
-    with open(os.path.join(out_dir, "hunt_confirmed_absences.md"), "w",
+    # confirmed absences: the cells no catalogued human dataset covers, and
+    # the cells covered only by datasets behind a barrier, computed from
+    # the registry at build time (the dated search reports and the ledger
+    # stay in the repository: they are working documents, not pages)
+    from moveatlas.registry import list_datasets as _ld
+    rows = [r for r in _ld() if r["family"] != "animal"]
+    covered, open_ = {}, {}
+    for r in rows:
+        cells = [c.strip() for c in (r.get("moveatlas_cells") or "").replace(";", ",").split(",")]
+        for c in cells:
+            code = c.split()[0] if c else ""
+            if code in _tax.CELLS_VALID:
+                covered[code] = covered.get(code, 0) + 1
+                if r["access_case"] in ("hosted", "recipe"):
+                    open_[code] = open_.get(code, 0) + 1
+    absent = [c for c in _tax.CELLS_VALID if covered.get(c, 0) == 0]
+    barrier_only = [c for c in _tax.CELLS_VALID
+                    if covered.get(c, 0) and not open_.get(c, 0)]
+    parts = ["<table class=\"table\"><thead><tr><th>Cell</th><th>Name</th>"
+             "<th>Status at build time</th></tr></thead><tbody>"]
+    for c in absent:
+        parts.append(f"<tr><td><code>{c}</code></td><td>{_html.escape(_portal.CELLS[c])}</td>"
+                     "<td>no open dataset found</td></tr>")
+    for c in barrier_only:
+        parts.append(f"<tr><td><code>{c}</code></td><td>{_html.escape(_portal.CELLS[c])}</td>"
+                     f"<td>catalogued only behind an access barrier ({covered[c]} dataset"
+                     f"{'s' if covered[c] > 1 else ''})</td></tr>")
+    parts.append("</tbody></table>")
+    parts.append(f"<p class=\"ma-count-note\">{len(absent)} cells with no dataset and "
+                 f"{len(barrier_only)} reachable only through a barrier, over "
+                 f"{len(_tax.CELLS_VALID)} cells; human datasets only.</p>")
+    with open(os.path.join(out_dir, "absences.html"), "w",
               encoding="utf-8", newline="\n") as f:
-        f.write(src)
+        f.write("\n".join(parts) + "\n")
 
-    # barriers casebook: the case titles only, the file itself stays in docs/
+    # barriers casebook: the KINDS of case, without the dataset names and
+    # dates the repository's casebook carries (a public page does not
+    # point at datasets; the evidence stays in the repository)
     cases = _re.findall(
-        r"^## (Case \d+: .*)$",
+        r"^## Case \d+: (.*)$",
         open(os.path.join(_REPO, "docs", "ACCESS_BARRIERS_CASES.md"),
              encoding="utf-8").read(), _re.M)
-    lines = [f"{len(cases)} documented cases (``docs/ACCESS_BARRIERS_CASES.md``,"
-             " each with its evidence trail):", ""]
-    lines += [f"- {c.strip()}" for c in cases]
+    kinds = []
+    for c in cases:
+        k = _re.sub(r"\s*\([^)]*\)", "", c)          # drop parentheticals
+        k = _re.sub(r"\s*\d{4}-\d{2}-\d{2}[^,;]*", "", k)
+        k = k.strip(" ,;:").replace("our own", "the atlas's own")
+        k = k[0].upper() + k[1:] if k else k
+        if k and k not in kinds:
+            kinds.append(k)
+    lines = [f"{len(cases)} documented cases, of these kinds:", ""]
+    lines += [f"- {k}" for k in kinds]
     with open(os.path.join(out_dir, "barriers_cases.rst"), "w",
               encoding="utf-8", newline="\n") as f:
         f.write("\n".join(lines) + "\n")
+
+    # age and sex per harmonized dataset: docs/demographics.csv, the same
+    # table the descriptor's Supplementary Table 3 is built from
+    # (paper/build_demographics.py writes both), so the site and the paper
+    # quote the same statements and the same counts
+    dp = os.path.join(_REPO, "docs", "demographics.csv")
+    demo = []
+    if os.path.exists(dp):
+        with open(dp, newline="", encoding="utf-8") as f:
+            demo = list(_csv.DictReader(f))
+    NR = '<span class="ma-count-note">not reported by source</span>'
+    parts = ["<table class=\"table datatable\"><thead><tr><th>Dataset</th>"
+             "<th>Subjects (canonical)</th><th>Age</th><th>Sex</th><th>Read from</th>"
+             "<th>Per-subject table</th></tr></thead><tbody>"]
+    n_age = n_sex = 0
+    for r in demo:
+        age = "" if r["age_source"] == "not_reported" else r["age_statement"]
+        sex = "" if r["sex_source"] == "not_reported" else r["sex_statement"]
+        n_age += bool(age)
+        n_sex += bool(sex)
+        src = {"source_paper": "source publication or record", "registry": "registry",
+               "card": "data card"}.get(r["age_source"] if age else r["sex_source"], "")
+        url = (r.get("demographics_url") or "").split(";")[0].strip()
+        link = (f"<a href=\"{_html.escape(url)}\">{_html.escape(src)}</a>"
+                if url and src == "source publication or record" else _html.escape(src))
+        table = r.get("subject_table_card") or ""
+        table = "" if table.startswith("not reported") else table
+        parts.append(f"<tr><td><code>{_html.escape(r['dataset_id'])}</code></td>"
+                     f"<td>{_html.escape(r['n_subjects_canonical'])}</td>"
+                     f"<td>{_html.escape(age) if age else NR}</td>"
+                     f"<td>{_html.escape(sex) if sex else NR}</td>"
+                     f"<td>{link}</td><td>{_html.escape(table)[:80]}</td></tr>")
+    parts.append("</tbody></table>")
+    parts.append(f"<p class=\"ma-count-note\">Age stated for {n_age} and sex for "
+                 f"{n_sex} of {len(demo)} harmonized datasets; the statements are "
+                 "quoted from the source publication or record (read 2026-09-15), "
+                 "the registry or the data card, in that order.</p>")
+    with open(os.path.join(out_dir, "demographics_sources.html"), "w",
+              encoding="utf-8", newline="\n") as f:
+        f.write("\n".join(parts) + "\n")
 
 
 _gen_taxonomy()

@@ -229,11 +229,111 @@ def jsonld(r, cells):
             "```", ""]
 
 
+
+# ---------------------------------------------------------------- public rendering
+# The cards are working documents: their status prose records who decided
+# what, on which machine and in which session. A public page shows the
+# dataset, not the workflow (owner request, 2026-09-16): every displayed
+# string goes through _public(), the status row is normalised to a state and
+# a date, and the card body shows its factual lines only.
+_INTERNAL = re.compile(
+    r"owner|session|\bGO\b|tower|DECIDED|agent|Paris|handoff|casebook|"
+    r"\bH\d+\b|ruling|internal|the paper|assistant|queue", re.I)
+
+
+def _public(text):
+    """Drop parentheticals and clauses that talk about the workflow."""
+    t = " ".join(str(text or "").split())
+    # parentheticals carrying workflow words
+    t = re.sub(r"\s*\(([^()]*)\)", lambda m: "" if _INTERNAL.search(m.group(1)) else m.group(0), t)
+    # "DECIDED 2026-08-28:" and "CORRECTED 2026-..:" trails
+    t = re.sub(r"\b(DECIDED|CORRECTED|RESOLVED|SETTLED)\s+\d{4}-\d{2}-\d{2}[^:;]*:\s*", "", t)
+    # clauses after ";" or ". " that carry workflow words
+    parts = re.split(r"(?<=[.;])\s+", t)
+    kept = [x for x in parts if not _INTERNAL.search(x)]
+    t = " ".join(kept) if kept else (parts[0] if parts else t)
+    t = re.sub(r"\s+([,;.])", r"\1", t).strip(" ;,")
+    return t.replace("tower download", "download")
+
+
+_STATES = [
+    (r"DOWNLOADED AND INGESTED|INGESTED", "harmonized"),
+    (r"DOCUMENTED BARRIER|WRITTEN OFF|HUMAN QUEUE|BARRIER", "documented access barrier"),
+    (r"SCRIPTED-CLIENT BLOCKED|BLOCKED", "blocked at the host for scripted clients"),
+    (r"DOWNLOADED|raw on disk|ACQUIRED", "acquired"),
+    (r"INDEX-ONLY|CATALOGUED|NEW|queued", "catalogued"),
+]
+
+
+def _status_public(text):
+    """'DOWNLOADED AND INGESTED 2026-08-24 (Paris night session): ...' ->
+    'harmonized (2026-08-24)'. The prose stays in the repository's card."""
+    t = str(text or "")
+    state = "catalogued"
+    for pat, name in _STATES:
+        if re.search(pat, t):
+            state = name
+            break
+    m = re.search(r"\d{4}-\d{2}-\d{2}", t)
+    return f"{state} ({m.group(0)})" if m else state
+
+
+def _redistribution_public(text):
+    t = " ".join(str(text or "").split())
+    low = t.lower()
+    head = "yes" if low.startswith("yes") else "no" if low.startswith("no") else "unknown"
+    m = re.search(r"pointer to ([^;,.)]+)", t)
+    if head == "no" and m:
+        return f"no (fetch from {m.group(1).strip()})"
+    m2 = re.search(r"^yes\s*\(([^)]*)\)", t, re.I)
+    if head == "yes" and m2 and not _INTERNAL.search(m2.group(1)):
+        return f"yes ({m2.group(1).strip()})"
+    return head
+
+
+_CARD_KEEP = ("dataset", "family", "MoveAtlas cells", "population", "n_subjects",
+              "age", "signal", "channel types", "license", "access", "link",
+              "citation", "ingestion", "library recipe")
+
+
+def _card_public(body):
+    """The card's factual lines, scrubbed; status, notes and the Retrieval /
+    Processing sections stay in the repository."""
+    out = []
+    for line in body.splitlines():
+        m = re.match(r"^- ([A-Za-z_ ]+?)\s*(\(.*?\))?\s*:\s*(.*)$", line)
+        if not m:
+            continue
+        key, _date, val = m.group(1).strip(), m.group(2), m.group(3)
+        if key not in _CARD_KEEP:
+            continue
+        if key == "family":
+            val = re.sub(r"\s*\(physical path:[^)]*\)", "", val)
+        val = _public(val)
+        if val:
+            out.append(f"- **{key}**: {esc(val)}")
+    return out
+
+
+def _row_public(r):
+    """The registry row as the page shows it: every free-text field scrubbed
+    of workflow prose, the status reduced to a state and a date."""
+    pub = dict(r)
+    for k in ("license", "access", "age", "moveatlas_cells", "title"):
+        if pub.get(k):
+            pub[k] = _public(pub[k]).replace("tower download", "download")
+    if pub.get("status"):
+        pub["status"] = _status_public(pub["status"])
+    if pub.get("redistribution"):
+        pub["redistribution"] = _redistribution_public(pub["redistribution"])
+    return pub
+
+
 def page(r):
     """One dataset page in a fixed scholarly order: JSON-LD (invisible),
     identity badges, key facts, how to load, license and access,
-    publications with BibTeX, then the verbatim data card as the
-    evidence trail."""
+    publications with BibTeX, then the factual lines of the data card."""
+    r = _row_public(r)
     rid = r["id"]
     status = "harmonized" if rid in INGESTED else "catalogued"
     cells = list(dict.fromkeys(
@@ -257,10 +357,11 @@ def page(r):
                             ("License", "license", 400)):
         v = r.get(key)
         if v:
-            v = " ".join(str(v).split())
+            v = v if key == "status" else _public(v)
             if len(v) > cap:
                 v = v[:cap].rstrip() + "..."
-            lines.append(f"| **{label}** | {esc(v)} |")
+            if v:
+                lines.append(f"| **{label}** | {esc(v)} |")
     lines.append("")
     lines += ["Cell codes are defined on the {doc}`taxonomy page "
               "</taxonomy>`.", ""]
@@ -278,7 +379,9 @@ def page(r):
                        ("Access route", "access")):
         v = r.get(key)
         if v:
-            lines.append(f"- **{label}**: {esc(str(v)[:400])}")
+            v = v if key == "redistribution" else _public(v)
+            if v:
+                lines.append(f"- **{label}**: {esc(v[:400])}")
     if r.get("link"):
         lines.append(f"- **Source**: <{r['link']}>")
     lines.append("")
@@ -299,10 +402,13 @@ def page(r):
     card = os.path.join(REPO, r["path"], "datacard.md")
     if os.path.exists(card):
         body = open(card, encoding="utf-8").read()
-        body = re.sub(r"^# .*\n", "", body)          # page already titled
-        body = re.sub(r"^#", "##", body, flags=re.M)  # shift headings down
-        lines += ["## Data card (verbatim, with its evidence trail)", "",
-                  body.rstrip(), ""]
+        facts = _card_public(body)
+        if facts:
+            lines += ["## Data card", "",
+                      "The dataset's card, factual lines; the full card with its "
+                      "verification dates, download journal and processing notes "
+                      "is in the repository.", ""]
+            lines += facts + [""]
     return "\n".join(lines)
 
 
@@ -314,9 +420,9 @@ for r in rows:
 
 index = ["# Dataset pages", "",
          "One page per catalogued dataset: key facts, publications with "
-         "BibTeX, and the data card verbatim (the card is the evidence "
-         "trail: license verification dates, download journal, ingestion "
-         "decisions). Cell codes are defined on the "
+         "BibTeX, and the factual lines of the data card (the full card, "
+         "with its verification dates and download journal, is in the "
+         "repository). Cell codes are defined on the "
          "{doc}`taxonomy page </taxonomy>`.", "",
          "```{toctree}", ":maxdepth: 1", ""]
 for r in sorted(rows, key=lambda x: (x["family"], x["id"])):
