@@ -76,9 +76,10 @@ def test_dataset_info_unknown_id_lists_known_ids():
       "status": "INGESTED v1"}, "hosted"),
     ({"id": "cody_3", "license": "CC BY-SA 3.0",
       "redistribution": "Yes (share-alike)", "status": ""}, "hosted"),
-    # redistributable but no record yet (2026-09-15): fetched at its origin
-    ({"id": "fog_turning_filho", "license": "CC0", "redistribution": "yes",
-      "status": "INGESTED v1"}, "recipe"),
+    # redistributable but no record yet (seizeit2, above the per-record
+    # cap, served through its recipe): fetched at its origin
+    ({"id": "seizeit2", "license": "CC0", "redistribution": "yes",
+      "status": "INGESTED"}, "recipe"),
     ({"license": "CC BY 4.0", "redistribution": "yes",
       "status": "INGESTED v1"}, "recipe"),
     ({"license": "custom", "redistribution": "no",

@@ -45,7 +45,7 @@ osdb,custom CC-Share-Alike variant + publish-back obligation,no,pointer_only
 ataxie_kinect_dib,Data in Brief (Elsevier supplementary; no explicit data licence),"no, DECIDED 2026-08-28: pointer to the article",pointer_only
 babypose,on request from the VRAI lab,no (until granted),pointer_only
 care_pd,"CC BY-NC-ND 4.0, SETTLED 2026-08-25 by the official NeurIPS 2025 site (neurips2025.care-pd.ca): 'Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 ... may be used for non-commercial research and educational purposes with appropriate citation but may not be modified or redistributed in altered form'. The old tag-vs-README ambiguity (pinned 2026-08-22) is resolved in the tag's favour. Per-cohort originals differ (BMCLab and DNE are CC BY 4.0); the GitHub MIT covers the CODE only","NO: ND. Harmonized/derived tensors must never be redistributed, and training that publishes a model is a derivative-work risk: EVAL ONLY",pointer_only
-fog_turning_filho,CC0 (figshare item 14984667),yes,host_copy_ok_with_attribution
+fog_turning_filho,CC BY 4.0 (figshare item 14984667; the API states CC BY 4.0; verified 2026-09-16; an earlier CC0 reading was wrong),yes,host_copy_ok_with_attribution
 gavd,"MIT (LICENSE file in the repo, read 2026-08-28); videos remain YouTube-hosted",yes (the annotation CSVs we hold are MIT; videos never distributed),host_copy_ok_with_attribution
 hubu_fis_fingertap,CC BY 4.0,yes,host_copy_ok_with_attribution
 koa_pd_nm,"research only, non-commercial",no (video); derived silhouettes internal,pointer_only

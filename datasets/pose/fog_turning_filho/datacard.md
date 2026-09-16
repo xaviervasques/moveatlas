@@ -6,7 +6,7 @@
 - population: 50 PD (35 with usable synchronized pairs per v1 ingestion); age, disease duration, LEDD, more-affected side
 - n_subjects: 50
 - signal: video + IMU (ACC ML/AP/SI in g, GYR ML/AP in deg/s) turning protocol
-- license: CC0 (figshare item 14984667) ; redistribution: yes
+- license: CC BY 4.0 (figshare item 14984667; the API states CC BY 4.0; verified 2026-09-16; an earlier CC0 reading was wrong) ; redistribution: yes
 - access: downloaded
 - status (2026-08-22): INGESTED v1: 106 + 106 records; one of the two real pose<->IMU pairs on disk (stage B table)
 - link: https://doi.org/10.6084/m9.figshare.14984667

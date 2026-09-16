@@ -44,8 +44,8 @@
   "record": 22313507
  },
  "cody_3": {
-  "doi": "10.5281/zenodo.22313509",
-  "record": 22313509
+  "doi": "10.5281/zenodo.22791880",
+  "record": 22791880
  },
  "daphnet": {
   "doi": "10.5281/zenodo.22310477",
@@ -62,6 +62,10 @@
  "fog_star": {
   "doi": "10.5281/zenodo.22310487",
   "record": 22310487
+ },
+ "fog_turning_filho": {
+  "doi": "10.5281/zenodo.22790322",
+  "record": 22790322
  },
  "gait120": {
   "doi": "10.5281/zenodo.22310188",

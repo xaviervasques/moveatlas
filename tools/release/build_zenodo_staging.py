@@ -230,7 +230,13 @@ def main():
     only = set(args.only.split(",")) if args.only else None
     os.makedirs(OUT, exist_ok=True)
     plan = []
-    for r in moveatlas.list_datasets(case="hosted"):
+    # Since 2026-09-15 "hosted" means "served by a published record", so a
+    # redistributable dataset that has no record yet (the very thing this
+    # script stages) classifies as recipe: iterate on the registry's
+    # redistribution column instead, which is the permission itself.
+    rows = [r for r in moveatlas.list_datasets()
+            if (r.get("redistribution") or "").strip().lower().startswith("yes")]
+    for r in rows:
         if only and r["id"] not in only:
             continue
         # The hosted case already requires redistribution to start with

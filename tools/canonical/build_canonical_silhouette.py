@@ -170,7 +170,7 @@ def ingest_cody_external(manifest):
         parts = f.split(os.sep)
         ds = parts[-3].replace("dataset_", "")          # "1" / "2" / "3"
         subj = parts[-2]                                 # "P28"
-        subject_ns = f"cody_ext_ds{ds}_{subj}"           # leakage-safe per dataset
+        subject_ns = f"cody_external:ds{ds}_{subj}"      # namespaced source:subject (2026-09-16); leakage-safe per dataset
         rec_id = os.path.basename(f).replace("_sam3_timeseries.xlsx", "")
         contour, scalars, detect, fps, scale, T = load_one(f)
         rec = {
