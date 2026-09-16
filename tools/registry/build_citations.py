@@ -116,6 +116,11 @@ def from_datacite(doi):
             "source": "datacite"}
 
 
+def _no_email(author):
+    s = re.sub(r"\(?\s*[\w.+-]+@[\w-]+(\.[\w-]+)+\s*\)?", "", author)
+    return re.sub(r"\s+", " ", s).strip(" ,;")
+
+
 def from_bids(acc, path=None):
     """Citation straight out of a local BIDS dataset_description.json.
 
@@ -171,7 +176,12 @@ def from_bids(acc, path=None):
                           f"citing {first}", flush=True)
             return {"doi": doi,
                     "title": j.get("Name", "") or acc,
-                    "authors": [a for a in j.get("Authors", []) if a],
+                    # BIDS author strings sometimes carry the e-mail address
+                    # ("Arun Singh arun.singh@usd.edu", "Inbal Maidan
+                    # (inbalm@...)"): a citation names people, it does not
+                    # republish their addresses (2026-09-17)
+                    "authors": [a for a in (_no_email(x) for x in
+                                            j.get("Authors", []) if x) if a],
                     "year": year, "venue": "OpenNeuro", "publisher": "OpenNeuro",
                     "type": "Dataset", "source": source}
     return None
