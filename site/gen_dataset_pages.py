@@ -293,7 +293,7 @@ def _redistribution_public(text):
 
 _CARD_KEEP = ("dataset", "family", "MoveAtlas cells", "population", "n_subjects",
               "age", "signal", "channel types", "license", "access", "link",
-              "citation", "ingestion", "library recipe")
+              "citation", "ingestion", "library recipe", "known issues")
 
 
 def _card_public(body):
@@ -413,6 +413,13 @@ def page(r):
 
 
 rows = moveatlas.list_datasets()
+# a page whose id is no longer a dataset (a software row, a merged id)
+# would stay behind as an orphan document: remove it
+_keep = {f"{r['id']}.md" for r in rows} | {"index.md"}
+for _name in os.listdir(OUT):
+    if _name.endswith(".md") and _name not in _keep:
+        os.remove(os.path.join(OUT, _name))
+        print(f"removed stale page {_name}")
 for r in rows:
     with open(os.path.join(OUT, f"{r['id']}.md"), "w", encoding="utf-8",
               newline="\n") as f:

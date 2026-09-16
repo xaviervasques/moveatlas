@@ -6,7 +6,7 @@
 - population: 63 children/adolescents with dyskinetic CP; clinical scoring in README xlsx
 - n_subjects: 63
 - signal: stick-figure pose video derivatives (Zenodo 5638470)
-- license: Zenodo open ; redistribution: yes
+- license: CC BY 4.0 (stated on the source Zenodo record, read through DataCite 2026-09-16) ; redistribution: yes
 - access: downloaded
 - status (2026-08-22): INGESTED v1: 94 canonical records
 - link: https://zenodo.org/records/5638470

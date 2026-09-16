@@ -194,11 +194,27 @@ def main():
         "KINEFM_REPO", os.path.dirname(os.path.abspath(__file__))))
     ap.add_argument("--cap", type=int, default=150,
                     help="per-source record cap (0 = exhaustive)")
+    ap.add_argument("--containers", default=None,
+                    help="comma list of container paths (relative to the "
+                         "repo): measure only these, exhaustively and one "
+                         "record at a time, and replace only their "
+                         "(family, dataset) rows in docs/mask_statistics.csv")
     args = ap.parse_args()
     rnd = random.Random(0)
     per = {}
-    for rec, shard_sampled in iter_records(
-            args.repo, cap_shards=(0 if args.cap == 0 else 40)):
+    if args.containers:
+        from moveatlas import records as _records
+        args.cap = 0
+
+        def _only():
+            for rel in args.containers.split(","):
+                for rec in _records.iter_load(os.path.join(args.repo, rel.strip())):
+                    if isinstance(rec, dict):
+                        yield rec, False
+        stream = _only()
+    else:
+        stream = iter_records(args.repo, cap_shards=(0 if args.cap == 0 else 40))
+    for rec, shard_sampled in stream:
         fam = rec_family(rec)
         if not fam:
             continue
@@ -235,6 +251,15 @@ def main():
                      round(float(np.percentile(v, 10)), 4),
                      round(float((v >= 0.999).mean()), 4)])
     out = os.path.join(args.repo, "docs", "mask_statistics.csv")
+    if args.containers and os.path.exists(out):
+        # merge: the measured (family, dataset) rows replace theirs in place
+        with open(out, newline="", encoding="utf-8") as f:
+            old = list(csv.reader(f))[1:]
+        new = {(r[0], r[1]): r for r in rows}
+        merged = [new.pop((r[0], r[1]), r) for r in old if r]
+        merged += list(new.values())
+        rows = [[r[0], r[1], int(r[2]), int(r[3]), r[4], float(r[5]),
+                 float(r[6]), float(r[7]), float(r[8])] for r in merged]
     with open(out, "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f, lineterminator="\n")
         w.writerow(["family", "source", "n_records_seen", "n_measured",

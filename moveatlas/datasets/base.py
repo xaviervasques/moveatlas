@@ -58,7 +58,7 @@ class BaseDataset:
         dataset, what its published record lists (nothing is downloaded
         to list). Many hosted records hold tables, archives or documents
         rather than canonical records; this is how you see them."""
-        if self.access_case in ("barrier", "local_only"):
+        if self.access_case in ("barrier", "local_only", "tool"):
             return []
         store = open_store()
         base = self.info["path"].replace("\\", "/").rstrip("/")
@@ -144,7 +144,7 @@ class GenericDataset(BaseDataset):
         computed once; () for barrier / local_only ids and when nothing
         is ingested."""
         if self._modalities is None:
-            if self.access_case in ("barrier", "local_only"):
+            if self.access_case in ("barrier", "local_only", "tool"):
                 self._modalities = ()
             else:
                 try:
@@ -193,6 +193,11 @@ class GenericDataset(BaseDataset):
                 f"'{self.code}' is a documented access barrier, not a "
                 f"download. Route on record: {i['access']}. Status: "
                 f"{i['status']}. Card: {i['path']}/datacard.md")
+        if self.access_case == "tool":
+            raise AccessError(
+                f"'{self.code}' is software catalogued for reference, not a "
+                f"dataset: nothing downloads. Code: {i['link']}. "
+                f"Card: {i['path']}/datacard.md")
         if self.access_case == "local_only":
             raise AccessError(
                 f"'{self.code}' is private-tier data; point a dedicated "

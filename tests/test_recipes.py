@@ -295,7 +295,7 @@ def test_hd_accel_ingest_from_synthetic_csvs(tmp_path):
     out, n = recipes.ingest("hd_accel_jnet", root=root)
     assert n == 1
     rec = records.load(out)[0]
-    assert rec["subject_ns"] == "hd_accel:7" and rec["fps"] is None
+    assert rec["subject_ns"] == "hd_accel:7" and rec["fps"] == 100.0
     assert rec["signal"].shape == (20, 1, 9)
 
 
@@ -317,3 +317,16 @@ def test_monipar_ingest_from_a_synthetic_mat(tmp_path):
     rec = records.load(out)[0]
     assert rec["subject_ns"] == "monipar:sup_r0c0" and abs(rec["fps"] - 50.0) < 1e-6
     assert abs(float(rec["signal"][0, 0, imu.CH_I["acc_z"]]) - 1.0) < 1e-3   # m/s^2 -> g
+
+
+def test_an_all_zero_channel_is_an_absent_sensor():
+    import numpy as np
+    from moveatlas.recipes import imu
+    z = np.zeros(50)
+    x = np.linspace(-1, 1, 50)
+    rec = imu.make_record({"head": {"acc_x": z, "acc_y": z, "acc_z": z},
+                           "trunk": {"acc_x": x, "acc_y": x, "acc_z": x + 1}},
+                          100.0, "t:1", "t", "t")
+    # the head wrote zeros throughout: dropped, like a never-finite sensor
+    assert rec["location_ids"].tolist() == [imu.LOC_I["trunk"]]
+    assert rec["channel_mask"][:, :3].all() and not rec["channel_mask"][:, 3:].any()

@@ -17,6 +17,9 @@ feet: [foot_L, foot_R]
 #   subject_ns, source, labels(optional)
 units:
   force: N            # canonical force unit (Newtons); convert per dataset if needed
+# A record whose source force is not in newtons says so at record level
+# (2026-09-17): unit "unknown" plus a "calibration" string (gaitndd:
+# "uncalibrated force-sensitive resistor output"). Never rescaled.
 sampling:
   policy: native_per_sample
 tokenization:

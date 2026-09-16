@@ -26,6 +26,7 @@ pose) because the corpus volume has 1 MiB allocation units - splitting
 API
     save(path, rec_or_list)        write a container (kind by type)
     load(path)                     dict or list, arrays as numpy
+    iter_load(path)                the records one at a time
     load_any(path)                 .npz via load(); .pkl via pickle with
                                    a DeprecationWarning (transition only)
     prefer_npz(path)               the .npz sibling of a .pkl path when it
@@ -97,11 +98,24 @@ def _detokenize(v, zf, prefix):
     return v
 
 
+# every member carries this timestamp, so writing the same records twice
+# gives the same bytes (a recipe run can be checked against the corpus by
+# checksum; zipfile otherwise stamps the wall-clock minute, 2026-09-17)
+_ZIP_EPOCH = (1980, 1, 1, 0, 0, 0)
+
+
+def _writestr(zf, name, data):
+    info = zipfile.ZipInfo(name, date_time=_ZIP_EPOCH)
+    info.compress_type = zf.compression
+    info.external_attr = 0o644 << 16
+    zf.writestr(info, data)
+
+
 def _write_npy(zf, name, arr):
     buf = io.BytesIO()
     np.lib.format.write_array(buf, np.ascontiguousarray(arr),
                               allow_pickle=False)
-    zf.writestr(name, buf.getvalue())
+    _writestr(zf, name, buf.getvalue())
 
 
 def _read_npy(zf, name):
@@ -112,13 +126,19 @@ def _read_npy(zf, name):
 
 # ------------------------------------------------------------------- write
 def save(path, obj, compress=True):
-    """Write a record (dict) or a list of records to `path` (.npz)."""
+    """Write a record (dict) or a list of records to `path` (.npz).
+
+    Any iterable of dicts (a generator included) is written as a list,
+    one record at a time, so a builder can stream a container larger
+    than memory."""
     if isinstance(obj, dict):
         kind, items = "record", [obj]
     elif isinstance(obj, (list, tuple)):
-        kind, items = "list", list(obj)
+        kind, items = "list", obj
+    elif hasattr(obj, "__iter__") and not isinstance(obj, (str, bytes)):
+        kind, items = "list", obj
     else:
-        raise TypeError("save() takes a record dict or a list of them")
+        raise TypeError("save() takes a record dict or an iterable of them")
     mode = zipfile.ZIP_DEFLATED if compress else zipfile.ZIP_STORED
     tmp = path + ".part"
     os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
@@ -142,8 +162,8 @@ def save(path, obj, compress=True):
                 header["records"] = metas
                 header["n_records"] = len(metas)
             # meta.json LAST so a truncated write is detectable (no header)
-            zf.writestr(META, json.dumps(header, ensure_ascii=False,
-                                         separators=(",", ":")))
+            _writestr(zf, META, json.dumps(header, ensure_ascii=False,
+                                           separators=(",", ":")))
     except BaseException:
         # a refused value (object array, non-JSON metadata) aborts the write
         # partway; leave no half-container behind for a later pass to find
@@ -187,6 +207,23 @@ def load(path):
             return _assemble(zf, header["meta"], "")
         return [_assemble(zf, m, f"r{i:06d}/")
                 for i, m in enumerate(header["records"])]
+
+
+def iter_load(path):
+    """Yield the records of a container one at a time (a kind 'record'
+    container yields its single record), so a container larger than
+    memory can be read record by record."""
+    with zipfile.ZipFile(path) as zf:
+        if META not in zf.namelist():
+            raise ValueError(f"{path}: not a {FORMAT} container (no {META})")
+        header = json.loads(zf.read(META).decode("utf-8"))
+        if header.get("format") != FORMAT:
+            raise ValueError(f"{path}: unknown format {header.get('format')!r}")
+        if header["kind"] == "record":
+            yield _assemble(zf, header["meta"], "")
+            return
+        for i, m in enumerate(header["records"]):
+            yield _assemble(zf, m, f"r{i:06d}/")
 
 
 def prefer_npz(path):

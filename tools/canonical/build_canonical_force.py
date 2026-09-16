@@ -16,28 +16,36 @@ import csv
 import glob
 import zipfile
 import tempfile
-import pickle
 import numpy as np
 
 REPO = os.path.dirname(os.path.abspath(__file__))
+# record-level declaration for sources whose force is not in newtons
+UNCALIBRATED = {"unit": "unknown",
+                "calibration": "uncalibrated force-sensitive resistor output"}
 # force grid: 8 insole positions (0..7) + total (8), per foot
 NPOS = 9
 
 
-def make_record(footL, footR, maskL, maskR, fps, subject_ns, task, source):
+def make_record(footL, footR, maskL, maskR, fps, subject_ns, task, source,
+                extra=None):
     T = footL.shape[0]
     force = np.zeros((T, 2, NPOS), np.float32)
     force[:, 0, :] = np.nan_to_num(footL)
     force[:, 1, :] = np.nan_to_num(footR)
     mask = np.stack([maskL, maskR])
-    return {"force": force, "sensor_mask": mask, "fps": fps,
-            "subject_ns": subject_ns, "task": task, "source": source, "n_frames": T}
+    rec = {"force": force, "sensor_mask": mask, "fps": fps,
+           "subject_ns": subject_ns, "task": task, "source": source, "n_frames": T}
+    if extra:
+        rec.update(extra)
+    return rec
 
 
 def save(source, recs, manifest):
     out = os.path.join(REPO, "datasets/imu", source, "processed")
     os.makedirs(out, exist_ok=True)
-    pickle.dump(recs, open(os.path.join(out, "canonical_force.pkl"), "wb"))
+    # straight to the moveatlas-record/1 container (pickle retired 2026-09-17)
+    from moveatlas import records as _records
+    _records.save(os.path.join(out, "canonical_force.npz"), recs)
     for r in recs:
         manifest.append([source, r["subject_ns"], r["task"], r["fps"], r["n_frames"]])
     print(f"  {source}: {len(recs)} recordings, "
@@ -84,8 +92,13 @@ def ingest_gaitndd(manifest):
                 continue
             footL = np.zeros((sig.shape[0], NPOS)); footL[:, 8] = sig[:, 0]
             footR = np.zeros((sig.shape[0], NPOS)); footR[:, 8] = sig[:, 1]
+            # the source's force-sensitive resistors are not calibrated:
+            # the values are sensor outputs (about -2 to 1.1), not newtons.
+            # Kept as recorded, never rescaled (2026-09-17; the contract's
+            # unit N was implied until then).
             recs.append(make_record(footL, footR, tmask, tmask, 300.0,
-                                    f"gaitndd:{rec_name}", rec_name, "gaitndd"))
+                                    f"gaitndd:{rec_name}", rec_name, "gaitndd",
+                                    extra=UNCALIBRATED))
     save("gaitndd", recs, manifest)
 
 
@@ -123,12 +136,53 @@ def ingest_weargait_force(manifest):
     save("weargait_pd", recs, manifest)
 
 
+SOURCES = {"gaitpdb": ingest_gaitpdb, "gaitndd": ingest_gaitndd,
+           "weargait": ingest_weargait_force}
+HEADER = ["source", "subject_ns", "task", "fps", "n_frames"]
+
+
+def _merge_in_place(old_rows, new_rows):
+    """The rebuilt sources' rows replace theirs where they stood (the first
+    old row of each source); the other sources' rows are kept untouched."""
+    by_src = {}
+    for r in new_rows:
+        by_src.setdefault(str(r[0]), []).append(r)
+    out, done, kept = [], set(), 0
+    for r in old_rows:
+        if not r:
+            continue
+        s = r[0]
+        if s in by_src:
+            if s not in done:
+                out.extend(by_src[s]); done.add(s)
+            continue
+        out.append(r); kept += 1
+    for s, rows in by_src.items():
+        if s not in done:
+            out.extend(rows)
+    return out, kept
+
+
 def main():
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--only", default=None,
+                    help="comma list among: " + ",".join(SOURCES))
+    args = ap.parse_args()
+    todo = list(SOURCES) if not args.only else [x.strip() for x in args.only.split(",")]
+    for t in todo:
+        if t not in SOURCES:
+            raise SystemExit(f"unknown source {t!r}; known: {', '.join(SOURCES)}")
     manifest = []
-    ingest_gaitpdb(manifest)
-    ingest_gaitndd(manifest)
-    ingest_weargait_force(manifest)
+    for t in todo:
+        SOURCES[t](manifest)
     mp = os.path.join(REPO, "datasets/_canonical_force_manifest.csv")
+    if args.only and os.path.exists(mp):
+        # merge, never clobber the rows of the sources not rebuilt
+        with open(mp, newline="") as f:
+            old_rows = list(csv.reader(f))[1:]
+        manifest, kept = _merge_in_place(old_rows, manifest)
+        print(f"merged: kept {kept} rows from other sources")
     with open(mp, "w", newline="") as f:
         w = csv.writer(f)
         w.writerow(["source", "subject_ns", "task", "fps", "n_frames"])

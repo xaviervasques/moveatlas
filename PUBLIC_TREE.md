@@ -16,10 +16,10 @@ needs. This tree starts with a single authored commit.
 | datasets | 204 |
 | docs | 33 |
 | moveatlas | 30 |
-| site | 263 |
+| site | 262 |
 | tests | 15 |
 | tools | 63 |
-| **total** | **635** |
+| **total** | **634** |
 
 ## Deliberately excluded
 

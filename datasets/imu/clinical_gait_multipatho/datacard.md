@@ -12,3 +12,4 @@
 - link: https://doi.org/10.6084/m9.figshare.28806086
 - ingestion: build_canonical_imu.py (clinical_gait mapping)
 - notes: IDENTITY SETTLED 2026-08-23: this IS the deposit the registry also lists as clinical_gait_2025 (figshare 28806086, 'A Dataset of Clinical Gait Signals with Wearable Sensors from Healthy, Neurological, and Orthopedic Cohorts'). Proof: the cached clinical_gait_2025 download URL is figshare file 53704514 and the md5 of raw/dataset.zip here matches the published md5 e7701e2ee2d8e6164a011f7c264d7649 exactly. The old 'check subject overlap' question dissolves: same record, ingested once, under this id
+- known issues (2026-09-17): magnetometer values are normalized to the local field, not in uT (declared in mag_unit from 2026-09-17); subject RIL_12's head sensor is written as zeros in five trials and is treated as absent in records built from 2026-09-17

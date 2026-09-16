@@ -274,3 +274,16 @@ def test_no_partial_file_survives_a_failed_save(tmp_path):
         records.save(str(p), bad)
     assert not p.exists()
     assert not (tmp_path / "fail.npz.part").exists()
+
+
+def test_the_same_records_write_the_same_bytes(tmp_path):
+    import hashlib
+    import time
+    recs = [{"signal": np.arange(12, dtype=np.float32).reshape(3, 4), "fps": 50.0}]
+    a, b = tmp_path / "a.npz", tmp_path / "b.npz"
+    records.save(str(a), recs)
+    time.sleep(1.1)
+    records.save(str(b), iter(recs))          # a generator writes a list too
+    assert hashlib.sha256(a.read_bytes()).digest() == \
+        hashlib.sha256(b.read_bytes()).digest()
+    assert records.load(str(b))[0]["fps"] == 50.0

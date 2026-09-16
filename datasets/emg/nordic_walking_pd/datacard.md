@@ -7,7 +7,7 @@
 - Version / retrieval date: catalogued 2026-09-05 (deep-dive sweep); NOT fetched
 - Status (2026-09-05): CATALOGUED 2026-09-05 (deep-dive): the FIRST open PD gait set combining full mocap + force plates + 16-channel surface EMG (pre/post intervention). Fetch-verify the repo host through the Nature link
 - Number of subjects: 24
-- MoveAtlas cells: B2; M2 M3 M4
+- MoveAtlas cells: B2; M1 M3 M5
 
 ## Retrieval notes
 Found by the 2026-09-05 deep-dive sweep. RE-VERIFY licence and access

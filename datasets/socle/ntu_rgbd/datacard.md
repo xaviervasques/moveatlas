@@ -23,6 +23,7 @@
   - Postural + action diversity (non-locomotor); priority-1 healthy base of Handoff 3.
   - RGB video / depth / IR (hundreds of GB) intentionally excluded: out of scope,
     identifiable, and disk-prohibitive. Skeletons are exactly what the FM needs.
+- known issues (2026-09-17): a screen on 2026-09-16 found 17,073 of 113,945 skeleton records outside the thigh-to-torso length band used for the other pose sources; the Kinect joint definitions differ from those sources
 
 ## Retrieval notes
 Downloaded by the owner via the ROSE portal (3D skeletons category), staged in

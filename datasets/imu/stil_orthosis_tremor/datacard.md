@@ -7,7 +7,7 @@
 - Version / retrieval date: catalogued 2026-09-04 (closing sweep); NOT fetched
 - Status (2026-09-04): CATALOGUED 2026-09-04 (closing sweep): raw tremor accelerometry with/without a suppression device + TETRAS, randomized crossover, 30 files - a rare RAW-signal ET deposit, A2 candidate if the registration route is self-serve (verify: registration vs request)
 - Number of subjects: 24
-- MoveAtlas cells: A2; M2
+- MoveAtlas cells: A1 (essential tremor); M2
 
 ## Retrieval notes
 Found by the 2026-09-04 closing sweep. Every licence/access statement

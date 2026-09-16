@@ -7,7 +7,7 @@
 - Version / retrieval date: catalogued 2026-09-05 (deep-dive sweep); NOT fetched
 - Status (2026-09-05): CATALOGUED 2026-09-05: DOCUMENTED BARRIER (fee + MTA + enclave drift): raw 100 Hz AX3 for ~103k participants incl. several hundred PD cases (the prodromal-PD-7-years-before-diagnosis literature). The FEE-BARRIER exemplar for the taxonomy
 - Number of subjects: ~103000 total
-- MoveAtlas cells: B1-B4 E; M2
+- MoveAtlas cells: B1-B4 context; C1 C3; M2
 
 ## Retrieval notes
 Found/adjudicated by the 2026-09-05 deep-dive sweep (big-cohort

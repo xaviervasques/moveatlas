@@ -43,7 +43,7 @@ imu,pd_biostamprc21,7682,7682,no,1.0,1.0,1.0,1.0
 imu,physionet_multimodal_gait,167,167,no,1.0,1.0,1.0,1.0
 imu,sensefog,43,43,no,1.0,1.0,1.0,1.0
 imu,sixmwt_lifespan,60,60,no,1.0,1.0,1.0,1.0
-imu,weargait_pd,1458,1458,no,1.0,1.0,1.0,1.0
+imu,weargait_pd,1458,1458,no,0.9965,1.0,0.9979,0.8916
 pose,amass,17154,17154,no,1.0,1.0,1.0,1.0
 pose,care_pd,8476,8476,no,1.0,1.0,1.0,1.0
 pose,cody_1,51,51,no,0.9979,1.0,0.9927,0.7647

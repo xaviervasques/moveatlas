@@ -27,7 +27,7 @@
   page (713 SHA256SUMS lines incl. figures/docs). The healthy
   multimodal control corpus the pairing analyses lacked.
 - Number of subjects: 59 (healthy young adults)
-- MoveAtlas cells: C1; M2 M3 M4 M6
+- MoveAtlas cells: C1; M2 M3 M5 M6
 
 ## Privacy gate (read 2026-09-07, before any redistribution)
 raw/Dataset/subject-info.csv carries, per subject, GENDER, a full

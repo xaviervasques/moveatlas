@@ -8,7 +8,7 @@ import pytest
 from moveatlas import registry
 from moveatlas.registry import access_case, dataset_info, list_datasets
 
-ACCESS_CASES = {"hosted", "recipe", "barrier", "local_only"}
+ACCESS_CASES = {"hosted", "recipe", "barrier", "local_only", "tool"}
 EXPECTED_COLUMNS = {"id", "family", "path", "title", "license",
                     "redistribution", "access", "status", "link",
                     "portal_action", "access_case"}
@@ -38,10 +38,11 @@ def test_list_datasets_filters_by_family_and_case():
     by_fam = list_datasets(family=fam)
     assert by_fam and all(r["family"] == fam for r in by_fam)
     assert len(by_fam) == sum(r["family"] == fam for r in rows)
+    everything = list_datasets(include_tools=True)
     for case in ACCESS_CASES:
         by_case = list_datasets(case=case)
         assert all(r["access_case"] == case for r in by_case)
-        assert len(by_case) == sum(r["access_case"] == case for r in rows)
+        assert len(by_case) == sum(r["access_case"] == case for r in everything)
     assert list_datasets(family="no_such_family") == []
 
 
@@ -93,6 +94,9 @@ def test_dataset_info_unknown_id_lists_known_ids():
     ({"license": "", "redistribution": "", "status": ""}, "recipe"),
     ({}, "recipe"),
     ({"license": None, "redistribution": None, "status": None}, "recipe"),
+    # software catalogued for reference is not a dataset
+    ({"id": "visionmd", "license": "open-source software",
+      "redistribution": "no (software tool)", "status": ""}, "tool"),
 ])
 def test_access_case_branches(row, expected):
     assert access_case(row) == expected
@@ -102,8 +106,17 @@ def test_access_case_covers_all_four_branches():
     rows = [{"license": "private"},
             {"id": "modys_video", "redistribution": "yes"},
             {"redistribution": "no", "status": "DOCUMENTED BARRIER"},
-            {"redistribution": "no", "status": "downloaded"}]
+            {"redistribution": "no", "status": "downloaded"},
+            {"id": "visionmd"}]
     assert {access_case(r) for r in rows} == ACCESS_CASES
+
+
+def test_tools_are_not_listed_as_datasets():
+    ids = {r["id"] for r in list_datasets()}
+    assert "visionmd" not in ids
+    assert {r["id"] for r in list_datasets(case="tool")} == {"visionmd"}
+    assert len(list_datasets(include_tools=True)) == len(ids) + 1
+    assert dataset_info("visionmd")["access_case"] == "tool"
 
 
 # -- the shipped snapshot ------------------------------------------------------
@@ -163,3 +176,14 @@ def test_registry_raises_when_no_index_anywhere(tmp_path, monkeypatch):
     monkeypatch.setattr(registry, "_HERE", str(tmp_path / "nowhere"))
     with pytest.raises(FileNotFoundError, match="MOVEATLAS_REPO"):
         list_datasets()
+
+
+def test_a_tool_refuses_data_and_recipes():
+    import moveatlas
+    from moveatlas.recipes import NoRecipe, recipe
+    ds = moveatlas.dataset("visionmd")
+    assert ds.files() == []
+    with pytest.raises(Exception, match="not a dataset"):
+        ds.get_data()
+    with pytest.raises(NoRecipe, match="not a dataset"):
+        recipe("visionmd")

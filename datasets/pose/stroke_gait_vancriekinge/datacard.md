@@ -13,3 +13,4 @@
 - link: https://doi.org/10.6084/m9.figshare.c.6503791
 - citation: Sci Data 2023, doi 10.1038/s41597-023-02767-y
 - notes: hemiparetic/spastic gait WITH pathological EMG: D3 anchor and an EMG contract pathology source
+- known issues (2026-09-17): 555 of 559 EMG records carry an amplitude flag: the declared volts convert to about 476 mV at the 99th percentile, about 1000 times the surface-EMG range, and are not rescaled; the 4 other records come from a 7-channel acquisition within range

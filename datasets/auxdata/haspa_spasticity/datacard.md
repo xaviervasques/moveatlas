@@ -8,7 +8,7 @@
 - Version / retrieval date: catalogued 2026-09-04 (closing sweep); fetch 2026-09-05 via fetch_dataverse.py (RDG back from maintenance)
 - Status (2026-09-04): CATALOGUED 2026-09-04 (closing sweep): lower-limb kinematics + kinetics + neurophysiological parameters of spastic resistance (hypertonia, scope-adjacent). RDG portal was DOWN (maintenance) during the sweep - explains the owner queue's RDG retry failures
 - Number of subjects: see record
-- MoveAtlas cells: E context; M2 M3
+- MoveAtlas cells: D3 (spasticity); M2 M3
 
 ## Retrieval notes
 Found by the 2026-09-04 closing sweep. Every licence/access statement

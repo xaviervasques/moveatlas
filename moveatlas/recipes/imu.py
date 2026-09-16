@@ -33,8 +33,9 @@ def make_record(loc_data, fps, subject_ns, task, source, label=None):
     channel with no finite sample anywhere is an ABSENT sensor, masked
     off and zeroed; a location left with no valid channel is dropped; a
     channel that drops out for a stretch stays present, its non-finite
-    samples zeroed and the record gains sample_valid (T, L). The signal
-    is therefore finite and nothing is inferred."""
+    samples zeroed and the record gains sample_valid (T, L). A channel
+    whose finite samples are all exactly zero is absent as well
+    (2026-09-17). The signal is therefore finite and nothing is inferred."""
     active = [l for l in LOCATIONS if l in loc_data]
     T = len(next(iter(next(iter(loc_data.values())).values())))
     sig = np.zeros((T, len(active), 9), np.float32)
@@ -46,6 +47,8 @@ def make_record(loc_data, fps, subject_ns, task, source, label=None):
 
     finite = np.isfinite(sig)
     dead = cmask & ~finite.any(axis=0)
+    # a channel of exact zeros throughout is an absent sensor too (2026-09-17)
+    dead |= cmask & ~np.any(finite & (sig != 0), axis=0)
     if dead.any():
         cmask = cmask & ~dead
     keep = [li for li in range(len(active)) if cmask[li].any()]

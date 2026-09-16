@@ -7,7 +7,7 @@
 - Version / retrieval date: catalogued 2026-09-04 (closing sweep); NOT fetched
 - Status (2026-09-04): CATALOGUED 2026-09-04 (closing sweep): raw C3D optical mocap marker trajectories, 379 MB / 6 files - pediatric normative gait reference; anti-bot as PIET
 - Number of subjects: 431
-- MoveAtlas cells: C1; D
+- MoveAtlas cells: C2 (typically developing children, 3-13 years); M1
 
 - ACCESS VERDICT 2026-09-05 (browser check of the record page): the
   page banner reads "Restricted Access Dataset" - controlled access

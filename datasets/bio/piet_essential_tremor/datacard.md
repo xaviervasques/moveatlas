@@ -7,7 +7,7 @@
 - Version / retrieval date: catalogued 2026-09-04 (closing sweep); NOT fetched
 - Status (2026-09-04): CATALOGUED 2026-09-04 (closing sweep): structural MRI + 5 fMRI runs/subject, 30.6 GB / 589 files - the neuroimaging arm for tremor phenotyping; no kinematics. ScienceDB blocks generic fetchers (anti-bot): fetch via DataCite-resolved links or browser route
 - Number of subjects: 45
-- MoveAtlas cells: A2 context; M5
+- MoveAtlas cells: A1 context; M8
 
 - ACCESS VERDICT 2026-09-05 (browser check): the page banner reads
   "PUBLIC Dataset, CC0" - self-serve confirmed. FETCH DEFERRED until

@@ -7,7 +7,7 @@
 - Version / retrieval date: catalogued 2026-09-04 (closing sweep); NOT fetched
 - Status (2026-09-04): CATALOGUED 2026-09-04 (closing sweep): smartwatch + phone accelerometry rated against Fahn-Tolosa-Marin - an open RAW-signal A2 addition
 - Number of subjects: see record
-- MoveAtlas cells: A2; M2
+- MoveAtlas cells: A1 (essential tremor); M2
 
 - CONTENT VERDICT 2026-09-05 (RData opened with pyreadr): the deposit
   is a DEMO-plus-labels package - one participant's raw smartwatch

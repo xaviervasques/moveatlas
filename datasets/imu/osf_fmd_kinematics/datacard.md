@@ -7,7 +7,7 @@
   drug-induced/functional pass; records verified at file level
   by the catalogue sweep)
 - Status (2026-09-05): CATALOGUED 2026-09-05: trial-level limb velocity traces (FMD.mat 110 MB) + full analysis pipeline - the second genuine open FMD deposit; with osf_fmd_eeg it revises D7 from 'nothing at all' to 'two processed-signal deposits, licence-pending'
-- MoveAtlas cells: D7 functional; M2 M4
+- MoveAtlas cells: D7 (functional); M2
 
 ## Retrieval notes
 RE-VERIFY at fetch. The two OSF FMD deposits carry NO licence:

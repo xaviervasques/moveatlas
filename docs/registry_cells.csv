@@ -23,7 +23,7 @@ clinical_gait_multipatho,imu,B2|B3|D3|D4|E4,M2,,HP:0002067|HP:0002375,n_subjects
 daphnet,imu,B5,M2,,HP:0031825,license_token:CC-BY-4.0
 fog_star,imu,B5,M2,,HP:0031825,license_token:CC-BY-4.0
 gaitdb,imu,B2|B3|C3,M2,derived,HP:0002067|HP:0002375,license_no_spdx_token
-gaitndd,imu,A7|B2|C1|D3,M3,"HD|PD|controls|ALS is pyramidal, not ataxic; dropped, owner ruling 2026-09-01",HP:0002072|HP:0002067,code_dropped:D2|license_no_spdx_token
+gaitndd,imu,A7|B2|C1|D3,M3,"HD|PD|controls|ALS is pyramidal, not ataxic; the ataxia code was dropped, owner ruling 2026-09-01",HP:0002072|HP:0002067,license_no_spdx_token
 hd_accel_jnet,imu,A7,M2,,HP:0002072,license_no_spdx_token
 imu_inthewild_iprognosis,imu,A1|B2,M2,,HP:0001337|HP:0002067,cell_without_keyword:A1|license_no_spdx_token
 kaggle_fog,imu,B5,M2,,HP:0031825,license_no_spdx_token
@@ -45,7 +45,7 @@ osdb,imu,D1,M2,,,n_subjects_nonnumeric|license_no_spdx_token
 ataxie_kinect_dib,pose,D2,M1,table only on disk,,license_no_spdx_token
 babypose,pose,C2,M1,,,license_no_spdx_token
 care_pd,pose,B2|B3,M1,,HP:0002067|HP:0002375,license_token:CC-BY-NC-ND-4.0|license_multiple_tokens:CC-BY-NC-ND-4.0/CC-BY-4.0/MIT
-fog_turning_filho,pose,B5,M1|M2,video + IMU synchronized,HP:0031825,license_token:CC0-1.0
+fog_turning_filho,pose,B5,M1|M2,video + IMU synchronized,HP:0031825,license_token:CC-BY-4.0|license_multiple_tokens:CC-BY-4.0/CC0-1.0
 gavd,pose,,M1,multi-pathology labels|annotations only,,cells_empty|modality_only|n_subjects_nonnumeric|license_token:MIT
 hubu_fis_fingertap,pose,B2,M1,video,HP:0002067,modality_keyword_without_code:M12(clinical scales)|n_subjects_nonnumeric|license_token:CC-BY-4.0
 koa_pd_nm,pose,B2|B3|C1|E4,M4,,HP:0002067|HP:0002375,modality_keyword_without_code:M1(video/pose)|license_no_spdx_token
@@ -108,64 +108,64 @@ alphasyn_catwalk,animal,,,animal: synucleinopathy gait analog (parkinsonian lane
 locomouse_ataxia,animal,,,animal: cerebellar-ataxia gait analogs (differential context for the dystonia/chorea gait question),,cells_empty_nonhuman|license_token:CC-BY
 infant_pose_chambers,pose,C2,M1,,,n_subjects_nonnumeric|license_token:CC-BY-4.0
 asdpose,pose,A5,M1,,HP:0000733,license_no_spdx_token
-piet_essential_tremor,bio,A2,M5,context,HP:0001336,modality_family_mismatch:M5|keyword_without_cell:A1(tremor)|cell_without_keyword:A2|modality_keyword_without_code:M8(imaging)|license_token:CC0-1.0
-open_dbs_pd,bio,B1|B2|B3|B4,M5,context,HP:0002063|HP:0002067|HP:0002375|HP:0002304,range_expanded:B1-B4|modality_family_mismatch:M5|modality_keyword_without_code:M8(imaging)|license_token:CC0-1.0
-shanghai_child_gait3d,pose,C1,,D,,class_only:D|license_no_spdx_token
+piet_essential_tremor,bio,A1,M8,context,HP:0001337,license_token:CC0-1.0
+open_dbs_pd,bio,B1|B2|B3|B4,M8,context,HP:0002063|HP:0002067|HP:0002375|HP:0002304,range_expanded:B1-B4|license_token:CC0-1.0
+shanghai_child_gait3d,pose,C2,M1,"typically developing children, 3-13 years",,C2_without_infant_evidence|license_no_spdx_token
 aihub_path_gait,imu,B2|C1,M2,,HP:0002067,license_no_spdx_token
-aihub_pd_imaging,bio,B1|B2|B3|B4,M5,context,HP:0002063|HP:0002067|HP:0002375|HP:0002304,range_expanded:B1-B4|modality_family_mismatch:M5|modality_keyword_without_code:M8(imaging)|license_no_spdx_token
+aihub_pd_imaging,bio,B1|B2|B3|B4,M8,context,HP:0002063|HP:0002067|HP:0002375|HP:0002304,range_expanded:B1-B4|license_no_spdx_token
 pearl_pd,imu,B2|B3,M2,,HP:0002067|HP:0002375,n_subjects_empty|license_no_spdx_token
-stil_orthosis_tremor,imu,A2,M2,,HP:0001336,keyword_without_cell:A1(tremor)|cell_without_keyword:A2|license_no_spdx_token
-haspa_spasticity,auxdata,,M2|M3,E context,,cells_empty|modality_only|class_only:E|keyword_without_cell:D3(pyramidal)|n_subjects_empty|license_token:etalab-2.0
-drummer_tremor_model,imu,A2|C2,M2|M4,context,HP:0001336,modality_family_mismatch:M4|keyword_without_cell:A1(tremor)|cell_without_keyword:A2|C2_without_infant_evidence|license_token:etalab-2.0
-mindts_tourette,video,A3,M1|M8,,HP:0100033,license_token:CC-BY-4.0
+stil_orthosis_tremor,imu,A1,M2,essential tremor,HP:0001337,license_no_spdx_token
+haspa_spasticity,auxdata,D3,M2|M3,spasticity,,n_subjects_empty|license_token:etalab-2.0
+drummer_tremor_model,imu,A1|C1,M2|M5,context (physiological tremor),HP:0001337,license_token:etalab-2.0
+mindts_tourette,video,A3,M1|M11,,HP:0100033,modality_family_mismatch:M11|license_token:CC-BY-4.0
 osf_tic_video_46vxm,pose,A3,M1,,HP:0100033,n_subjects_empty|license_no_spdx_token
 dataversenl_pd_ema,imu,B1|B2|B3|B4|B5,M2,,HP:0002063|HP:0002067|HP:0002375|HP:0002304|HP:0031825,range_expanded:B1-B5|license_token:CC0-1.0
 sensefog,eeg,B5,M6|M7,,HP:0031825,modality_keyword_without_code:M5(EMG)|n_subjects_nonnumeric|license_token:CC-BY-4.0
-mendeley_et_accel,imu,A2,M2,,HP:0001336,keyword_without_cell:A1(tremor)|cell_without_keyword:A2|n_subjects_empty|license_token:CC-BY-4.0
-osf_tremor_amplitude,imu,A2|B1,M2,context,HP:0001336|HP:0002063,keyword_without_cell:A1(tremor)|cell_without_keyword:A2|n_subjects_empty|license_token:CC-BY-NC-SA-4.0
-dbsmatchmaker,auxdata,A1|A4|A5|A6|A7|A8,M9,genetic context,HP:0001337|HP:0001332|HP:0000733|HP:0002305|HP:0002072|HP:0100248,range_expanded:A4-A8|cell_without_keyword:A1|n_subjects_nonnumeric|license_no_spdx_token
+mendeley_et_accel,imu,A1,M2,essential tremor,HP:0001337,n_subjects_empty|license_token:CC-BY-4.0
+osf_tremor_amplitude,imu,A1,M2,,HP:0001337,keyword_without_cell:B?(parkinson)|n_subjects_empty|license_token:CC-BY-NC-SA-4.0
+dbsmatchmaker,auxdata,A1|A3|A4|A5|A6|A7|A8,M9,genetic context,HP:0001337|HP:0100033|HP:0001332|HP:0000733|HP:0002305|HP:0002072|HP:0100248,range_expanded:A3-A8|cell_without_keyword:A1|n_subjects_nonnumeric|license_no_spdx_token
 mpower,imu,B1|B2|B3,M2|M8,,HP:0002063|HP:0002067|HP:0002375,range_expanded:B1-B3|modality_family_mismatch:M8|n_subjects_nonnumeric|license_no_spdx_token
 ppmi_sensors,imu,B1|B2|B3|B4,M2,,HP:0002063|HP:0002067|HP:0002375|HP:0002304,range_expanded:B1-B4|keyword_without_cell:D6(sleep)|n_subjects_empty|license_no_spdx_token
 ppp_radboud,imu,B1|B2|B3|B4,M2,,HP:0002063|HP:0002067|HP:0002375|HP:0002304,range_expanded:B1-B4|license_no_spdx_token
 watch_pd,imu,B1|B2|B3,M2,,HP:0002063|HP:0002067|HP:0002375,range_expanded:B1-B3|license_no_spdx_token
-ukb_accelerometry,imu,B1|B2|B3|B4,M2,E,HP:0002063|HP:0002067|HP:0002375|HP:0002304,class_only:E|range_expanded:B1-B4|n_subjects_nonnumeric|license_no_spdx_token
+ukb_accelerometry,imu,B1|B2|B3|B4|C1|C3,M2,context,HP:0002063|HP:0002067|HP:0002375|HP:0002304,range_expanded:B1-B4|n_subjects_nonnumeric|license_no_spdx_token
 rempark_staton,imu,B5,M2,,HP:0031825,license_no_spdx_token
 iceberg_icm,imu,B1|B2|B3|B4,M2|M6,prodromal,HP:0002063|HP:0002067|HP:0002375|HP:0002304,range_expanded:B1-B4|keyword_without_cell:D6(sleep)|modality_keyword_without_code:M11(voice/writing)|n_subjects_approx|license_no_spdx_token
 ncer_pd_gait,imu,B2,M2,,HP:0002067,n_subjects_nonnumeric|license_no_spdx_token
 opdc_discovery,imu,B1|B2|B3,M2,prodromal,HP:0002063|HP:0002067|HP:0002375,range_expanded:B1-B3|n_subjects_empty|license_no_spdx_token
 mass_sleep,eeg,,M6,prodromal context,,cells_empty|modality_only|keyword_without_cell:D6(sleep)|modality_keyword_without_code:M5(EMG)|n_subjects_nonnumeric|license_no_spdx_token
-nordic_walking_pd,emg,B2,M2|M3|M4,,HP:0002067,modality_family_mismatch:M4|modality_keyword_without_code:M1(video/pose)|modality_keyword_without_code:M5(EMG)|license_no_spdx_token
+nordic_walking_pd,emg,B2,M1|M3|M5,,HP:0002067,license_no_spdx_token
 ankle_fog_4tu,imu,B5,M2,,HP:0031825,n_subjects_empty|license_no_spdx_token
-newhandpd,auxdata,B1|B2,M8,,HP:0002063|HP:0002067,modality_family_mismatch:M8|modality_keyword_without_code:M11(voice/writing)|license_no_spdx_token
-pahaw,auxdata,B1|B2,M8,,HP:0002063|HP:0002067,modality_family_mismatch:M8|modality_keyword_without_code:M11(voice/writing)|license_no_spdx_token
-uci_spiral_isenkul,auxdata,B1|B2,M8,,HP:0002063|HP:0002067,modality_family_mismatch:M8|modality_keyword_without_code:M11(voice/writing)|license_token:CC-BY-4.0
+newhandpd,auxdata,B2,M11,proxy (handwriting),HP:0002067,license_no_spdx_token
+pahaw,auxdata,B2,M11,proxy (handwriting),HP:0002067,license_no_spdx_token
+uci_spiral_isenkul,auxdata,B2,M11,proxy (spiral drawing),HP:0002067,license_token:CC-BY-4.0
 cis_pd,imu,B1|B2|B3|B4|A7,M2,dyskinesia labels,HP:0002063|HP:0002067|HP:0002375|HP:0002304|HP:0002072,range_expanded:B1-B4|license_no_spdx_token
 real_pd,imu,B1|B2|B3|B4|A7,M2,,HP:0002063|HP:0002067|HP:0002375|HP:0002304|HP:0002072,range_expanded:B1-B4|keyword_without_cell:A1(tremor)|license_no_spdx_token
-opensim_wrist_tremor,emg,A2|B1,M2|M4,,HP:0001336|HP:0002063,modality_family_mismatch:M4|keyword_without_cell:A1(tremor)|cell_without_keyword:A2|license_no_spdx_token
-mrc_lfp_dystonia,eeg,A1,M2|M4|M7,,HP:0001337,modality_family_mismatch:M4|keyword_without_cell:A4(dystonia)|cell_without_keyword:A1|modality_keyword_without_code:M5(EMG)|n_subjects_nonnumeric|license_token:CC-BY-SA-4.0
-dystonia_coalition,video,A1,M1,all focal dystonias,HP:0001337,keyword_without_cell:A4(dystonia)|n_subjects_nonnumeric|license_no_spdx_token
+opensim_wrist_tremor,emg,A1|B2,M2|M5,context,HP:0001337|HP:0002067,license_no_spdx_token
+mrc_lfp_dystonia,eeg,A4,M2|M5|M7,cervical dystonia,HP:0001332,n_subjects_nonnumeric|license_token:CC-BY-SA-4.0
+dystonia_coalition,video,A4,M1,all focal dystonias,HP:0001332,keyword_without_cell:A1(tremor)|n_subjects_nonnumeric|license_no_spdx_token
 mobilityapp_atypical,imu,B1|B2|B3|B4,M2,atypical,HP:0002063|HP:0002067|HP:0002375|HP:0002304,range_expanded:B1-B4|n_subjects_nonnumeric|license_token:CC-BY-4.0
 psp_msa_vowels,auxdata,,M8,B atypical speech-motor context,,cells_empty|modality_only|class_only:B|modality_family_mismatch:M8|keyword_without_cell:B?(parkinson)|modality_keyword_without_code:M11(voice/writing)|n_subjects_empty|license_token:CC-BY-4.0
 lancaster_prehd,eeg,A7,M5|M6,prodromal,HP:0002072,license_no_spdx_token
 enroll_hd_family,auxdata,A7,M1|M8,incl. premanifest|context,HP:0002072,modality_family_mismatch:M1|modality_family_mismatch:M8|n_subjects_nonnumeric|license_no_spdx_token
 nsrr_plm_psg,eeg,,M6,RLS/PLM context,,cells_empty|modality_only|keyword_without_cell:D6(sleep)|n_subjects_nonnumeric|license_no_spdx_token
-svd_spasmodic_dysphonia,auxdata,A1,M8,laryngeal,HP:0001337,modality_family_mismatch:M8|keyword_without_cell:A4(dystonia)|cell_without_keyword:A1|modality_keyword_without_code:M11(voice/writing)|n_subjects_nonnumeric|license_token:CC-BY-4.0
-uncommonvoice,auxdata,A1,M8,laryngeal,HP:0001337,modality_family_mismatch:M8|keyword_without_cell:A4(dystonia)|cell_without_keyword:A1|modality_keyword_without_code:M11(voice/writing)|n_subjects_nonnumeric|license_token:CC-BY-NC-SA-4.0
-meei_voice_db,auxdata,A1,M8,laryngeal context,HP:0001337,modality_family_mismatch:M8|cell_without_keyword:A1|modality_keyword_without_code:M11(voice/writing)|n_subjects_approx|license_no_spdx_token
-osf_fmd_eeg,eeg,D7,M5,functional,,modality_keyword_without_code:M6(EEG/PSG)|n_subjects_approx|license_no_spdx_token
-osf_fmd_kinematics,imu,D7,M2|M4,functional,,modality_family_mismatch:M4|n_subjects_empty|license_no_spdx_token
+svd_spasmodic_dysphonia,auxdata,A4,M11,laryngeal dystonia,HP:0001332,n_subjects_nonnumeric|license_token:CC-BY-4.0
+uncommonvoice,auxdata,A4,M11,laryngeal dystonia,HP:0001332,n_subjects_nonnumeric|license_token:CC-BY-NC-SA-4.0
+meei_voice_db,auxdata,A4,M11,context (laryngeal disorders),HP:0001332,cell_without_keyword:A4|n_subjects_approx|license_no_spdx_token
+osf_fmd_eeg,eeg,D7,M6,functional,,n_subjects_approx|license_no_spdx_token
+osf_fmd_kinematics,imu,D7,M2,functional,,n_subjects_empty|license_no_spdx_token
 obf_psychiatric,imu,E6,M2,drug-exposed context,,keyword_without_cell:E7(psychiatric)|license_token:CC-BY-4.0
-mobile_gaitlab,pose,C1,M1,D CP,,class_only:D|keyword_without_cell:D3(pyramidal)|license_no_spdx_token
-leuven_cp_gait,pose,,M3,D CP,,cells_empty|modality_only|class_only:D|keyword_without_cell:D3(pyramidal)|n_subjects_empty|license_no_spdx_token
-nbia_tircon,auxdata,A1,M9,genetic context,HP:0001337,keyword_without_cell:A4(dystonia)|cell_without_keyword:A1|n_subjects_approx|license_no_spdx_token
-dabi_movement_ephys,eeg,B1|B2|B3|B4|B5|A1|A2|A3,M7,pediatric,HP:0002063|HP:0002067|HP:0002375|HP:0002304|HP:0031825|HP:0001337|HP:0001336|HP:0100033,range_expanded:B1-B5|keyword_without_cell:A4(dystonia)|keyword_without_cell:D6(sleep)|cell_without_keyword:A2|n_subjects_empty|license_no_spdx_token
-dryad_vim_et_intraop,eeg,A2,M7,,HP:0001336,keyword_without_cell:A1(tremor)|cell_without_keyword:A2|n_subjects_empty|license_token:CC0-1.0
+mobile_gaitlab,pose,D3|C1,M1,cerebral palsy,,license_no_spdx_token
+leuven_cp_gait,pose,D3,M1|M3,cerebral palsy,,n_subjects_empty|license_no_spdx_token
+nbia_tircon,auxdata,A4,M9,genetic context,HP:0001332,n_subjects_approx|license_no_spdx_token
+dabi_movement_ephys,eeg,B1|B2|B3|B4|B5|A1|A3|A4,M7,context (paediatric archive),HP:0002063|HP:0002067|HP:0002375|HP:0002304|HP:0031825|HP:0001337|HP:0100033|HP:0001332,range_expanded:B1-B5|keyword_without_cell:D6(sleep)|n_subjects_empty|license_no_spdx_token
+dryad_vim_et_intraop,eeg,A1,M7,essential tremor,HP:0001337,n_subjects_empty|license_token:CC0-1.0
 dryad_pd_5imu_adl,imu,B1|B2|B3,M2,,HP:0002063|HP:0002067|HP:0002375,range_expanded:B1-B3|n_subjects_empty|license_token:CC0-1.0
-dryad_stn_kinematics,eeg,B1,M7|M4,,HP:0002063,modality_family_mismatch:M4|n_subjects_empty|license_token:CC0-1.0
+dryad_stn_kinematics,eeg,B1|B2,M1|M7,,HP:0002063|HP:0002067,range_expanded:B1-B2|modality_family_mismatch:M1|n_subjects_empty|license_token:CC0-1.0
 dryad_irbd_smartphone,imu,,M2|M8,B prodromal,,cells_empty|modality_only|class_only:B|modality_family_mismatch:M8|keyword_without_cell:B?(parkinson)|n_subjects_empty|license_token:CC0-1.0
-natmeg_pd,eeg,B1|B2|B3|B4,M5|M6|M4,,HP:0002063|HP:0002067|HP:0002375|HP:0002304,range_expanded:B1-B4|modality_family_mismatch:M4|n_subjects_empty|license_no_spdx_token
+natmeg_pd,eeg,B1|B2|B3|B4,M5|M6|M8,,HP:0002063|HP:0002067|HP:0002375|HP:0002304,range_expanded:B1-B4|modality_family_mismatch:M8|n_subjects_empty|license_no_spdx_token
 ebrains_rat_lfp_atlas,animal,,M7,animal PD models,,cells_empty_nonhuman|n_subjects_nonnumeric|license_token:CC-BY-4.0
 openneuro_pd_rest_eeg_768,eeg,B1|B2|B3|B4,M6,,HP:0002063|HP:0002067|HP:0002375|HP:0002304,range_expanded:B1-B4|license_token:CC0-1.0
-openneuro_cd_ctbs_174,bio,A1,M5,,HP:0001337,modality_family_mismatch:M5|keyword_without_cell:A4(dystonia)|cell_without_keyword:A1|modality_keyword_without_code:M8(imaging)|license_no_spdx_token
-physionet_multimodal_gait,eeg,C1,M2|M3|M4|M6,,,modality_family_mismatch:M3|modality_family_mismatch:M4|modality_keyword_without_code:M5(EMG)|license_token:CC-BY-4.0
+openneuro_cd_ctbs_174,bio,A4,M8,cervical dystonia,HP:0001332,license_no_spdx_token
+physionet_multimodal_gait,eeg,C1,M2|M3|M5|M6,,,modality_family_mismatch:M3|license_token:CC-BY-4.0
 gin_pd_rat_dbs,animal,,M7,animal PD models,,cells_empty_nonhuman|n_subjects_empty|license_token:CC-BY

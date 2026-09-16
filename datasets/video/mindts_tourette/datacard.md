@@ -16,7 +16,7 @@
   streams.
 - Status (2026-09-04): CATALOGUED 2026-09-04 (closing sweep): video + audio + text, >120 h of sessions, expert tic-frequency and affect annotations, 60 children. IF the content check confirms movement signal + de-identification, this REVISES the A3 tics absence (currently: refutation PENDING VERIFICATION). Ethics gate BEFORE fetch
 - Number of subjects: 60
-- MoveAtlas cells: A3; M1 M8
+- MoveAtlas cells: A3; M1 M11
 
 ## Retrieval notes
 Found by the 2026-09-04 closing sweep. All licence/access/content

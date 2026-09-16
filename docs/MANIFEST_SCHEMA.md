@@ -109,7 +109,7 @@ weargait_pd,weargait:HC108,TUG,100.0,4381,head|trunk|lower_back|wrist_L|wrist_R|
 | source | str | dataset name | `weargait_pd` |
 | subject_ns | str | namespaced subject id | `weargait:HC100` |
 | task | str | task / run / trial id | `TUG`, `S01R01` |
-| fps | float or blank | native sampling rate (blank for hd_accel_jnet, undeclared) | `100.0` |
+| fps | float or blank | native sampling rate (blank when the source declares none) | `100.0` |
 | n_frames | int | samples | `3606` |
 | locations | str | pipe-separated canonical sensor locations present, in record order | `head\|trunk\|...` |
 

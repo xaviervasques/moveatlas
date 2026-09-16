@@ -7,7 +7,7 @@
   drug-induced/functional pass; records verified at file level
   by the catalogue sweep)
 - Status (2026-09-05): CATALOGUED 2026-09-05 (deep-dive): per-subject scalp time-frequency (.tfc BESA) + beamformer source files, FMD patients + matched controls - one of exactly TWO genuine open FMD deposits found anywhere (the D7 absence gets its first cracks)
-- MoveAtlas cells: D7 functional; M5
+- MoveAtlas cells: D7 (functional); M6
 
 ## Retrieval notes
 RE-VERIFY at fetch. The two OSF FMD deposits carry NO licence:

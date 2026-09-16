@@ -88,6 +88,33 @@ def _load_container(path):
         return pickle.load(fh)
 
 
+def _take(path, full, sample):
+    """The records of a list container to check: all of them (--full) or a
+    fixed-seed sample, read ONE AT A TIME from an .npz so a container
+    larger than memory (weargait_pd, ~7 GB decompressed) can be checked
+    on an 8 GB machine. random.sample picks by position, so sampling
+    range(n) chooses exactly the records sampling the list did."""
+    if not path.endswith(".npz"):
+        blob = _load_container(path)
+        if not isinstance(blob, list):
+            return
+        take = blob if full else random.Random(0).sample(blob, min(sample, len(blob)))
+        yield from take
+        return
+    import json as _json
+    import zipfile as _zipfile
+    from moveatlas import records as _records
+    with _zipfile.ZipFile(path) as zf:
+        header = _json.loads(zf.read("meta.json"))
+        if header.get("kind") != "list":
+            return
+        metas = header["records"]
+        idx = range(len(metas)) if full else \
+            random.Random(0).sample(range(len(metas)), min(sample, len(metas)))
+        for i in idx:
+            yield _records._assemble(zf, metas[i], f"r{i:06d}/")
+
+
 def _containers_in(d):
     """Record containers of a shard directory: .npz preferred, a legacy
     .pkl only when no .npz sibling exists; AppleDouble ghosts skipped."""
@@ -373,20 +400,15 @@ def validate_family(repo, fam, cfg, args, rep):
                     continue          # superseded by its .npz sibling
                 ap = os.path.join(root, f)
                 try:
-                    blob = _load_container(ap)
+                    for rec in _take(ap, args.full, args.sample):
+                        if isinstance(rec, dict):
+                            check_record(rec, cfg, fam,
+                                         f"{os.path.basename(root)}/"
+                                         f"{rec.get('subject_ns', '?')}", rep)
+                            opened += 1
                 except Exception as e:
-                    rep.error(fam, f"{os.path.relpath(ap, repo)}: cannot unpickle ({e})")
+                    rep.error(fam, f"{os.path.relpath(ap, repo)}: cannot read ({e})")
                     continue
-                if not isinstance(blob, list):
-                    continue
-                rnd = random.Random(0)
-                take = blob if args.full else rnd.sample(blob, min(args.sample, len(blob)))
-                for rec in take:
-                    if isinstance(rec, dict):
-                        check_record(rec, cfg, fam,
-                                     f"{os.path.basename(root)}/"
-                                     f"{rec.get('subject_ns', '?')}", rep)
-                        opened += 1
         rep.note(f"{'':11s} opened {opened} record(s) from per-dataset pkl files")
 
 

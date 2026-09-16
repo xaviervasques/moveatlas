@@ -6,7 +6,7 @@
 - population: 15 PD with DBS (GPi n=5? / Vim / STN per prefix g/v/s), high- and low-amplitude tremor cohorts, DBS/medication conditions + 15/30/45/60-min post-off washout
 - n_subjects: 15 (97 recordings)
 - signal: hand tremor VELOCITY by laser Doppler at 100 Hz, one text file per subject per condition (.rit right / .let left), physical units mm/s (m/s converted)
-- license: PhysioNet open ; redistribution: yes
+- license: ODC-By 1.0 (Open Data Commons Attribution License v1.0, stated on the PhysioNet page, read 2026-09-16) ; redistribution: yes
 - access: downloaded
 - status (2026-08-22): RE-EXAMINED AND INGESTED AS AUX 2026-08-22 (was SKIPPED in v1 as 'opaque channels': the .hea comment tables document everything). CLARIFIED 2026-09-01 (owner-confirmed): the ingestion is processed/tremordb_velocity.pkl + subject table + audit, BY DESIGN outside the canonical IMU contract (laser-Doppler velocity, not acc/gyro), so NO canonical manifest rows exist and the harmonization badge correctly reads catalogued
 - link: https://physionet.org/content/tremordb/

@@ -7,7 +7,7 @@
 - Version / retrieval date: catalogued 2026-09-04 (closing sweep); NOT fetched
 - Status (2026-09-04): CATALOGUED 2026-09-04 (closing sweep): fMRI/sMRI under 7 DBS stimulation conditions x 5 timepoints + UPDRS, 613 GB / 12413 files, ~11.7 h fMRI per patient. SIZE DECISION needed before any fetch (disk); anti-bot as PIET
 - Number of subjects: 14
-- MoveAtlas cells: B1-B4 context; M5
+- MoveAtlas cells: B1-B4 context; M8
 
 ## Retrieval notes
 Found by the 2026-09-04 closing sweep. Every licence/access statement

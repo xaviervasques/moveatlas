@@ -8,7 +8,7 @@
 - Version / retrieval date: catalogued 2026-09-04 (closing sweep); fetch 2026-09-05 via fetch_dataverse.py (RDG back from maintenance)
 - Status (2026-09-04): CATALOGUED 2026-09-04 (closing sweep): raw kinematics + EMG of expert drummers at extreme movement frequencies - a healthy mechanistic model of physiological tremor, context lane for A2
 - Number of subjects: 18
-- MoveAtlas cells: A2 context; C2; M2 M4
+- MoveAtlas cells: A1 context (physiological tremor); C1; M2 M5
 
 ## Retrieval notes
 Found by the 2026-09-04 closing sweep. Every licence/access statement

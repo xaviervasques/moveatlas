@@ -6,7 +6,7 @@
 - population: 53 healthy subjects on disk (54 published); 13 daily activities (walks, sit-to-stand, arm tasks)
 - n_subjects: 53
 - signal: video-derived 3D keypoints (34 landmarks, ~30 fps measured 29.42) for all; 5 orientation-quaternion IMUs (dynamic lower-body or upper-body sets) for 16 subjects, ~208 same-trial pose+IMU pairs
-- license: Zenodo open (CC BY 4.0 per record) ; redistribution: yes
+- license: CC BY 4.0 (every VIDIMU version on Zenodo, read through DataCite 2026-09-16) ; redistribution: yes
 - access: direct download (on disk)
 - status (2026-08-22): INGESTED 2026-08-22 (this session, container run on full real data): 723 pose records / 53 subjects + 242 quaternion streams (208 paired). TOWER RERUN required to materialize outputs on disk: unzip raw/dataset.zip then python ingest_vidimu.py
 - link: https://zenodo.org/records/15075076

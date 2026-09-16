@@ -156,19 +156,24 @@ def from_bids(acc, path=None):
                     pass
             declared = (j.get("DatasetDOI") or "").replace("doi:", "").strip()
             doi = declared
+            source = "bids dataset_description.json"
             if declared and not doi_resolves(declared):
                 # ds007526 declares .v1.0.2 while only .v1.0.0 is registered
                 # (2026-09-08): keep the citation resolvable, say so
                 first = re.sub(r"\.v[\d.]+$", ".v1.0.0", declared)
                 if first != declared and doi_resolves(first):
                     doi = first
+                    ver = declared.rsplit(".v", 1)[-1]
+                    source = (f"bids dataset_description.json (declares v{ver}; "
+                              "only the v1.0.0 DOI is registered - checked on "
+                              f"doi.org {time.strftime('%Y-%m-%d')})")
                     print(f"  {acc}: declared DOI {declared} does not resolve; "
                           f"citing {first}", flush=True)
             return {"doi": doi,
                     "title": j.get("Name", "") or acc,
                     "authors": [a for a in j.get("Authors", []) if a],
                     "year": year, "venue": "OpenNeuro", "publisher": "OpenNeuro",
-                    "type": "Dataset", "source": "bids dataset_description.json"}
+                    "type": "Dataset", "source": source}
     return None
 
 
@@ -358,15 +363,18 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--repo", default=os.environ.get(
         "KINEFM_REPO", os.path.dirname(os.path.abspath(__file__))))
-    ap.add_argument("--only", default=None)
+    ap.add_argument("--only", default=None,
+                    help="re-resolve these ids (ignoring their cache entry); "
+                         "the outputs still cover the whole registry")
     ap.add_argument("--refresh", action="store_true", help="ignore the cache")
     args = ap.parse_args()
 
     idx = os.path.join(args.repo, "docs", "datasets_index.csv")
     rows = list(csv.DictReader(open(idx)))
-    if args.only:
-        want = {x.strip() for x in args.only.split(",")}
-        rows = [r for r in rows if r["id"] in want]
+    # --only used to FILTER the rows, so the files below were rewritten
+    # with those ids alone and every other citation vanished (found
+    # 2026-09-17 before a run). It now only selects what is re-resolved.
+    want = {x.strip() for x in args.only.split(",")} if args.only else None
 
     # Hand-verified DOIs that no automatic route can find, usually because the
     # dataset's link is a bare domain. Each row carries its evidence, and only
@@ -386,7 +394,16 @@ def main():
     out, unresolved = [], []
     for i, r in enumerate(rows, 1):
         ds = r["id"]
-        if ds in cache:
+        if want is not None and ds not in want:
+            rec = cache.get(ds)
+            if rec is None:
+                print(f"  {ds}: not in the cache and not asked for; left out")
+                continue
+            out.append(rec)
+            if not (rec.get("data") or rec.get("paper")):
+                unresolved.append((ds, r["link"], rec.get("candidates") or []))
+            continue
+        if ds in cache and want is None:
             rec = cache[ds]
         else:
             rec = {"id": ds, "link": r["link"], "data": None, "paper": None}

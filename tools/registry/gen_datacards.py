@@ -1563,21 +1563,11 @@ def main():
     args = ap.parse_args()
     ids = [e["id"] for e in DATA]
     assert len(ids) == len(set(ids)), "duplicate dataset ids"
-    n_cards = 0
-    for e in DATA:
-        if not e["render"]:
-            continue
-        d = os.path.join(args.repo, "datasets", e["path"])
-        if not args.dry:
-            os.makedirs(d, exist_ok=True)
-            # newline="\n": the repo convention is LF; without it a Windows run
-            # rewrites all 76 cards in CRLF (found 2026-08-23 on the Paris PC)
-            with open(os.path.join(d, "datacard.md"), "w", encoding="utf-8",
-                      newline="\n") as f:
-                f.write(render(e))
-        n_cards += 1
     docs = os.path.join(args.repo, "docs")
     os.makedirs(docs, exist_ok=True)
+    # THE GUARD runs FIRST (2026-09-17): it used to run after the card loop,
+    # so a refused run had already rewritten the 2026-08-22 cards over every
+    # later hand edit (and `make site` called this script).
     # THE GUARD (LAUNCH_PLAN 1.4, 2026-09-15): DATA holds fewer entries
     # than the registry on disk has rows (108 vs 170 today), so a full run
     # used to rewrite docs/datasets_index.csv shorter and drop datasets
@@ -1599,6 +1589,19 @@ def main():
                 print(msg)
                 return
             raise SystemExit(msg)
+    n_cards = 0
+    for e in DATA:
+        if not e["render"]:
+            continue
+        d = os.path.join(args.repo, "datasets", e["path"])
+        if not args.dry:
+            os.makedirs(d, exist_ok=True)
+            # newline="\n": the repo convention is LF; without it a Windows run
+            # rewrites all 76 cards in CRLF (found 2026-08-23 on the Paris PC)
+            with open(os.path.join(d, "datacard.md"), "w", encoding="utf-8",
+                      newline="\n") as f:
+                f.write(render(e))
+        n_cards += 1
     with open(os.path.join(docs, "datasets_index.csv"), "w", newline="",
               encoding="utf-8") as f:
         w = csv.writer(f, lineterminator="\n")

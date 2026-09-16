@@ -74,8 +74,17 @@ def _read(name):
         return list(csv.DictReader(f))
 
 
+# Registry rows that describe software, not a subject corpus. They stay in
+# the registry (their card points at the code) but are not datasets: they
+# classify as "tool" and list_datasets() leaves them out unless asked, so
+# every catalogue count (library, site, descriptor) applies one rule.
+TOOLS = frozenset({"visionmd"})
+
+
 def access_case(row):
-    """Classify a registry row into the four access cases.
+    """Classify a registry row into the access cases.
+
+    - tool: software catalogued for reference, not a dataset (TOOLS).
 
     - hosted: redistribution allowed, our record store serves it.
     - local_only: private-tier data on disk (empty since 2026-09-01: the
@@ -85,6 +94,8 @@ def access_case(row):
     - barrier: a documented access barrier (no automated route).
     - recipe: everything else (fetch from origin + local ingestion).
     """
+    if row.get("id") in TOOLS:
+        return "tool"
     redist = (row.get("redistribution") or "").strip().lower()
     status = (row.get("status") or "")
     lic = (row.get("license") or "").lower()
@@ -105,9 +116,11 @@ def access_case(row):
     return "recipe"
 
 
-def list_datasets(family=None, case=None):
+def list_datasets(family=None, case=None, include_tools=False):
     """Return registry rows (dicts), optionally filtered by family or
-    access case. Each row gains an 'access_case' key."""
+    access case. Each row gains an 'access_case' key. Rows describing
+    software rather than data (access case "tool") are left out unless
+    include_tools is true or case="tool" is asked."""
     rows = _read("datasets_index.csv")
     lic = {r["id"]: r for r in _read("license_matrix.csv")}
     out = []
@@ -120,14 +133,17 @@ def list_datasets(family=None, case=None):
             continue
         if case and r["access_case"] != case:
             continue
+        if (r["access_case"] == "tool" and not include_tools
+                and case != "tool"):
+            continue
         out.append(r)
     return out
 
 
 def dataset_info(code):
     """The registry row for one dataset id, or raise with the known ids."""
-    for r in list_datasets():
+    for r in list_datasets(include_tools=True):
         if r["id"] == code:
             return r
-    known = ", ".join(sorted(x["id"] for x in list_datasets()))
+    known = ", ".join(sorted(x["id"] for x in list_datasets(include_tools=True)))
     raise KeyError(f"unknown dataset '{code}'; known: {known}")

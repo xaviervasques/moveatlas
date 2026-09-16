@@ -23,7 +23,16 @@ locations: [head, trunk, lower_back, wrist_L, wrist_R, thigh_L, thigh_R,
 #   location_mask       (14,)       bool      which locations are present
 #   channel_mask        (14, 9)     bool      which channels present per location
 #   fps                 float                 native sampling rate of THIS sample
+#   sample_valid        (T, L)      bool      per-sample validity (dropouts)
 #   subject_ns, task, source, labels(optional, eval only)
+#   mag_unit            str (optional)        present when the magnetometer is
+#                                             NOT in uT (Xsens exports normalized
+#                                             to the local field): values kept
+#                                             as recorded, never rescaled
+#   acc_content         str (optional)        linear_no_gravity when the source
+#                                             removed gravity
+# A channel with no finite sample, or with exact zeros throughout, is an
+# absent sensor (masked; a location left empty is dropped). 2026-09-17.
 sampling:
   policy: native_per_sample     # owner decision; rates span 64-500 Hz
   rationale: preserve tremor (100 Hz+) and myoclonus; no global decimation

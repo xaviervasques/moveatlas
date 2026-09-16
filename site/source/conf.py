@@ -77,7 +77,7 @@ autodoc_member_order = "bysource"
 # ---------------------------------------------------------------------
 # One number, one source: every dataset count quoted in the .rst pages is
 # a substitution computed here from the registry, never typed by hand.
-#   |n_catalogued|  rows of docs/datasets_index.csv
+#   |n_catalogued|  rows of docs/datasets_index.csv, software rows excluded
 #   |n_human|       rows whose family is not "animal"
 #   |n_animal|      rows whose family is "animal"
 #   |n_harmonized|  distinct `source` values in docs/mask_statistics.csv
@@ -92,6 +92,10 @@ def _registry_counts():
     with open(os.path.join(_REPO, "docs", "datasets_index.csv"),
               newline="", encoding="utf-8") as f:
         reg = list(_csv.DictReader(f))
+    # software rows (moveatlas.registry.TOOLS) are not datasets: the same
+    # rule as the library and the descriptor
+    from moveatlas.registry import TOOLS as _TOOLS
+    reg = [r for r in reg if r["id"] not in _TOOLS]
     with open(os.path.join(_REPO, "docs", "mask_statistics.csv"),
               newline="", encoding="utf-8") as f:
         mask = list(_csv.DictReader(f))

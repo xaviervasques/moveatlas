@@ -34,7 +34,8 @@ canonical:
 	$(PY) build_canonical_silhouette.py
 	@echo "dataset-specific ingesters, run by hand:"; ls ingest_*.py
 
-# 3. pickle -> moveatlas-record/1 (until every builder writes npz)
+# 3. pickle -> moveatlas-record/1 (for builders that still write pickle;
+#    build_canonical_imu.py and build_canonical_force.py write npz since 2026-09-17)
 convert:
 	$(PY) convert_records_to_npz.py --workers 12
 
@@ -67,8 +68,9 @@ records:
 	$(PY) build_records_table.py
 
 # 11. site regeneration (stdlib part; the Sphinx build is a Mac task)
+# (gen_datacards.py is NOT part of it: the registry and the cards are edited
+# by hand since 2026-09-01, and that script only refuses; 2026-09-17)
 site:
-	$(PY) gen_datacards.py
 	$(PY) site/gen_dataset_pages.py
 	$(PY) build_portal.py
 
@@ -79,5 +81,11 @@ test:
 lint:
 	$(PY) release_lint.py --help
 
+# the descriptor package, step 2 of paper/package/README.md (CSV inputs
+# only). It OVERWRITES the .docx and .xlsx of paper/package/: it refuses
+# while Word holds a lock file there; copy aside any file edited in Word.
 docx:
-	$(PY) paper/build_docx.py
+	@if ls paper/package/~\$$* >/dev/null 2>&1; then echo "refusing: a Word lock file sits in paper/package (close Word, copy edited files aside)"; exit 1; fi
+	cd paper/package/source && $(PY) phenotype_index.py && $(PY) numbers_v4.py && $(PY) refs_v4.py && $(PY) tables_v4.py
+	cd paper/package/source && $(PY) fig1_overview.py && $(PY) fig2_families.py && $(PY) fig3_phenotype_map.py && $(PY) fig4_screens.py && $(PY) fig5_identity_access.py
+	cd paper/package/source && $(PY) build_docx_v4.py && $(PY) build_package_v4.py

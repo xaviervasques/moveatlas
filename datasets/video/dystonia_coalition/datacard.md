@@ -8,7 +8,7 @@
   dystonia pass; record fetched and confirmed by the catalogue sweep)
 - Status (2026-09-05): CATALOGUED 2026-09-05: DOCUMENTED BARRIER (application tier): standardized 2-min exam videos across ALL isolated dystonias - 38+68 blepharospasm, ~185 cervical (93 with head tremor), writing tasks - the source corpus behind published CV severity work. THE reference route if the owner ever wants dystonia video mass; actively distributed to outside researchers
 - Number of subjects: >3000 participants
-- MoveAtlas cells: A1 all focal dystonias; M1
+- MoveAtlas cells: A4 (all focal dystonias); M1
 
 ## Retrieval notes
 RE-VERIFY at fetch. mrc_lfp_dystonia: needs the owner's MRC portal

@@ -13,9 +13,10 @@ and by the automated linter (`release_lint.py`), and BOTH must pass.
 - Any render where a patient remains visible, including segmentation
   OVERLAYS and SIDEBYSIDE composites (`*_sam3_overlay.mp4`,
   `*_sam3_sidebyside.mp4`).
-- Anything from a source whose licence forbids redistribution (the 29
-  pointer_only rows of docs/license_matrix.csv) or that is ND-restricted
-  (CARE-PD harmonized tensors).
+- Anything from a source whose licence does not allow redistribution
+  (every registry row whose redistribution column does not start with
+  "yes": 92 of the 169 catalogued datasets on 2026-09-17) or that is
+  ND-restricted (CARE-PD harmonized tensors).
 - Identifiers: names, dates of birth, addresses, faces, voices, hospital
   ids. Subject ids in releases are our namespaced pseudonyms only.
 - Credentials or tokens of any kind, including in notebooks, logs and
@@ -26,8 +27,10 @@ and by the automated linter (`release_lint.py`), and BOTH must pass.
 - CODY: keypoints, per-frame labels, PURE segmentation masks
   (`*_sam3_mask.mp4`) and timeseries (`*_sam3_timeseries.xlsx`);
   CONTROL raw videos (and only controls).
-- Canonical records of the 50 host_copy_ok sources, with their licences
-  and citations attached.
+- Canonical records of the redistributable sources (77 on 2026-09-17,
+  54 of them served by a published record), each under the licence its
+  source states (moveatlas/data/zenodo_records.json lists the records),
+  with its citation attached.
 - All documentation, contracts, tools, manifests, checksums.
 
 ## 3. The audit steps (run in order, record the outcome)

@@ -246,8 +246,8 @@ def _ingest_hd_accel(root):
         loc = {"wrist_L": {"acc_x": df["x"].values, "acc_y": df["y"].values,
                            "acc_z": df["z"].values}}
         lab = df["label"].values if "label" in df.columns else None
-        # the source declares no sampling rate: fps stays None, as in the corpus
-        recs.append(imu.make_record(loc, None, f"hd_accel:{b[:-4]}", b[:-4],
+        # the deposit states GENEActiv at 100 Hz; the CSVs carry no time column
+        recs.append(imu.make_record(loc, 100.0, f"hd_accel:{b[:-4]}", b[:-4],
                                     "hd_accel_jnet", lab))
     out = imu.save(root, "hd_accel_jnet", recs)
     return out, len(recs)
@@ -420,6 +420,9 @@ def recipe(id):
                        f"{info['path']}/datacard.md")
     if case == "local_only":
         raise NoRecipe(f"{id!r} is private-tier data; nothing downloads")
+    if case == "tool":
+        raise NoRecipe(f"{id!r} is software catalogued for reference, not a "
+                       f"dataset; its code is at {info['link']}")
     # a recipe dataset with no curated entry: the registry names the
     # script when it knows it, the card otherwise
     from moveatlas.datasets.base import recipe_of

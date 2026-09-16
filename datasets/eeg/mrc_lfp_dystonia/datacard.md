@@ -8,7 +8,7 @@
   dystonia pass; record fetched and confirmed by the catalogue sweep)
 - Status (2026-09-05): CATALOGUED 2026-09-05 (deep-dive): STN/zona-incerta/VL-thalamus LFP + EEG + splenius/SCM EMG + accelerometer, MATLAB .mat, 3 zips - the strongest OPEN cervical-dystonia signal deposit found anywhere. SAME PORTAL as oxford_stn_onoff_dbs: the owner's pending MRC login session can collect BOTH
 - Number of subjects: 7 patients / 12 hemispheres
-- MoveAtlas cells: A1; M2 M4 M7
+- MoveAtlas cells: A4 (cervical dystonia); M2 M5 M7
 
 ## Retrieval notes
 RE-VERIFY at fetch. mrc_lfp_dystonia: needs the owner's MRC portal

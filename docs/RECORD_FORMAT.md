@@ -46,6 +46,14 @@ become lists). A `_arrays` list of member paths is kept in each record
 dict for inspection. meta.json is written LAST so a truncated file is
 detectable (missing member).
 
+Determinism (2026-09-17): every member is stamped 1980-01-01 00:00, so
+the same records written twice give the same bytes, and a library recipe
+can be checked against the corpus by sha256. Containers written before
+that date carry wall-clock stamps and match by content only.
+records.save() also accepts any iterable of record dicts and writes
+them one at a time, so a builder can stream a container larger than
+memory (build_canonical_imu.py does so for weargait_pd).
+
 Compression: deflate (zipfile.ZIP_DEFLATED); typical ratios observed
 on 2026-09-08: IMU 10x (daphnet 222 MB -> 22 MB), force 3x, pose and
 silhouette 1.2-1.7x, EEG 1.1-1.8x.

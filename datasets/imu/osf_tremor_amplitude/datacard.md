@@ -14,7 +14,7 @@
   listings), resolved by a spaced probe - no retry storm
 - Status (2026-09-04): CATALOGUED 2026-09-04 (closing sweep): wrist accelerometry feature CSVs + scripts spanning PD and ET tremor in a DBS context - small but cross-disorder A2/B1 bridge
 - Number of subjects: see record
-- MoveAtlas cells: A2; B1 context; M2
+- MoveAtlas cells: A1; M2
 
 ## Retrieval notes
 Found by the 2026-09-04 closing sweep. All licence/access/content

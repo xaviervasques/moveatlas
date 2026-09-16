@@ -18,6 +18,7 @@ Usage: python build_zenodo_staging.py [--hash] [--only id1,id2]
 import argparse
 import csv
 import hashlib
+import html
 import json
 import os
 import re
@@ -107,6 +108,20 @@ def licence_sentence(text):
     head = re.split(r"(?<!\d)[.;(]|\.(?!\d)|;|\(| - ",
                     (text or "").strip(), 1)[0].strip()
     return head.rstrip(",") or "see the source record"
+
+
+def known_issues(row):
+    """The text of the data card's '- known issues (date): ...' line, or ''."""
+    card = os.path.join(REPO, row["path"], "datacard.md")
+    try:
+        with open(card, encoding="utf-8") as f:
+            for line in f:
+                m = re.match(r"^- known issues(?: \([^)]*\))?\s*:\s*(.+)$", line)
+                if m:
+                    return m.group(1).strip()
+    except OSError:
+        pass
+    return ""
 
 
 def _citation_dois(repo):
@@ -311,12 +326,20 @@ def main():
         # Publish it only when it begins with a number.
         subjects = (r.get("n_subjects") or "").strip()
         subj_txt = f" Subjects: {subjects}." if subjects[:1].isdigit() else ""
+        # the data card's "known issues" line, when it has one, is part of
+        # what a reader of the record must see (2026-09-17)
+        issues = known_issues(r)
+        if issues and not issues.endswith("."):
+            issues += "."
+        issues_html = (f"<p>Known issues: {html.escape(issues)}</p>"
+                       if issues else "")
         desc = provenance + (
             f"<p>MoveAtlas harmonized release of <b>{r['title']}</b> "
             f"(dataset id: {r['id']}, family: {r['family']}).</p>"
             + body +
             f"<p>Source licence: {lic_public}. Taxonomy cells: "
             f"{r['moveatlas_cells']}.{subj_txt}</p>"
+            + issues_html +
             f"<p>Load it with the MoveAtlas package:</p>"
             f"<pre>pip install moveatlas\n\n"
             f"import moveatlas\n"

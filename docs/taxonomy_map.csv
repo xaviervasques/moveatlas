@@ -23,7 +23,7 @@ clinical_gait_multipatho,B2;B3;D3;D4;E4,M2,AVC + leuco + neuropathie chimio + or
 daphnet,B5,M2,FOG historique
 fog_star,B5,M2,episodes FOG annotes
 gaitdb,B2;B3;C3,M2,vieillissement ; derive (intervalles)
-gaitndd,A7;B2;C1;D2;D3,M3,Huntington + SLA + PD + controles
+gaitndd,A7;B2;C1;D3,M3,Huntington + SLA + PD + controles
 hd_accel_jnet,A7,M2,choree Huntington accelerometrie
 imu_inthewild_iprognosis,A1;B2,M2,tremblement vie libre
 kaggle_fog,B5,M2,FOG annote grande cohorte

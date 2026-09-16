@@ -6,7 +6,7 @@
 - population: PD + controls, sustained phonation
 - n_subjects: 31 (195 recordings)
 - signal: voice feature table
-- license: UCI open ; redistribution: yes
+- license: CC BY 4.0 (stated on the UCI repository page, read 2026-09-16) ; redistribution: yes
 - access: downloaded
 - status (2026-08-22): raw on disk
 - link: https://archive.ics.uci.edu/dataset/174/parkinsons

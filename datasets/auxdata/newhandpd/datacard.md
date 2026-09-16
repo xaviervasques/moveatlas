@@ -7,7 +7,7 @@
 - Version / retrieval date: catalogued 2026-09-05 (deep-dive sweep); NOT fetched
 - Status (2026-09-05): CATALOGUED 2026-09-05: 74 PD + 18 HC, 736 spiral+meander images AND 6-sensor BiSP smart-pen time signals - the only fully open online-signal handwriting set; goodwin_smm-style licence adjudication needed
 - Number of subjects: 92
-- MoveAtlas cells: B1 B2; M8
+- MoveAtlas cells: B2 proxy (handwriting); M11
 
 ## Retrieval notes
 Found by the 2026-09-05 deep-dive sweep. RE-VERIFY licence and access

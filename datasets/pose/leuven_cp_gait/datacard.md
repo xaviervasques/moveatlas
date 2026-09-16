@@ -6,7 +6,7 @@
 - Version / retrieval date: catalogued 2026-09-05 (deep-dive sweep,
   pediatric/genetic-rare pass); NOT fetched
 - Status (2026-09-05): CATALOGUED 2026-09-05: Vicon Plug-In-Gait 3D kinematics, spastic uni/bilateral CP 3-18 y GMFCS I-III - mocap complement to mobile_gaitlab
-- MoveAtlas cells: D CP; M3
+- MoveAtlas cells: D3 (cerebral palsy); M1 M3
 
 ## Retrieval notes
 RE-VERIFY at fetch. No-emails policy for application tiers.

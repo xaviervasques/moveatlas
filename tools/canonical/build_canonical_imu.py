@@ -29,9 +29,14 @@ CHANNELS = ["acc_x", "acc_y", "acc_z", "gyro_x", "gyro_y", "gyro_z",
 LOC_I = {n: i for i, n in enumerate(LOCATIONS)}
 CH_I = {n: i for i, n in enumerate(CHANNELS)}
 G = 9.80665
+# magnetometers exported by Xsens software are normalized to the local
+# field strength (|B| ~ 1), not in uT; converting would need the field at
+# the recording site, which the sources do not give, so the values stay
+# as recorded and the record says so
+MAG_NORMALIZED = "normalized (source units, |B| ~ 1 at the recording site)"
 
 
-def make_record(loc_data, fps, subject_ns, task, source, label=None):
+def make_record(loc_data, fps, subject_ns, task, source, label=None, extra=None):
     """loc_data: {location_name: {channel_name: np.array(T,)}}. Same T across all.
 
     VALIDITY, added 2026-08-23. This used to mark every channel it was handed as
@@ -50,6 +55,13 @@ def make_record(loc_data, fps, subject_ns, task, source, label=None):
         looking like a limb that stopped moving
 
     The signal array is therefore guaranteed finite, and nothing is inferred.
+
+    A fourth rule, added 2026-09-17: a channel whose finite samples are all
+    exactly zero is an ABSENT sensor too (clinical_gait_multipatho RIL_12
+    ships a head sensor written as zeros for five whole trials); no real
+    accelerometer, gyroscope or magnetometer reads exactly zero throughout.
+    `extra` adds record-level keys (e.g. mag_unit where the source's
+    magnetometer is not in the contract unit).
     """
     active = [l for l in LOCATIONS if l in loc_data]
     T = len(next(iter(next(iter(loc_data.values())).values())))
@@ -62,6 +74,7 @@ def make_record(loc_data, fps, subject_ns, task, source, label=None):
 
     finite = np.isfinite(sig)
     dead = cmask & ~finite.any(axis=0)          # (L, 9) channel never finite
+    dead |= cmask & ~np.any(finite & (sig != 0), axis=0)   # all exact zeros
     if dead.any():
         cmask = cmask & ~dead
     keep = [li for li in range(len(active)) if cmask[li].any()]
@@ -82,6 +95,8 @@ def make_record(loc_data, fps, subject_ns, task, source, label=None):
         rec["dropout_fraction"] = float(1.0 - sample_valid.mean())
     if label is not None:
         rec["label"] = np.asarray(label)
+    if extra:
+        rec.update(extra)
     return rec
 
 
@@ -90,15 +105,25 @@ def acc3(x, y, z):
 
 
 def save(source, recs, manifest):
+    """Write the records straight to the moveatlas-record/1 container
+    (canonical_imu.npz; the pickle step is retired, 2026-09-17). `recs`
+    may be a generator: records are written one at a time, which is how
+    weargait_pd (about 7 GB in memory) builds on an 8 GB machine."""
+    from moveatlas import records as _records
     out = os.path.join(REPO, "datasets/imu", source, "processed")
     os.makedirs(out, exist_ok=True)
-    pickle.dump(recs, open(os.path.join(out, "canonical_imu.pkl"), "wb"))
-    for r in recs:
-        manifest.append([source, r["subject_ns"], r["task"], round(r["fps"], 2)
+    rows, subjects = [], set()
+
+    def stream():
+        for r in recs:
+            rows.append([source, r["subject_ns"], r["task"], round(r["fps"], 2)
                          if r["fps"] else "", r["n_frames"],
                          "|".join(LOCATIONS[i] for i in r["location_ids"])])
-    print(f"  {source}: {len(recs)} recordings, "
-          f"{len({r['subject_ns'] for r in recs})} subjects")
+            subjects.add(r["subject_ns"])
+            yield r
+    _records.save(os.path.join(out, "canonical_imu.npz"), stream())
+    manifest.extend(rows)
+    print(f"  {source}: {len(rows)} recordings, {len(subjects)} subjects")
 
 
 # ---------------------------------------------------------------- daphnet
@@ -164,7 +189,9 @@ def ingest_hd_accel(manifest):
             continue
         loc = {"wrist_L": acc3(df["x"].values, df["y"].values, df["z"].values)}
         lab = df["label"].values if "label" in df.columns else None
-        recs.append(make_record(loc, None, f"hd_accel:{b[:-4]}", b[:-4],
+        # the deposit (zenodo 14384260) states GENEActiv at 100 Hz; the
+        # CSVs carry no time column (fps was None until 2026-09-17)
+        recs.append(make_record(loc, 100.0, f"hd_accel:{b[:-4]}", b[:-4],
                                 "hd_accel_jnet", lab))
     save("hd_accel_jnet", recs, manifest)
 
@@ -233,7 +260,8 @@ def ingest_clinical_gait(manifest):
         parts = stem.split("_")
         subj = "_".join(parts[:2])                  # pathology_subject e.g. HS_70
         recs.append(make_record(loc_data, 100.0, f"clinical_gait:{subj}", stem,
-                                "clinical_gait_multipatho"))
+                                "clinical_gait_multipatho",
+                                extra={"mag_unit": MAG_NORMALIZED}))
     save("clinical_gait_multipatho", recs, manifest)
 
 
@@ -295,11 +323,14 @@ def ingest_imu_inthewild(manifest, max_sessions=30):
             a = np.asarray(s)
             if a.ndim != 2 or a.shape[1] < 4 or a.shape[0] < 10:
                 continue
+            # column 0 is a phone timestamp in NANOSECONDS: a session spans
+            # at most 75 s by the deposit's description, and the spans read
+            # 75.0e9 (checked 2026-09-17; the rate used to be computed as if
+            # the stamps were seconds, 2e-7 Hz). Phones sample irregularly:
+            # fps is the median rate of the session, 99-1000 Hz across phones.
             ts = a[:, 0]
             dt = np.median(np.diff(ts))
-            fps = float(1.0 / dt) if dt > 1e-9 else None
-            if fps and fps > 1000:                        # ts likely in ms/us
-                fps = None
+            fps = float(1e9 / dt) if dt > 0 else None
             acc = acc_to_g(a[:, 1:4])
             loc = {"pocket": acc3(acc[:, 0], acc[:, 1], acc[:, 2])}
             recs.append(make_record(loc, fps, f"imu_inthewild:{subj}", f"sess{si}",
@@ -331,46 +362,76 @@ def ingest_monipar(manifest):
 
 
 # ---------------------------------------------------------------- weargait (CSV)
-def ingest_weargait(manifest):
-    import pandas as pd
-    LOCMAP = {"Forehead": "head", "Xiphoid": "trunk", "LowerBack": "lower_back",
-              "L_Wrist": "wrist_L", "R_Wrist": "wrist_R",
-              "L_MidLatThigh": "thigh_L", "R_MidLatThigh": "thigh_R",
-              "L_LatShank": "shank_L", "R_LatShank": "shank_R",
-              "L_Ankle": "ankle_L", "R_Ankle": "ankle_R",
-              "L_DorsalFoot": "foot_L", "R_DorsalFoot": "foot_R"}
-    SUF = {"acc_x": "Acc_X", "acc_y": "Acc_Y", "acc_z": "Acc_Z",
-           "gyro_x": "Gyr_X", "gyro_y": "Gyr_Y", "gyro_z": "Gyr_Z",
-           "mag_x": "Mag_X", "mag_y": "Mag_Y", "mag_z": "Mag_Z"}
-    recs = []
+WEARGAIT_LOCMAP = {"Forehead": "head", "Xiphoid": "trunk", "LowerBack": "lower_back",
+                   "L_Wrist": "wrist_L", "R_Wrist": "wrist_R",
+                   "L_MidLatThigh": "thigh_L", "R_MidLatThigh": "thigh_R",
+                   "L_LatShank": "shank_L", "R_LatShank": "shank_R",
+                   "L_Ankle": "ankle_L", "R_Ankle": "ankle_R",
+                   "L_DorsalFoot": "foot_L", "R_DorsalFoot": "foot_R"}
+WEARGAIT_SUF = {"acc_x": "Acc_X", "acc_y": "Acc_Y", "acc_z": "Acc_Z",
+                "gyro_x": "Gyr_X", "gyro_y": "Gyr_Y", "gyro_z": "Gyr_Z",
+                "mag_x": "Mag_X", "mag_y": "Mag_Y", "mag_z": "Mag_Z"}
+
+
+def _weargait_files():
+    """The per-trial CSVs, sorted (deterministic record order; the order
+    of the 2026-09-08 container followed the ingestion volume's listing)."""
+    out = []
     for f in glob.glob(os.path.join(
             REPO, "datasets/imu/weargait_pd/raw/**/CSV files/*.csv"), recursive=True):
         b = os.path.basename(f)
         if b.startswith("._") or "Demographic" in b or "Metrics" in b:
             continue
-        try:
-            df = pd.read_csv(f, low_memory=False)
-        except Exception:
+        out.append(f)
+    return sorted(out)
+
+
+def _weargait_record(f):
+    import pandas as pd
+    b = os.path.basename(f)
+    try:
+        df = pd.read_csv(f, low_memory=False)
+    except Exception:
+        return None
+    cols = set(df.columns)
+    loc = {}
+    for pre, dst in WEARGAIT_LOCMAP.items():
+        if f"{pre}_Acc_X" not in cols:
             continue
-        cols = set(df.columns)
-        loc = {}
-        for pre, dst in LOCMAP.items():
-            if f"{pre}_Acc_X" not in cols:
-                continue
-            d = {}
-            for ch, suf in SUF.items():
-                c = f"{pre}_{suf}"
-                if c in cols:
-                    d[ch] = np.nan_to_num(pd.to_numeric(df[c], errors="coerce").values)
-            acc = acc_to_g(np.stack([d["acc_x"], d["acc_y"], d["acc_z"]], -1))
-            d["acc_x"], d["acc_y"], d["acc_z"] = acc[:, 0], acc[:, 1], acc[:, 2]
-            loc[dst] = d
-        if not loc:
-            continue
-        parts = b[:-4].split("_")
-        recs.append(make_record(loc, 100.0, f"weargait:{parts[0]}",
-                                "_".join(parts[1:]) or "rec", "weargait_pd"))
-    save("weargait_pd", recs, manifest)
+        d = {}
+        for ch, suf in WEARGAIT_SUF.items():
+            c = f"{pre}_{suf}"
+            if c in cols:
+                # missing samples stay NaN so make_record marks them in
+                # sample_valid (2026-09-17: they were zeroed here, which hid
+                # dropouts and, with more than half a trace missing, pulled
+                # the median under the m/s2 test: 20 traces were stored in
+                # m/s2 under the unit g)
+                d[ch] = pd.to_numeric(df[c], errors="coerce").values.astype(float)
+        acc = acc_to_g(np.stack([d["acc_x"], d["acc_y"], d["acc_z"]], -1))
+        d["acc_x"], d["acc_y"], d["acc_z"] = acc[:, 0], acc[:, 1], acc[:, 2]
+        # Xsens exports: gyroscope in rad/s (an ankle's p99 read ~4, i.e.
+        # ~250 deg/s; it was stored as deg/s until 2026-09-17), magnetometer
+        # normalized to the local field (declared in mag_unit)
+        for k in ("gyro_x", "gyro_y", "gyro_z"):
+            if k in d:
+                d[k] = deg(d[k])
+        loc[dst] = d
+    if not loc:
+        return None
+    parts = b[:-4].split("_")
+    return make_record(loc, 100.0, f"weargait:{parts[0]}",
+                       "_".join(parts[1:]) or "rec", "weargait_pd",
+                       extra={"mag_unit": MAG_NORMALIZED})
+
+
+def ingest_weargait(manifest):
+    def stream():
+        for f in _weargait_files():
+            rec = _weargait_record(f)
+            if rec is not None:
+                yield rec
+    save("weargait_pd", stream(), manifest)
 
 
 SOURCES = {"weargait": ingest_weargait, "monipar": ingest_monipar,
@@ -379,6 +440,28 @@ SOURCES = {"weargait": ingest_weargait, "monipar": ingest_monipar,
            "clinical_gait": ingest_clinical_gait, "fog_turning": ingest_fog_turning,
            "capture24": ingest_capture24, "imu_inthewild": ingest_imu_inthewild}
 HEADER = ["source", "subject_ns", "task", "fps", "n_frames", "locations"]
+
+
+def _merge_in_place(old_rows, new_rows):
+    """The rebuilt sources' rows replace theirs where they stood (the first
+    old row of each source); the other sources' rows are kept untouched."""
+    by_src = {}
+    for r in new_rows:
+        by_src.setdefault(str(r[0]), []).append(r)
+    out, done, kept = [], set(), 0
+    for r in old_rows:
+        if not r:
+            continue
+        s = r[0]
+        if s in by_src:
+            if s not in done:
+                out.extend(by_src[s]); done.add(s)
+            continue
+        out.append(r); kept += 1
+    for s, rows in by_src.items():
+        if s not in done:
+            out.extend(rows)
+    return out, kept
 
 
 def main():
@@ -404,10 +487,8 @@ def main():
         with open(mp, newline="") as f:
             rows = list(csv.reader(f))
         head, old_rows = rows[0], rows[1:]
-        touched = {str(r[0]) for r in manifest}
-        kept = [r for r in old_rows if r and r[0] not in touched]
-        manifest = kept + manifest
-        print(f"merged: kept {len(kept)} rows from other sources")
+        manifest, kept = _merge_in_place(old_rows, manifest)
+        print(f"merged: kept {kept} rows from other sources")
     with open(mp, "w", newline="") as f:
         w = csv.writer(f)
         w.writerow(HEADER)

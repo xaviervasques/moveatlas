@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """The `moveatlas` command line: the same verbs as the library.
 
-    moveatlas list [--family imu] [--case hosted|recipe|barrier]
+    moveatlas list [--family imu] [--case hosted|recipe|barrier|tool]
     moveatlas info <id>
     moveatlas fetch <id>
     moveatlas ingest <id>
@@ -77,7 +77,7 @@ def main(argv=None):
     p = sub.add_parser("list", help="the catalogue, with each access case")
     p.add_argument("--family", default="")
     p.add_argument("--case", default="",
-                   choices=["", "hosted", "recipe", "barrier", "local_only"])
+                   choices=["", "hosted", "recipe", "barrier", "local_only", "tool"])
     p.set_defaults(fn=cmd_list)
     p = sub.add_parser("info", help="one dataset: registry row, record, recipe")
     p.add_argument("id")

@@ -7,7 +7,7 @@
 - Version / retrieval date: catalogued 2026-09-05 (deep-dive sweep); NOT fetched
 - Status (2026-09-05): CATALOGUED 2026-09-05: DOCUMENTED BARRIER (sign+email tier): 37 PD / 38 HC, 8 tasks, full online dynamics - the canonical PD handwriting set; request = owner decision (no-emails policy)
 - Number of subjects: 75
-- MoveAtlas cells: B1 B2; M8
+- MoveAtlas cells: B2 proxy (handwriting); M11
 
 ## Retrieval notes
 Found by the 2026-09-05 deep-dive sweep. RE-VERIFY licence and access
