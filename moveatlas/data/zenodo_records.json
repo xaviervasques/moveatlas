@@ -32,8 +32,8 @@
   "record": 22313543
  },
  "clinical_gait_multipatho": {
-  "doi": "10.5281/zenodo.22310387",
-  "record": 22310387
+  "doi": "10.5281/zenodo.22806989",
+  "record": 22806989
  },
  "cody_1": {
   "doi": "10.5281/zenodo.22313505",
@@ -48,8 +48,8 @@
   "record": 22791880
  },
  "daphnet": {
-  "doi": "10.5281/zenodo.22310477",
-  "record": 22310477
+  "doi": "10.5281/zenodo.22806975",
+  "record": 22806975
  },
  "drummer_tremor_model": {
   "doi": "10.5281/zenodo.22358617",
@@ -76,16 +76,16 @@
   "record": 22310489
  },
  "gaitndd": {
-  "doi": "10.5281/zenodo.22310491",
-  "record": 22310491
+  "doi": "10.5281/zenodo.22806862",
+  "record": 22806862
  },
  "gaitrec": {
   "doi": "10.5281/zenodo.22313441",
   "record": 22313441
  },
  "hd_accel_jnet": {
-  "doi": "10.5281/zenodo.22310581",
-  "record": 22310581
+  "doi": "10.5281/zenodo.22806887",
+  "record": 22806887
  },
  "hpo": {
   "doi": "10.5281/zenodo.22313503",
@@ -96,8 +96,8 @@
   "record": 22300223
  },
  "imu_inthewild_iprognosis": {
-  "doi": "10.5281/zenodo.22310591",
-  "record": 22310591
+  "doi": "10.5281/zenodo.22806890",
+  "record": 22806890
  },
  "infant_pose_chambers": {
   "doi": "10.5281/zenodo.22313572",
@@ -120,8 +120,8 @@
   "record": 22313479
  },
  "monipar": {
-  "doi": "10.5281/zenodo.22310610",
-  "record": 22310610
+  "doi": "10.5281/zenodo.22806980",
+  "record": 22806980
  },
  "multimodal_fog": {
   "doi": "10.5281/zenodo.22310616",
@@ -212,7 +212,7 @@
   "record": 22313495
  },
  "weargait_pd": {
-  "doi": "10.5281/zenodo.22310738",
-  "record": 22310738
+  "doi": "10.5281/zenodo.22807262",
+  "record": 22807262
  }
 }
