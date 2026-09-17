@@ -105,7 +105,7 @@ TOOLS = {
         "analyze_neuromorpho_conditions.py", "build_cody_manifest.py",
     ],
     "release": [
-        "build_zenodo_staging.py", "upload_zenodo.py",
+        "build_zenodo_staging.py", "build_zenodo_corpus.py", "upload_zenodo.py",
         "build_records_table.py", "build_public_release.py",
         "build_portal.py", "run_local_pipeline.py",
     ],
@@ -135,6 +135,7 @@ DOCS = [
     "hpo_movement_terms.csv", "mask_statistics.csv", "registry_cells.csv",
     "interventions.csv", "citations.bib", "citations.csv",
     "citation_overrides.csv", "demographics_curated.csv", "demographics.csv",
+    "record_titles.csv", "zenodo_corpus_index.csv",
 ]
 
 # The resource paper does not ship. Until 2026-09-15 the tree carried

@@ -110,6 +110,20 @@ def licence_sentence(text):
     return head.rstrip(",") or "see the source record"
 
 
+PREFIX = "MoveAtlas harmonized release: "
+
+
+def record_titles():
+    """dataset id -> public record title (docs/record_titles.csv, curated
+    2026-09-17: the registry titles carry working notes such as accession
+    numbers and contents, which do not belong in a citation)."""
+    p = os.path.join(REPO, "docs", "record_titles.csv")
+    if not os.path.exists(p):
+        return {}
+    with open(p, newline="", encoding="utf-8") as f:
+        return {r["dataset"]: r["record_title"] for r in csv.DictReader(f)}
+
+
 def known_issues(row):
     """The text of the data card's '- known issues (date): ...' line, or ''."""
     card = os.path.join(REPO, row["path"], "datacard.md")
@@ -241,6 +255,9 @@ def main():
     ap.add_argument("--hash", action="store_true",
                     help="compute sha256 for every staged file (slow)")
     ap.add_argument("--only", default=None)
+    ap.add_argument("--metadata-only", action="store_true",
+                    help="rewrite metadata.json only; files.csv and the plan "
+                         "are left as they are (a title or description fix)")
     args = ap.parse_args()
     only = set(args.only.split(",")) if args.only else None
     os.makedirs(OUT, exist_ok=True)
@@ -249,6 +266,7 @@ def main():
     # redistributable dataset that has no record yet (the very thing this
     # script stages) classifies as recipe: iterate on the registry's
     # redistribution column instead, which is the permission itself.
+    titles = record_titles()
     rows = [r for r in moveatlas.list_datasets()
             if (r.get("redistribution") or "").strip().lower().startswith("yes")]
     for r in rows:
@@ -331,10 +349,12 @@ def main():
         issues = known_issues(r)
         if issues and not issues.endswith("."):
             issues += "."
-        issues_html = (f"<p>Known issues: {html.escape(issues)}</p>"
+        issues_html = (f"<p>Known issues: {html.escape(issues, quote=False)}</p>"
                        if issues else "")
+        title = titles.get(r["id"]) or f"MoveAtlas harmonized: {r['title']}"
+        name = title[len(PREFIX):] if title.startswith(PREFIX) else r["title"]
         desc = provenance + (
-            f"<p>MoveAtlas harmonized release of <b>{r['title']}</b> "
+            f"<p>MoveAtlas harmonized release: <b>{html.escape(name, quote=False)}</b> "
             f"(dataset id: {r['id']}, family: {r['family']}).</p>"
             + body +
             f"<p>Source licence: {lic_public}. Taxonomy cells: "
@@ -346,7 +366,7 @@ def main():
             f"records, meta = moveatlas.dataset(&quot;{r['id']}&quot;)"
             f".get_data()</pre>")
         meta = {"metadata": {
-            "title": f"MoveAtlas harmonized: {r['title']}",
+            "title": title,
             "upload_type": "dataset",
             "description": desc,
             # the record credits the HARMONIZATION (a derived work); the
@@ -366,6 +386,9 @@ def main():
         with open(os.path.join(d, "metadata.json"), "w", newline="\n",
                   encoding="utf-8") as f:
             json.dump(meta, f, indent=1, ensure_ascii=False)
+        if args.metadata_only:
+            print(f"  {r['id']:28s} metadata only")
+            continue
         with open(os.path.join(d, "files.csv"), "w", newline="",
                   encoding="utf-8") as f:
             w = csv.writer(f, lineterminator="\n")
@@ -383,10 +406,19 @@ def main():
                      len(files), "yes" if lid else "free-text"])
         print(f"  {r['id']:28s} {target:6s} {size/1e9:8.2f} GB "
               f"{len(files):6d} files")
+    if args.metadata_only:
+        print("metadata only: files.csv and _plan.csv untouched")
+        return
     # --only must MERGE into the plan, not replace it: two --only runs
     # (drummer 2026-09-05, sensefog 2026-09-07) each left a one-row plan
     # behind, which the paper cites as the deposit crosswalk.
     plan_path = os.path.join(OUT, "_plan.csv")
+    # the corpus record (build_zenodo_corpus.py) is not a registry row: a
+    # full run keeps its plan row instead of dropping it
+    if not args.only and os.path.exists(plan_path):
+        with open(plan_path, newline="", encoding="utf-8") as f:
+            plan += [r for r in list(csv.reader(f))[1:]
+                     if r and r[0] == "moveatlas_corpus"]
     if args.only and os.path.exists(plan_path):
         with open(plan_path, newline="", encoding="utf-8") as f:
             old = [r for r in csv.reader(f)][1:]

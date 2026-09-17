@@ -1,0 +1,55 @@
+dataset,record_title
+alameda_tremor,MoveAtlas harmonized release: ALAMEDA wrist tremor features
+alphasyn_catwalk,MoveAtlas harmonized release: CatWalk gait of alpha-synuclein transgenic mice
+cap_sleep,MoveAtlas harmonized release: CAP Sleep Database
+capture24,MoveAtlas harmonized release: Capture-24 free-living wrist accelerometry
+cdystonia,MoveAtlas harmonized release: Cervical dystonia TWSTRS trial scores
+cervical_motion_multiplanar,MoveAtlas harmonized release: Multi-planar cervical motion recordings
+chop_gma_features,MoveAtlas harmonized release: Infant general movement assessment features
+chorea_acanthocytosis_mri,MoveAtlas harmonized release: Chorea-acanthocytosis cohort imaging data
+clinical_gait_multipatho,MoveAtlas harmonized release: Multi-pathology clinical gait wearable recordings
+cody_1,MoveAtlas harmonized release: CODY adult hyperkinetic cohort
+cody_2,MoveAtlas harmonized release: CODY paediatric evaluation cohort
+cody_3,MoveAtlas harmonized release: CODY keypoint and silhouette series
+daphnet,MoveAtlas harmonized release: Daphnet Freezing of Gait dataset
+drummer_tremor_model,MoveAtlas harmonized release: Expert drummer tremor recordings
+dystonia_alcohol_bfm,MoveAtlas harmonized release: Alcohol responsiveness in isolated dystonia
+fog_star,MoveAtlas harmonized release: FoG-STAR freezing of gait sensor data
+fog_turning_filho,MoveAtlas harmonized release: Turning-in-place freezing of gait recordings
+gait120,MoveAtlas harmonized release: Gait120 motion capture and surface EMG
+gaitdb,MoveAtlas harmonized release: Gait in Aging and Disease Database
+gaitndd,MoveAtlas harmonized release: Gait in Neurodegenerative Disease Database
+gaitrec,MoveAtlas harmonized release: GaitRec ground reaction forces
+hd_accel_jnet,MoveAtlas harmonized release: Huntington's disease wrist accelerometry
+hpo,"MoveAtlas harmonized release: Human Phenotype Ontology, release 2025-01-16"
+ilg_ataxia_tables,MoveAtlas harmonized release: Real-life gait in degenerative cerebellar ataxia
+imu_inthewild_iprognosis,MoveAtlas harmonized release: i-PROGNOSIS in-the-wild smartphone accelerometry
+infant_pose_chambers,MoveAtlas harmonized release: Infant pose estimates and normative video metadata
+lance_adams_myoclonus,MoveAtlas harmonized release: Lance-Adams syndrome EEG and EMG case
+li_taati,MoveAtlas harmonized release: Parkinson's disease pose estimation dataset
+ltmm,MoveAtlas harmonized release: Long-Term Movement Monitoring Database
+modys_video,MoveAtlas harmonized release: MODYS dyskinetic cerebral palsy video data
+monipar,MoveAtlas harmonized release: MoniPAR smartwatch recordings in Parkinson's disease
+multimodal_fog,MoveAtlas harmonized release: Multimodal freezing of gait recordings
+neuromorpho_bg,MoveAtlas harmonized release: Basal ganglia neuron morphologies from NeuroMorpho.Org
+nonan_gaitprint,"MoveAtlas harmonized release: NONAN GaitPrint, older adults"
+nonan_gaitprint_young,"MoveAtlas harmonized release: NONAN GaitPrint, young adults"
+nqmitcsxpd,MoveAtlas harmonized release: neuroQWERTY MIT-CSXPD keystroke data
+pads,MoveAtlas harmonized release: Parkinson's Disease Smartwatch dataset (PADS)
+pallidal_units_dystonia,MoveAtlas harmonized release: Pallidal single-unit features in genetic dystonia
+park_fingertap,MoveAtlas harmonized release: PARK finger-tapping features
+pd_rest_eeg_ds004584,MoveAtlas harmonized release: Resting-state EEG in Parkinson's disease (OpenNeuro ds004584)
+pd_rest_eeg_onoff_ds002778,MoveAtlas harmonized release: UC San Diego resting-state EEG in Parkinson's disease (OpenNeuro ds002778)
+pd_walking_eeg_ds007526,MoveAtlas harmonized release: Rest and treadmill-walking EEG in Parkinson's disease (OpenNeuro ds007526)
+physionet_gaitpdb,MoveAtlas harmonized release: Gait in Parkinson's Disease Database
+physionet_multimodal_gait,MoveAtlas harmonized release: Multimodal gait dataset of healthy young adults
+physionet_semg_walking,MoveAtlas harmonized release: Long-term surface EMG during walking
+remap_open,MoveAtlas harmonized release: REMAP open dataset
+sensefog,MoveAtlas harmonized release: SenseFOG subthalamic and EMG recordings during gait
+sixmwt_lifespan,MoveAtlas harmonized release: Six-minute walk tests across the adult lifespan
+stroke_gait_vancriekinge,MoveAtlas harmonized release: Full-body gait of stroke survivors and able-bodied adults
+tappy_keystroke,MoveAtlas harmonized release: Tappy keystroke dataset
+tremordb,MoveAtlas harmonized release: Deep brain stimulation and parkinsonian tremor
+uci_parkinson_voix,MoveAtlas harmonized release: UCI Parkinson's voice dataset
+vidimu,MoveAtlas harmonized release: VIDIMU daily-activity video and inertial data
+weargait_pd,MoveAtlas harmonized release: WearGait-PD wearable gait data

@@ -1,0 +1,55 @@
+dataset,record_title,record_doi,concept_doi,licence,source_identifier
+alameda_tremor,MoveAtlas harmonized release: ALAMEDA wrist tremor features,10.5281/zenodo.22310374,10.5281/zenodo.22310373,cc-by-4.0,10.5281/zenodo.10782573
+alphasyn_catwalk,MoveAtlas harmonized release: CatWalk gait of alpha-synuclein transgenic mice,10.5281/zenodo.22313570,10.5281/zenodo.22313569,cc-by-4.0,https://pmc.ncbi.nlm.nih.gov/articles/PMC5988224/
+cap_sleep,MoveAtlas harmonized release: CAP Sleep Database,10.5281/zenodo.22300225,10.5281/zenodo.22300224,odc-by-1.0,10.13026/c2vc79
+capture24,MoveAtlas harmonized release: Capture-24 free-living wrist accelerometry,10.5281/zenodo.22662984,10.5281/zenodo.22662983,cc-by-4.0,10.5287/bodleian:ngx0jomp5
+cdystonia,MoveAtlas harmonized release: Cervical dystonia TWSTRS trial scores,10.5281/zenodo.22300081,10.5281/zenodo.22300080,other-open,https://hbiostat.org/data/repo/cdystonia.html
+cervical_motion_multiplanar,MoveAtlas harmonized release: Multi-planar cervical motion recordings,10.5281/zenodo.22310376,10.5281/zenodo.22310375,cc-by-4.0,10.1038/s41597-024-04351-4
+chop_gma_features,MoveAtlas harmonized release: Infant general movement assessment features,10.5281/zenodo.22313491,10.5281/zenodo.22313490,cc0-1.0,10.17605/osf.io/bwgek
+chorea_acanthocytosis_mri,MoveAtlas harmonized release: Chorea-acanthocytosis cohort imaging data,10.5281/zenodo.22313543,10.5281/zenodo.22313542,cc0-1.0,10.5061/dryad.7h44j0zr9
+clinical_gait_multipatho,MoveAtlas harmonized release: Multi-pathology clinical gait wearable recordings,10.5281/zenodo.22806989,10.5281/zenodo.22310386,cc-by-4.0,10.6084/m9.figshare.28806086
+cody_1,MoveAtlas harmonized release: CODY adult hyperkinetic cohort,10.5281/zenodo.22313505,10.5281/zenodo.22313504,cc-by-4.0,https://doi.org/10.5281/zenodo.22232609
+cody_2,MoveAtlas harmonized release: CODY paediatric evaluation cohort,10.5281/zenodo.22313507,10.5281/zenodo.22313506,cc-by-4.0,https://doi.org/10.5281/zenodo.22232609
+cody_3,MoveAtlas harmonized release: CODY keypoint and silhouette series,10.5281/zenodo.22791880,10.5281/zenodo.22313508,cc-by-4.0,https://doi.org/10.5281/zenodo.22232609
+daphnet,MoveAtlas harmonized release: Daphnet Freezing of Gait dataset,10.5281/zenodo.22806975,10.5281/zenodo.22310476,cc-by-4.0,10.24432/c56k78
+drummer_tremor_model,MoveAtlas harmonized release: Expert drummer tremor recordings,10.5281/zenodo.22358617,10.5281/zenodo.22358616,etalab-2.0,https://doi.org/10.57745/thhwp2
+dystonia_alcohol_bfm,MoveAtlas harmonized release: Alcohol responsiveness in isolated dystonia,10.5281/zenodo.22313541,10.5281/zenodo.22313540,cc0-1.0,10.5061/dryad.hj08j85
+fog_star,MoveAtlas harmonized release: FoG-STAR freezing of gait sensor data,10.5281/zenodo.22310487,10.5281/zenodo.22310486,cc-by-4.0,10.5281/zenodo.17838806
+fog_turning_filho,MoveAtlas harmonized release: Turning-in-place freezing of gait recordings,10.5281/zenodo.22790322,10.5281/zenodo.22790321,cc-by-4.0,10.6084/m9.figshare.14984667
+gait120,MoveAtlas harmonized release: Gait120 motion capture and surface EMG,10.5281/zenodo.22310188,10.5281/zenodo.22310187,cc-by-4.0,10.1038/s41597-025-05391-0
+gaitdb,MoveAtlas harmonized release: Gait in Aging and Disease Database,10.5281/zenodo.22310489,10.5281/zenodo.22310488,odc-by-1.0,10.13026/c2c889
+gaitndd,MoveAtlas harmonized release: Gait in Neurodegenerative Disease Database,10.5281/zenodo.22806862,10.5281/zenodo.22310490,odc-by-1.0,10.13026/c27g6c
+gaitrec,MoveAtlas harmonized release: GaitRec ground reaction forces,10.5281/zenodo.22313441,10.5281/zenodo.22313440,cc0-1.0,10.6084/m9.figshare.c.4788012
+hd_accel_jnet,MoveAtlas harmonized release: Huntington's disease wrist accelerometry,10.5281/zenodo.22806887,10.5281/zenodo.22310580,cc-by-4.0,10.5281/zenodo.14384260
+hpo,"MoveAtlas harmonized release: Human Phenotype Ontology, release 2025-01-16",10.5281/zenodo.22313503,10.5281/zenodo.22313502,other-open,https://hpo.jax.org/
+ilg_ataxia_tables,MoveAtlas harmonized release: Real-life gait in degenerative cerebellar ataxia,10.5281/zenodo.22300223,10.5281/zenodo.22300222,cc0-1.0,10.5061/dryad.4tmpg4f62
+imu_inthewild_iprognosis,MoveAtlas harmonized release: i-PROGNOSIS in-the-wild smartphone accelerometry,10.5281/zenodo.22806890,10.5281/zenodo.22310590,cc-by-4.0,10.5281/zenodo.3519213
+infant_pose_chambers,MoveAtlas harmonized release: Infant pose estimates and normative video metadata,10.5281/zenodo.22313572,10.5281/zenodo.22313571,cc-by-4.0,https://doi.org/10.6084/m9.figshare.8161430
+lance_adams_myoclonus,MoveAtlas harmonized release: Lance-Adams syndrome EEG and EMG case,10.5281/zenodo.22313522,10.5281/zenodo.22313521,cc-by-4.0,10.5281/zenodo.7620808
+li_taati,MoveAtlas harmonized release: Parkinson's disease pose estimation dataset,10.5281/zenodo.22313475,10.5281/zenodo.22313474,cc-by-4.0,https://github.com/limi44/Parkinson-s-Pose-Estimation-Dataset
+ltmm,MoveAtlas harmonized release: Long-Term Movement Monitoring Database,10.5281/zenodo.22659396,10.5281/zenodo.22659395,odc-by-1.0,10.13026/c2s59c
+modys_video,MoveAtlas harmonized release: MODYS dyskinetic cerebral palsy video data,10.5281/zenodo.22313479,10.5281/zenodo.22313478,cc-by-4.0,10.5281/zenodo.5638470
+monipar,MoveAtlas harmonized release: MoniPAR smartwatch recordings in Parkinson's disease,10.5281/zenodo.22806980,10.5281/zenodo.22310609,cc-by-4.0,10.5281/zenodo.8104853
+multimodal_fog,MoveAtlas harmonized release: Multimodal freezing of gait recordings,10.5281/zenodo.22310616,10.5281/zenodo.22310615,cc-by-4.0,10.17632/r8gmbtv7w2.1
+neuromorpho_bg,MoveAtlas harmonized release: Basal ganglia neuron morphologies from NeuroMorpho.Org,10.5281/zenodo.22313520,10.5281/zenodo.22313519,cc-by-4.0,https://neuromorpho.org
+nonan_gaitprint,"MoveAtlas harmonized release: NONAN GaitPrint, older adults",10.5281/zenodo.22310799,10.5281/zenodo.22310798,cc-by-4.0,10.6084/m9.figshare.27815034
+nonan_gaitprint_young,"MoveAtlas harmonized release: NONAN GaitPrint, young adults",10.5281/zenodo.22312827,10.5281/zenodo.22312826,cc0-1.0,10.6084/m9.figshare.c.6415061
+nqmitcsxpd,MoveAtlas harmonized release: neuroQWERTY MIT-CSXPD keystroke data,10.5281/zenodo.22300189,10.5281/zenodo.22300188,odc-by-1.0,10.13026/c2859q
+pads,MoveAtlas harmonized release: Parkinson's Disease Smartwatch dataset (PADS),10.5281/zenodo.22310664,10.5281/zenodo.22310663,cc-by-nc-sa-4.0,https://physionet.org/content/parkinsons-disease-smartwatch/1.0.0/
+pallidal_units_dystonia,MoveAtlas harmonized release: Pallidal single-unit features in genetic dystonia,10.5281/zenodo.22313518,10.5281/zenodo.22313517,cc-by-4.0,10.5281/zenodo.13269430
+park_fingertap,MoveAtlas harmonized release: PARK finger-tapping features,10.5281/zenodo.22313481,10.5281/zenodo.22313480,mit,https://github.com/ROC-HCI/finger-tapping-severity
+pd_rest_eeg_ds004584,MoveAtlas harmonized release: Resting-state EEG in Parkinson's disease (OpenNeuro ds004584),10.5281/zenodo.22308281,10.5281/zenodo.22308280,cc0-1.0,10.18112/openneuro.ds004584.v1.0.0
+pd_rest_eeg_onoff_ds002778,MoveAtlas harmonized release: UC San Diego resting-state EEG in Parkinson's disease (OpenNeuro ds002778),10.5281/zenodo.22313545,10.5281/zenodo.22313544,cc0-1.0,https://openneuro.org/datasets/ds002778
+pd_walking_eeg_ds007526,MoveAtlas harmonized release: Rest and treadmill-walking EEG in Parkinson's disease (OpenNeuro ds007526),10.5281/zenodo.22307403,10.5281/zenodo.22307402,cc0-1.0,10.18112/openneuro.ds007526.v1.0.0
+physionet_gaitpdb,MoveAtlas harmonized release: Gait in Parkinson's Disease Database,10.5281/zenodo.22310689,10.5281/zenodo.22310688,odc-by-1.0,10.13026/c24h3n
+physionet_multimodal_gait,MoveAtlas harmonized release: Multimodal gait dataset of healthy young adults,10.5281/zenodo.22663176,10.5281/zenodo.22663175,cc-by-4.0,https://physionet.org/content/multimodal-gait-dataset/1.0.0/
+physionet_semg_walking,MoveAtlas harmonized release: Long-term surface EMG during walking,10.5281/zenodo.22310311,10.5281/zenodo.22310310,odc-by-1.0,10.13026/grdj-qx06
+remap_open,MoveAtlas harmonized release: REMAP open dataset,10.5281/zenodo.22313485,10.5281/zenodo.22313484,cc-by-4.0,10.5523/bris.21h9f9e30v9cl2fapjggz4q1x7
+sensefog,MoveAtlas harmonized release: SenseFOG subthalamic and EMG recordings during gait,10.5281/zenodo.22663103,10.5281/zenodo.22663102,cc-by-4.0,https://doi.org/10.17632/c9ckcvjxc7.1
+sixmwt_lifespan,MoveAtlas harmonized release: Six-minute walk tests across the adult lifespan,10.5281/zenodo.22310797,10.5281/zenodo.22310796,cc-by-4.0,10.6084/m9.figshare.c.7954157
+stroke_gait_vancriekinge,MoveAtlas harmonized release: Full-body gait of stroke survivors and able-bodied adults,10.5281/zenodo.22313489,10.5281/zenodo.22313488,cc0-1.0,10.6084/m9.figshare.c.6503791
+tappy_keystroke,MoveAtlas harmonized release: Tappy keystroke dataset,10.5281/zenodo.22300193,10.5281/zenodo.22300192,odc-by-1.0,10.13026/c2k08d
+tremordb,MoveAtlas harmonized release: Deep brain stimulation and parkinsonian tremor,10.5281/zenodo.22310736,10.5281/zenodo.22310735,odc-by-1.0,10.13026/c2d097
+uci_parkinson_voix,MoveAtlas harmonized release: UCI Parkinson's voice dataset,10.5281/zenodo.22300217,10.5281/zenodo.22300216,cc-by-4.0,10.24432/c59c74
+vidimu,MoveAtlas harmonized release: VIDIMU daily-activity video and inertial data,10.5281/zenodo.22313495,10.5281/zenodo.22313494,cc-by-4.0,10.1038/s41597-023-02554-9
+weargait_pd,MoveAtlas harmonized release: WearGait-PD wearable gait data,10.5281/zenodo.22807262,10.5281/zenodo.22310737,cc-by-4.0,10.7303/syn52540892
