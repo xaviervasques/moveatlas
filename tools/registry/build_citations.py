@@ -356,10 +356,38 @@ def bibkey(ds_id, meta, kind):
     return f"{ds_id}_{kind}_{y}"
 
 
+# repository metadata errors, checked against the DataCite and Crossref
+# records on 2026-09-17: fixed by DOI when the bibliography is written
+META_FIXES = {
+    "10.5281/zenodo.10782573": {"authors": ["Giannakopoulou, Konstantina-Maria",
+                                            "Stefanis, Leonidas",
+                                            "Papagiannakis, Nikolaos"]},
+    "10.13026/c2d097": {"authors": ["Beuter, Anne", "Titcombe, Michèle S.",
+                                    "Richer, François", "Gross, Christian",
+                                    "Guehl, Dominique"]},
+    "10.5061/dryad.4tmpg4f62": {"title": "Towards ecologically valid biomarkers: "
+                                         "real-life gait assessment in cerebellar ataxia"},
+}
+
+
+_GROUP = re.compile(r"consortium|team|force|society|maintainers|behalf|group|"
+                    r"university|institute|committee|investigators|challenge", re.I)
+
+
+def _bib_author(a):
+    # a person ("Family, Given" or "Given Family") is left to BibTeX; a group
+    # name is braced so BibTeX neither splits it on "and" nor abbreviates it
+    return "{" + a + "}" if _GROUP.search(a) and "," not in a else a
+
+
 def to_bibtex(key, meta, kind):
     entry = "misc" if kind == "data" else "article"
+    fix = META_FIXES.get(str(meta.get("doi", "")).lower(), {})
+    meta = dict(meta, **fix)
+    authors = [a.replace("manifrenti, marilena kalaitzi", "Manifrenti, Marilena Kalaitzi")
+               for a in meta.get("authors", [])]
     fields = [("title", meta.get("title", "")),
-              ("author", " and ".join(meta.get("authors", [])) or "{Unknown}"),
+              ("author", " and ".join(_bib_author(a) for a in authors) or "{Unknown}"),
               ("year", meta.get("year", "")),
               ("doi", meta.get("doi", "")),
               ("howpublished" if entry == "misc" else "journal",
