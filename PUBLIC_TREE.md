@@ -25,7 +25,7 @@ needs. This tree starts with a single authored commit.
 
 | what | why |
 |---|---|
-| paper/, docs/PAPER_SCIDATA_V2.md, docs/SCIDATA_CONFORMITY.md | the resource paper: manuscript, builders, tables, figures and the journal conformity check. A draft until its preprint is out; the tree will then carry the reference, not the manuscript |
+| paper/, docs/SCIDATA_CONFORMITY.md | the resource paper: manuscript, builders, tables, figures and the journal conformity check. A draft until its preprint is out; the tree will then carry the reference, not the manuscript |
 | KINEFM_HANDOFF_*.md, HANDOFF_WINDOWS_RTX.md | session handoffs: working notes, superseded by docs/OPERATIONS.md |
 | docs/BACKUP.md | the owner's backup procedure for a private disk: it describes where one person's copies live and nothing a reader of this resource can use or verify |
 | docs/MACHINES.md | the owner's two-machine ingestion procedure (mounts, line endings, AppleDouble, token hygiene, log locations), split out of docs/OPERATIONS.md on 2026-09-15 so that what ships is what a reader needs: the pipeline, the gates, the record format, the access log |
@@ -36,7 +36,7 @@ needs. This tree starts with a single authored commit.
 | docs/G2_REVIEW_DOSSIER.md, docs/KINEFM_V2_SPEC.md, docs/V2_DIRECTION.md | design material for the model project, not for the data resource |
 | docs/RESUME_DONNEES_FR.md, the .xlsx/.docx project files | French project-management material; the repository is English-only |
 | docs/REVIEW_360_*.md, docs/REGISTRY_CELLS_REPORT_*.md, docs/STATUS/phase1/citation_candidates/imu_reconnaissance | internal review and triage notes |
-| docs/PAPER_SCIDATA_DRAFT.md, docs/PAPER_SCIDATA_OUTLINE.md | superseded by PAPER_SCIDATA_V2.md |
+| docs/PAPER_SCIDATA_DRAFT.md, docs/PAPER_SCIDATA_OUTLINE.md | superseded drafts of the descriptor (the manuscript is built under paper/package/source/ since 2026-09-16; the v2 source was removed on 2026-09-17) |
 | RUN1.ps1, RUN_POSE_VICREG.ps1, RUN_ON_RTX.md, LANCEMENT.md | runbooks for a training machine that no longer exists |
 | arbo.py, download_*.py, extract_care_pd.py, fetch_hunt_*.py, fetch_animal_*.py, fetch_dandi_000947_sample.py, stop_before_eject.sh | one-shot scaffolding superseded by the generic fetchers |
 | _pipeline_log.txt, _paris_logs/, builder_inputs/, build/, dist/ | machine logs and build artifacts |

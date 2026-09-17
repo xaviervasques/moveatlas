@@ -1,198 +1,198 @@
-hpo_id,name,depth_under_HP0100022,parents,moamb_cells
-HP:0100022,Abnormality of movement,0,HP:0012638,
-HP:0000743,Frontal release signs,1,HP:0100022,
-HP:0001288,Gait disturbance,1,HP:0100022,
-HP:0001332,Dystonia,1,HP:0100022,A4
-HP:0002172,Postural instability,1,HP:0100022,
-HP:0002374,Diminished movement,1,HP:0100022,
-HP:0002411,Myokymia,1,HP:0100022,
-HP:0002457,Abnormal head movements,1,HP:0100022,
-HP:0002487,Hyperkinetic movements,1,HP:0100022,
-HP:0002533,Abnormal posturing,1,HP:0100022,
-HP:0004305,Involuntary movements,1,HP:0011442|HP:0100022,
-HP:0010546,Muscle fibrillation,1,HP:0100022,
-HP:0012164,Asterixis,1,HP:0100022,
-HP:0020037,Astasia,1,HP:0100022,
-HP:0025403,Stooped posture,1,HP:0100022,
-HP:0031826,Abnormal reflex,1,HP:0100022,
-HP:0034980,Synkinesis,1,HP:0100022,
-HP:0100021,Cerebral palsy,1,HP:0011442|HP:0100022,
-HP:0100660,Dyskinesia,1,HP:0100022,
-HP:0000317,Facial myokymia,2,HP:0000301|HP:0002411,
-HP:0001304,Torsion dystonia,2,HP:0001332,A4
-HP:0001308,Tongue fasciculations,2,HP:0002380|HP:0010546|HP:0030810,
-HP:0001315,Reduced tendon reflexes,2,HP:0031826,
-HP:0001335,Bimanual synkinesia,2,HP:0034980,
-HP:0001336,Myoclonus,2,HP:0004305,A2
-HP:0001337,Tremor,2,HP:0004305,A1
-HP:0001347,Hyperreflexia,2,HP:0031826,
-HP:0002064,Spastic gait,2,HP:0001257|HP:0001288,
-HP:0002066,Gait ataxia,2,HP:0001251|HP:0001288,
-HP:0002072,Chorea,2,HP:0004305,A7
-HP:0002136,Broad-based gait,2,HP:0001288,
-HP:0002141,Gait imbalance,2,HP:0001288,
-HP:0002169,Clonus,2,HP:0001347|HP:0004305,
-HP:0002268,Paroxysmal dystonia,2,HP:0001332,A4
-HP:0002304,Akinesia,2,HP:0002374,B4
-HP:0002305,Athetosis,2,HP:0004305,A6
-HP:0002310,Orofacial dyskinesia,2,HP:0100660,
-HP:0002317,Unsteady gait,2,HP:0001288,
-HP:0002362,Shuffling gait,2,HP:0001288,
-HP:0002375,Hypokinesia,2,HP:0002374,B3
-HP:0002380,Fasciculations,2,HP:0004305,
-HP:0002451,Limb dystonia,2,HP:0001332,A4
-HP:0002476,Primitive reflex,2,HP:0031826,
-HP:0002510,Spastic tetraplegia,2,HP:0034353|HP:0100021,
-HP:0002515,Waddling gait,2,HP:0001288,
-HP:0002527,Falls,2,HP:0001288,
-HP:0002530,Axial dystonia,2,HP:0001332,A4
-HP:0002540,Inability to walk,2,HP:0001288,
-HP:0002599,Head titubation,2,HP:0002346|HP:0002457|HP:0030187,A1
-HP:0003376,Steppage gait,2,HP:0001288,
-HP:0004373,Focal dystonia,2,HP:0001332,A4
-HP:0006961,Jerky head movements,2,HP:0002457,
-HP:0007089,Facial-lingual fasciculations,2,HP:0002380|HP:0010546,
-HP:0007166,Paroxysmal dyskinesia,2,HP:0004305,
-HP:0007289,Limb fasciculations,2,HP:0002380|HP:0010546|HP:0040064,
-HP:0007308,Extrapyramidal dyskinesia,2,HP:0002071|HP:0100660,
-HP:0007325,Generalized dystonia,2,HP:0001332,A4
-HP:0008767,Self-mutilation of tongue and lips due to involuntary movements,2,HP:0000742|HP:0004305,
-HP:0009878,Cerebellar ataxia associated with quadrupedal gait,2,HP:0001251|HP:0001288,
-HP:0010521,Gait apraxia,2,HP:0001288|HP:0002186,
-HP:0010553,Oculogyric crisis,2,HP:0001332,A4
-HP:0011099,Spastic hemiparesis,2,HP:0001269|HP:0034353|HP:0100021,
-HP:0011445,Athetoid cerebral palsy,2,HP:0002071|HP:0100021,
-HP:0025682,Crouch gait,2,HP:0001288,
-HP:0030051,Tip-toe gait,2,HP:0001288,
-HP:0031166,Eyelid myokymia,2,HP:0002411,
-HP:0031629,Impaired tandem gait,2,HP:0001288,
-HP:0031825,Freezing of gait,2,HP:0001288,B5
-HP:0031828,Abnormal superficial reflex,2,HP:0031826,
-HP:0031847,Difficulty walking backward,2,HP:0001288,
-HP:0031943,Akathisia,2,HP:0000711|HP:0004305,
-HP:0031952,Neurogenic claudication,2,HP:0001288,
-HP:0031953,Cautious gait,2,HP:0001288,
-HP:0031954,Dystonic gait,2,HP:0001288,
-HP:0031955,Antalgic gait,2,HP:0001288,
-HP:0031990,Chvostek sign,2,HP:0004305,
-HP:0032005,Hemidystonia,2,HP:0001332,A4
-HP:0032506,Alien limb phenomenon,2,HP:0004305,
-HP:0033329,Abnormal postural reflex,2,HP:0031826,
-HP:0034052,Impaired toe-walking ability,2,HP:0001288,
-HP:0034183,Spastic triplegia,2,HP:0034353|HP:0100021,
-HP:0034979,Facial synkinesis,2,HP:0034980,
-HP:0040141,Tardive dyskinesia,2,HP:0100660,
-HP:0100248,Hemiballismus,2,HP:0004305,A8
-HP:0100288,EMG: myokymic discharges,2,HP:0002411|HP:0003457,
-HP:6000490,Impaired heel-walking ability,2,HP:0001288,
-HP:6001054,Intoeing,2,HP:0001288,
-HP:6001056,Out-toeing,2,HP:0001288,
-HP:0001265,Hyporeflexia,3,HP:0001315,
-HP:0001266,Choreoathetosis,3,HP:0002072|HP:0002305,A6|A7
-HP:0001284,Areflexia,3,HP:0001315,
-HP:0001348,Brisk reflexes,3,HP:0001347,
-HP:0002322,Resting tremor,3,HP:0001337,A1
-HP:0002345,Action tremor,3,HP:0001337,A1
-HP:0002356,Writer's cramp,3,HP:0004373,A4
-HP:0002395,Lower limb hyperreflexia,3,HP:0001347,
-HP:0002505,Loss of ambulation,3,HP:0002540,
-HP:0003487,Babinski sign,3,HP:0007256|HP:0031828,
-HP:0003739,Myoclonic spasms,3,HP:0001336,A2
-HP:0006801,Hyperactive deep tendon reflexes,3,HP:0001347,
-HP:0006915,Inability to walk by childhood/adolescence,3,HP:0002540,
-HP:0006962,"Gait instability, worse in the dark",3,HP:0002317,
-HP:0007000,Morning myoclonic jerks,3,HP:0001336,A2
-HP:0007034,Generalized hyperreflexia,3,HP:0001347,
-HP:0007054,Proximal hyperreflexia,3,HP:0001347,
-HP:0007240,Progressive gait ataxia,3,HP:0002066,
-HP:0007311,Short stepped shuffling gait,3,HP:0002362,
-HP:0007350,Upper limb hyperreflexia,3,HP:0001347,
-HP:0010530,Palatal tremor,3,HP:0001336,A2
-HP:0010531,Spinal myoclonus,3,HP:0001336,A2
-HP:0011448,Ankle clonus,3,HP:0002169|HP:0034674,
-HP:0011449,Knee clonus,3,HP:0002169,
-HP:0011728,Elbow clonus,3,HP:0002169,
-HP:0012049,Laryngeal dystonia,3,HP:0001618|HP:0004373,A4
-HP:0012179,Craniofacial dystonia,3,HP:0004373,A4
-HP:0012323,Sleep myoclonus,3,HP:0001336,A2
-HP:0012452,Restless legs,3,HP:0031943|HP:5200300,
-HP:0012462,Chin myoclonus,3,HP:0001336,A2
-HP:0012651,Abasia,3,HP:0002066,
-HP:0025097,Eyelid myoclonus,3,HP:0001336,A2
-HP:0025357,Erratic myoclonus,3,HP:0001336,A2
-HP:0030188,Tremor by anatomical site,3,HP:0001337,A1
-HP:0030665,Rubral tremor,3,HP:0001337,A1
-HP:0030902,Palmomental reflex,3,HP:0002476,
-HP:0030903,Grasp reflex,3,HP:0002476,
-HP:0030904,Glabellar reflex,3,HP:0002476,
-HP:0030905,Snout reflex,3,HP:0002476,
-HP:0030906,Suck reflex,3,HP:0002476,
-HP:0031827,Absent abdominal reflex,3,HP:0031828,
-HP:0031829,Absent cremaster reflex,3,HP:0031828,
-HP:0031848,Cock-walk gait,3,HP:0031954,
-HP:0031856,Hobby horse gait,3,HP:0031954,
-HP:0031957,Spastic hemiparetic gait,3,HP:0002064,
-HP:0031958,Spastic paraparetic gait,3,HP:0002064,
-HP:0031959,Leg dystonia,3,HP:0002451,A4
-HP:0031960,Arm dystonia,3,HP:0002451,A4
-HP:0031986,Polyminimyoclonus,3,HP:0001336,A2
-HP:0032507,Labiomental fasciculations,3,HP:0007089,
-HP:0032549,Persistent asymmetrical tonic neck reflex,3,HP:0002476,
-HP:0033330,Impaired neck-righting reflex,3,HP:0033329,
-HP:0033411,Lower extremity akinesia,3,HP:0002304,B4
-HP:0033412,Upper extremity akinesia,3,HP:0002304,B4
-HP:0033413,Upper extremity hypokinesia,3,HP:0002375,B3
-HP:0033414,Lower extremity hypokinesia,3,HP:0002375,B3
-HP:0033683,Jaw hyperreflexia,3,HP:0001347,
-HP:0034360,Action myoclonus,3,HP:0001336,A2
-HP:0040148,Cortical myoclonus,3,HP:0001336,A2
-HP:0045084,Limb myoclonus,3,HP:0001336,A2
-HP:0000473,Torticollis,4,HP:0011006|HP:0011442|HP:0012179,A4
-HP:0000643,Blepharospasm,4,HP:0012179|HP:0031879,A4
-HP:0002174,Postural tremor,4,HP:0002345,A1
-HP:0002346,Head tremor,4,HP:0030188,A1
-HP:0002378,Hand tremor,4,HP:0030188,A1
-HP:0002522,Areflexia of lower limbs,4,HP:0001284|HP:0002814,
-HP:0002600,Hyporeflexia of lower limbs,4,HP:0001265|HP:0002814,
-HP:0006794,Loss of ability to walk in first decade,4,HP:0002505,
-HP:0007083,Hyperactive patellar reflex,4,HP:0002395|HP:0007054,
-HP:0007098,Paroxysmal choreoathetosis,4,HP:0001266,A6|A7
-HP:0007326,Progressive choreoathetosis,4,HP:0001266,A6|A7
-HP:0008945,Loss of ability to walk in early childhood,4,HP:0002505,
-HP:0010828,Hemifacial spasm,4,HP:0003739,A2
-HP:0012046,Areflexia of upper limbs,4,HP:0001284|HP:0002817,
-HP:0012048,Oromandibular dystonia,4,HP:0012179,A4
-HP:0012391,Hyporeflexia of upper limbs,4,HP:0001265|HP:0002817,
-HP:0012392,Jaw hyporeflexia,4,HP:0001265|HP:0045037,
-HP:0012407,Scissor gait,4,HP:0031958,
-HP:0012477,Vocal tremor,4,HP:0002345,A1
-HP:0025387,Pill-rolling tremor,4,HP:0002322,A1
-HP:0030185,Isometric tremor,4,HP:0002345,A1
-HP:0030186,Kinetic tremor,4,HP:0002345,A1
-HP:0030187,Titubation,4,HP:0002345,A1
-HP:0031004,Hemiareflexia,4,HP:0001284,
-HP:0031007,Orofacial action-specific dystonia induced by speech,4,HP:0012179,A4
-HP:0031008,Lingual dystonia,4,HP:0012179,A4
-HP:0031947,Tongue tremor,4,HP:0030188,A1
-HP:0032006,Lip tremor,4,HP:0030188,A1
-HP:0033054,Myoclonic tremor,4,HP:0040148,A2
-HP:0033203,Brachioradialis hyperreflexia,4,HP:0007054|HP:0007350,
-HP:0033204,Triceps hyperreflexia,4,HP:0007350,
-HP:0033205,Biceps hyperreflexia,4,HP:0007350,
-HP:0033206,Hyperactive Achilles reflex,4,HP:0002395,
-HP:0200085,Limb tremor,4,HP:0030188,A1
-HP:0002080,Intention tremor,5,HP:0030186,A1
-HP:0002544,Retrocollis,5,HP:0000473,A4
-HP:0006844,Absent patellar reflexes,5,HP:0002522,
-HP:0007351,Upper limb postural tremor,5,HP:0002174|HP:0200085,A1
-HP:0009072,Decreased Achilles reflex,5,HP:0002600,
-HP:0011808,Decreased patellar reflex,5,HP:0002600,
-HP:0030147,Truncal titubation,5,HP:0030187,A1
-HP:0033200,Triceps hyporeflexia,5,HP:0012391,
-HP:0033201,Biceps hyporeflexia,5,HP:0012391,
-HP:0033202,Brachioradialis hyporeflexia,5,HP:0012391,
-HP:0033228,Triceps areflexia,5,HP:0012046,
-HP:0033229,Brachioradialis areflexia,5,HP:0012046,
-HP:0033230,Biceps areflexia,5,HP:0012046,
-HP:0200101,Decreased/absent ankle reflexes,5,HP:0002522,
-HP:0003438,Absent Achilles reflex,6,HP:0200101,
+hpo_id,name,depth_under_HP0100022,parents,moveatlas_cells,hpo_release
+HP:0100022,Abnormality of movement,0,HP:0012638,,2025-01-16
+HP:0000743,Frontal release signs,1,HP:0100022,,2025-01-16
+HP:0001288,Gait disturbance,1,HP:0100022,,2025-01-16
+HP:0001332,Dystonia,1,HP:0100022,A4,2025-01-16
+HP:0002172,Postural instability,1,HP:0100022,,2025-01-16
+HP:0002374,Diminished movement,1,HP:0100022,,2025-01-16
+HP:0002411,Myokymia,1,HP:0100022,,2025-01-16
+HP:0002457,Abnormal head movements,1,HP:0100022,,2025-01-16
+HP:0002487,Hyperkinetic movements,1,HP:0100022,,2025-01-16
+HP:0002533,Abnormal posturing,1,HP:0100022,,2025-01-16
+HP:0004305,Involuntary movements,1,HP:0011442|HP:0100022,,2025-01-16
+HP:0010546,Muscle fibrillation,1,HP:0100022,,2025-01-16
+HP:0012164,Asterixis,1,HP:0100022,,2025-01-16
+HP:0020037,Astasia,1,HP:0100022,,2025-01-16
+HP:0025403,Stooped posture,1,HP:0100022,,2025-01-16
+HP:0031826,Abnormal reflex,1,HP:0100022,,2025-01-16
+HP:0034980,Synkinesis,1,HP:0100022,,2025-01-16
+HP:0100021,Cerebral palsy,1,HP:0011442|HP:0100022,,2025-01-16
+HP:0100660,Dyskinesia,1,HP:0100022,,2025-01-16
+HP:0000317,Facial myokymia,2,HP:0000301|HP:0002411,,2025-01-16
+HP:0001304,Torsion dystonia,2,HP:0001332,A4,2025-01-16
+HP:0001308,Tongue fasciculations,2,HP:0002380|HP:0010546|HP:0030810,,2025-01-16
+HP:0001315,Reduced tendon reflexes,2,HP:0031826,,2025-01-16
+HP:0001335,Bimanual synkinesia,2,HP:0034980,,2025-01-16
+HP:0001336,Myoclonus,2,HP:0004305,A2,2025-01-16
+HP:0001337,Tremor,2,HP:0004305,A1,2025-01-16
+HP:0001347,Hyperreflexia,2,HP:0031826,,2025-01-16
+HP:0002064,Spastic gait,2,HP:0001257|HP:0001288,,2025-01-16
+HP:0002066,Gait ataxia,2,HP:0001251|HP:0001288,,2025-01-16
+HP:0002072,Chorea,2,HP:0004305,A7,2025-01-16
+HP:0002136,Broad-based gait,2,HP:0001288,,2025-01-16
+HP:0002141,Gait imbalance,2,HP:0001288,,2025-01-16
+HP:0002169,Clonus,2,HP:0001347|HP:0004305,,2025-01-16
+HP:0002268,Paroxysmal dystonia,2,HP:0001332,A4,2025-01-16
+HP:0002304,Akinesia,2,HP:0002374,B4,2025-01-16
+HP:0002305,Athetosis,2,HP:0004305,A6,2025-01-16
+HP:0002310,Orofacial dyskinesia,2,HP:0100660,,2025-01-16
+HP:0002317,Unsteady gait,2,HP:0001288,,2025-01-16
+HP:0002362,Shuffling gait,2,HP:0001288,,2025-01-16
+HP:0002375,Hypokinesia,2,HP:0002374,B3,2025-01-16
+HP:0002380,Fasciculations,2,HP:0004305,,2025-01-16
+HP:0002451,Limb dystonia,2,HP:0001332,A4,2025-01-16
+HP:0002476,Primitive reflex,2,HP:0031826,,2025-01-16
+HP:0002510,Spastic tetraplegia,2,HP:0034353|HP:0100021,,2025-01-16
+HP:0002515,Waddling gait,2,HP:0001288,,2025-01-16
+HP:0002527,Falls,2,HP:0001288,,2025-01-16
+HP:0002530,Axial dystonia,2,HP:0001332,A4,2025-01-16
+HP:0002540,Inability to walk,2,HP:0001288,,2025-01-16
+HP:0002599,Head titubation,2,HP:0002346|HP:0002457|HP:0030187,A1,2025-01-16
+HP:0003376,Steppage gait,2,HP:0001288,,2025-01-16
+HP:0004373,Focal dystonia,2,HP:0001332,A4,2025-01-16
+HP:0006961,Jerky head movements,2,HP:0002457,,2025-01-16
+HP:0007089,Facial-lingual fasciculations,2,HP:0002380|HP:0010546,,2025-01-16
+HP:0007166,Paroxysmal dyskinesia,2,HP:0004305,,2025-01-16
+HP:0007289,Limb fasciculations,2,HP:0002380|HP:0010546|HP:0040064,,2025-01-16
+HP:0007308,Extrapyramidal dyskinesia,2,HP:0002071|HP:0100660,,2025-01-16
+HP:0007325,Generalized dystonia,2,HP:0001332,A4,2025-01-16
+HP:0008767,Self-mutilation of tongue and lips due to involuntary movements,2,HP:0000742|HP:0004305,,2025-01-16
+HP:0009878,Cerebellar ataxia associated with quadrupedal gait,2,HP:0001251|HP:0001288,,2025-01-16
+HP:0010521,Gait apraxia,2,HP:0001288|HP:0002186,,2025-01-16
+HP:0010553,Oculogyric crisis,2,HP:0001332,A4,2025-01-16
+HP:0011099,Spastic hemiparesis,2,HP:0001269|HP:0034353|HP:0100021,,2025-01-16
+HP:0011445,Athetoid cerebral palsy,2,HP:0002071|HP:0100021,,2025-01-16
+HP:0025682,Crouch gait,2,HP:0001288,,2025-01-16
+HP:0030051,Tip-toe gait,2,HP:0001288,,2025-01-16
+HP:0031166,Eyelid myokymia,2,HP:0002411,,2025-01-16
+HP:0031629,Impaired tandem gait,2,HP:0001288,,2025-01-16
+HP:0031825,Freezing of gait,2,HP:0001288,B5,2025-01-16
+HP:0031828,Abnormal superficial reflex,2,HP:0031826,,2025-01-16
+HP:0031847,Difficulty walking backward,2,HP:0001288,,2025-01-16
+HP:0031943,Akathisia,2,HP:0000711|HP:0004305,,2025-01-16
+HP:0031952,Neurogenic claudication,2,HP:0001288,,2025-01-16
+HP:0031953,Cautious gait,2,HP:0001288,,2025-01-16
+HP:0031954,Dystonic gait,2,HP:0001288,,2025-01-16
+HP:0031955,Antalgic gait,2,HP:0001288,,2025-01-16
+HP:0031990,Chvostek sign,2,HP:0004305,,2025-01-16
+HP:0032005,Hemidystonia,2,HP:0001332,A4,2025-01-16
+HP:0032506,Alien limb phenomenon,2,HP:0004305,,2025-01-16
+HP:0033329,Abnormal postural reflex,2,HP:0031826,,2025-01-16
+HP:0034052,Impaired toe-walking ability,2,HP:0001288,,2025-01-16
+HP:0034183,Spastic triplegia,2,HP:0034353|HP:0100021,,2025-01-16
+HP:0034979,Facial synkinesis,2,HP:0034980,,2025-01-16
+HP:0040141,Tardive dyskinesia,2,HP:0100660,,2025-01-16
+HP:0100248,Hemiballismus,2,HP:0004305,A8,2025-01-16
+HP:0100288,EMG: myokymic discharges,2,HP:0002411|HP:0003457,,2025-01-16
+HP:6000490,Impaired heel-walking ability,2,HP:0001288,,2025-01-16
+HP:6001054,Intoeing,2,HP:0001288,,2025-01-16
+HP:6001056,Out-toeing,2,HP:0001288,,2025-01-16
+HP:0001265,Hyporeflexia,3,HP:0001315,,2025-01-16
+HP:0001266,Choreoathetosis,3,HP:0002072|HP:0002305,A6|A7,2025-01-16
+HP:0001284,Areflexia,3,HP:0001315,,2025-01-16
+HP:0001348,Brisk reflexes,3,HP:0001347,,2025-01-16
+HP:0002322,Resting tremor,3,HP:0001337,A1,2025-01-16
+HP:0002345,Action tremor,3,HP:0001337,A1,2025-01-16
+HP:0002356,Writer's cramp,3,HP:0004373,A4,2025-01-16
+HP:0002395,Lower limb hyperreflexia,3,HP:0001347,,2025-01-16
+HP:0002505,Loss of ambulation,3,HP:0002540,,2025-01-16
+HP:0003487,Babinski sign,3,HP:0007256|HP:0031828,,2025-01-16
+HP:0003739,Myoclonic spasms,3,HP:0001336,A2,2025-01-16
+HP:0006801,Hyperactive deep tendon reflexes,3,HP:0001347,,2025-01-16
+HP:0006915,Inability to walk by childhood/adolescence,3,HP:0002540,,2025-01-16
+HP:0006962,"Gait instability, worse in the dark",3,HP:0002317,,2025-01-16
+HP:0007000,Morning myoclonic jerks,3,HP:0001336,A2,2025-01-16
+HP:0007034,Generalized hyperreflexia,3,HP:0001347,,2025-01-16
+HP:0007054,Proximal hyperreflexia,3,HP:0001347,,2025-01-16
+HP:0007240,Progressive gait ataxia,3,HP:0002066,,2025-01-16
+HP:0007311,Short stepped shuffling gait,3,HP:0002362,,2025-01-16
+HP:0007350,Upper limb hyperreflexia,3,HP:0001347,,2025-01-16
+HP:0010530,Palatal tremor,3,HP:0001336,A2,2025-01-16
+HP:0010531,Spinal myoclonus,3,HP:0001336,A2,2025-01-16
+HP:0011448,Ankle clonus,3,HP:0002169|HP:0034674,,2025-01-16
+HP:0011449,Knee clonus,3,HP:0002169,,2025-01-16
+HP:0011728,Elbow clonus,3,HP:0002169,,2025-01-16
+HP:0012049,Laryngeal dystonia,3,HP:0001618|HP:0004373,A4,2025-01-16
+HP:0012179,Craniofacial dystonia,3,HP:0004373,A4,2025-01-16
+HP:0012323,Sleep myoclonus,3,HP:0001336,A2,2025-01-16
+HP:0012452,Restless legs,3,HP:0031943|HP:5200300,,2025-01-16
+HP:0012462,Chin myoclonus,3,HP:0001336,A2,2025-01-16
+HP:0012651,Abasia,3,HP:0002066,,2025-01-16
+HP:0025097,Eyelid myoclonus,3,HP:0001336,A2,2025-01-16
+HP:0025357,Erratic myoclonus,3,HP:0001336,A2,2025-01-16
+HP:0030188,Tremor by anatomical site,3,HP:0001337,A1,2025-01-16
+HP:0030665,Rubral tremor,3,HP:0001337,A1,2025-01-16
+HP:0030902,Palmomental reflex,3,HP:0002476,,2025-01-16
+HP:0030903,Grasp reflex,3,HP:0002476,,2025-01-16
+HP:0030904,Glabellar reflex,3,HP:0002476,,2025-01-16
+HP:0030905,Snout reflex,3,HP:0002476,,2025-01-16
+HP:0030906,Suck reflex,3,HP:0002476,,2025-01-16
+HP:0031827,Absent abdominal reflex,3,HP:0031828,,2025-01-16
+HP:0031829,Absent cremaster reflex,3,HP:0031828,,2025-01-16
+HP:0031848,Cock-walk gait,3,HP:0031954,,2025-01-16
+HP:0031856,Hobby horse gait,3,HP:0031954,,2025-01-16
+HP:0031957,Spastic hemiparetic gait,3,HP:0002064,,2025-01-16
+HP:0031958,Spastic paraparetic gait,3,HP:0002064,,2025-01-16
+HP:0031959,Leg dystonia,3,HP:0002451,A4,2025-01-16
+HP:0031960,Arm dystonia,3,HP:0002451,A4,2025-01-16
+HP:0031986,Polyminimyoclonus,3,HP:0001336,A2,2025-01-16
+HP:0032507,Labiomental fasciculations,3,HP:0007089,,2025-01-16
+HP:0032549,Persistent asymmetrical tonic neck reflex,3,HP:0002476,,2025-01-16
+HP:0033330,Impaired neck-righting reflex,3,HP:0033329,,2025-01-16
+HP:0033411,Lower extremity akinesia,3,HP:0002304,B4,2025-01-16
+HP:0033412,Upper extremity akinesia,3,HP:0002304,B4,2025-01-16
+HP:0033413,Upper extremity hypokinesia,3,HP:0002375,B3,2025-01-16
+HP:0033414,Lower extremity hypokinesia,3,HP:0002375,B3,2025-01-16
+HP:0033683,Jaw hyperreflexia,3,HP:0001347,,2025-01-16
+HP:0034360,Action myoclonus,3,HP:0001336,A2,2025-01-16
+HP:0040148,Cortical myoclonus,3,HP:0001336,A2,2025-01-16
+HP:0045084,Limb myoclonus,3,HP:0001336,A2,2025-01-16
+HP:0000473,Torticollis,4,HP:0011006|HP:0011442|HP:0012179,A4,2025-01-16
+HP:0000643,Blepharospasm,4,HP:0012179|HP:0031879,A4,2025-01-16
+HP:0002174,Postural tremor,4,HP:0002345,A1,2025-01-16
+HP:0002346,Head tremor,4,HP:0030188,A1,2025-01-16
+HP:0002378,Hand tremor,4,HP:0030188,A1,2025-01-16
+HP:0002522,Areflexia of lower limbs,4,HP:0001284|HP:0002814,,2025-01-16
+HP:0002600,Hyporeflexia of lower limbs,4,HP:0001265|HP:0002814,,2025-01-16
+HP:0006794,Loss of ability to walk in first decade,4,HP:0002505,,2025-01-16
+HP:0007083,Hyperactive patellar reflex,4,HP:0002395|HP:0007054,,2025-01-16
+HP:0007098,Paroxysmal choreoathetosis,4,HP:0001266,A6|A7,2025-01-16
+HP:0007326,Progressive choreoathetosis,4,HP:0001266,A6|A7,2025-01-16
+HP:0008945,Loss of ability to walk in early childhood,4,HP:0002505,,2025-01-16
+HP:0010828,Hemifacial spasm,4,HP:0003739,A2,2025-01-16
+HP:0012046,Areflexia of upper limbs,4,HP:0001284|HP:0002817,,2025-01-16
+HP:0012048,Oromandibular dystonia,4,HP:0012179,A4,2025-01-16
+HP:0012391,Hyporeflexia of upper limbs,4,HP:0001265|HP:0002817,,2025-01-16
+HP:0012392,Jaw hyporeflexia,4,HP:0001265|HP:0045037,,2025-01-16
+HP:0012407,Scissor gait,4,HP:0031958,,2025-01-16
+HP:0012477,Vocal tremor,4,HP:0002345,A1,2025-01-16
+HP:0025387,Pill-rolling tremor,4,HP:0002322,A1,2025-01-16
+HP:0030185,Isometric tremor,4,HP:0002345,A1,2025-01-16
+HP:0030186,Kinetic tremor,4,HP:0002345,A1,2025-01-16
+HP:0030187,Titubation,4,HP:0002345,A1,2025-01-16
+HP:0031004,Hemiareflexia,4,HP:0001284,,2025-01-16
+HP:0031007,Orofacial action-specific dystonia induced by speech,4,HP:0012179,A4,2025-01-16
+HP:0031008,Lingual dystonia,4,HP:0012179,A4,2025-01-16
+HP:0031947,Tongue tremor,4,HP:0030188,A1,2025-01-16
+HP:0032006,Lip tremor,4,HP:0030188,A1,2025-01-16
+HP:0033054,Myoclonic tremor,4,HP:0040148,A2,2025-01-16
+HP:0033203,Brachioradialis hyperreflexia,4,HP:0007054|HP:0007350,,2025-01-16
+HP:0033204,Triceps hyperreflexia,4,HP:0007350,,2025-01-16
+HP:0033205,Biceps hyperreflexia,4,HP:0007350,,2025-01-16
+HP:0033206,Hyperactive Achilles reflex,4,HP:0002395,,2025-01-16
+HP:0200085,Limb tremor,4,HP:0030188,A1,2025-01-16
+HP:0002080,Intention tremor,5,HP:0030186,A1,2025-01-16
+HP:0002544,Retrocollis,5,HP:0000473,A4,2025-01-16
+HP:0006844,Absent patellar reflexes,5,HP:0002522,,2025-01-16
+HP:0007351,Upper limb postural tremor,5,HP:0002174|HP:0200085,A1,2025-01-16
+HP:0009072,Decreased Achilles reflex,5,HP:0002600,,2025-01-16
+HP:0011808,Decreased patellar reflex,5,HP:0002600,,2025-01-16
+HP:0030147,Truncal titubation,5,HP:0030187,A1,2025-01-16
+HP:0033200,Triceps hyporeflexia,5,HP:0012391,,2025-01-16
+HP:0033201,Biceps hyporeflexia,5,HP:0012391,,2025-01-16
+HP:0033202,Brachioradialis hyporeflexia,5,HP:0012391,,2025-01-16
+HP:0033228,Triceps areflexia,5,HP:0012046,,2025-01-16
+HP:0033229,Brachioradialis areflexia,5,HP:0012046,,2025-01-16
+HP:0033230,Biceps areflexia,5,HP:0012046,,2025-01-16
+HP:0200101,Decreased/absent ankle reflexes,5,HP:0002522,,2025-01-16
+HP:0003438,Absent Achilles reflex,6,HP:0200101,,2025-01-16

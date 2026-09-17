@@ -264,7 +264,7 @@ def load_hpo_anchors(repo, voc):
         best = {}
         with open(path, newline="", encoding="utf-8") as f:
             for r in csv.DictReader(f):
-                for cell in [c for c in (r.get("moamb_cells") or "").split("|") if c]:
+                for cell in [c for c in (r.get("moveatlas_cells") or r.get("moamb_cells") or "").split("|") if c]:
                     d = int(r["depth_under_HP0100022"])
                     if cell not in best or d < best[cell][0]:
                         best[cell] = (d, r["hpo_id"], r["name"])

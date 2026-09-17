@@ -145,7 +145,7 @@ DOCS = [
 
 # Left behind, with the reason a reader of the report can check.
 EXCLUDED_WITH_REASON = [
-    ("paper/, docs/PAPER_SCIDATA_V2.md, docs/SCIDATA_CONFORMITY.md",
+    ("paper/, docs/SCIDATA_CONFORMITY.md",
      "the resource paper: manuscript, builders, tables, figures and the "
      "journal conformity check. A draft until its preprint is out; the "
      "tree will then carry the reference, not the manuscript"),
@@ -177,7 +177,9 @@ EXCLUDED_WITH_REASON = [
      "citation_candidates/imu_reconnaissance",
      "internal review and triage notes"),
     ("docs/PAPER_SCIDATA_DRAFT.md, docs/PAPER_SCIDATA_OUTLINE.md",
-     "superseded by PAPER_SCIDATA_V2.md"),
+     "superseded drafts of the descriptor (the manuscript is built under "
+     "paper/package/source/ since 2026-09-16; the v2 source was removed "
+     "on 2026-09-17)"),
     ("RUN1.ps1, RUN_POSE_VICREG.ps1, RUN_ON_RTX.md, LANCEMENT.md",
      "runbooks for a training machine that no longer exists"),
     ("arbo.py, download_*.py, extract_care_pd.py, fetch_hunt_*.py, "

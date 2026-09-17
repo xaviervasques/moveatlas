@@ -1,12 +1,12 @@
 id,family,cells,modalities,qualifiers,hpo_ids,flags
 cdystonia,auxdata,A4,M12,,HP:0001332,license_no_spdx_token
 kaggle_spiral,auxdata,A1|B2,M11,proxy|proxy,HP:0001337|HP:0002067,n_subjects_nonnumeric|license_no_spdx_token
-nqmitcsxpd,auxdata,B2,M11,proxy,HP:0002067,n_subjects_nonnumeric|license_no_spdx_token
-tappy_keystroke,auxdata,B2,M11,proxy,HP:0002067,n_subjects_nonnumeric|license_no_spdx_token
-uci_parkinson_voix,auxdata,B2,M11,proxy (hypokinetic dysarthria),HP:0002067,n_subjects_nonnumeric|license_no_spdx_token
+nqmitcsxpd,auxdata,B2,M11,proxy,HP:0002067,n_subjects_nonnumeric|license_token:ODC-By-1.0
+tappy_keystroke,auxdata,B2,M11,proxy,HP:0002067,n_subjects_nonnumeric|license_token:ODC-By-1.0
+uci_parkinson_voix,auxdata,B2,M11,proxy (hypokinetic dysarthria),HP:0002067,n_subjects_nonnumeric|license_token:CC-BY-4.0
 ilg_ataxia_tables,auxdata,D2,M2,derived,,license_token:CC0-1.0
 clinical_scales,auxdata,,M12,,,cells_empty|modality_only|n_subjects_nonnumeric|license_no_spdx_token
-cap_sleep,eeg,D6,M5|M6,RBD|chin,,license_no_spdx_token
+cap_sleep,eeg,D6,M5|M6,RBD|chin,,license_token:ODC-By-1.0
 seizeit2,eeg,D1|A2,M2|M5|M6,proxy,HP:0001336,license_token:CC0-1.0
 tuh_eeg,eeg,D1|A2,M6,socle|myoclonic events,HP:0001336,n_subjects_nonnumeric|license_no_spdx_token
 pd_meg_stn_lfp_ds004998,eeg,B1|B2|A1,M5|M6|M7,PD|MEG,HP:0002063|HP:0002067|HP:0001337,license_token:CC0-1.0
@@ -17,24 +17,24 @@ beijing_sleep_lfp,eeg,D6,M7,,,license_no_spdx_token
 gait120,emg,C1,M1|M5,,,license_token:CC-BY-4.0
 ninapro,emg,C1,M5,,,n_subjects_nonnumeric|license_no_spdx_token
 physionet_semg_walking,emg,C1,M5,,,license_token:ODC-By-1.0
-alameda_tremor,imu,A1,M2,derived,HP:0001337,license_no_spdx_token
+alameda_tremor,imu,A1,M2,derived,HP:0001337,license_token:CC-BY-4.0
 cervical_motion_multiplanar,imu,A4|C1,M2,normative,HP:0001332,license_token:CC-BY-4.0|license_multiple_tokens:CC-BY-4.0/CC-BY-NC-ND
 clinical_gait_multipatho,imu,B2|B3|D3|D4|E4,M2,,HP:0002067|HP:0002375,n_subjects_nonnumeric|license_token:CC-BY-4.0
 daphnet,imu,B5,M2,,HP:0031825,license_token:CC-BY-4.0
 fog_star,imu,B5,M2,,HP:0031825,license_token:CC-BY-4.0
-gaitdb,imu,B2|B3|C3,M2,derived,HP:0002067|HP:0002375,license_no_spdx_token
-gaitndd,imu,A7|B2|C1|D3,M3,"HD|PD|controls|ALS is pyramidal, not ataxic; the ataxia code was dropped, owner ruling 2026-09-01",HP:0002072|HP:0002067,license_no_spdx_token
-hd_accel_jnet,imu,A7,M2,,HP:0002072,license_no_spdx_token
-imu_inthewild_iprognosis,imu,A1|B2,M2,,HP:0001337|HP:0002067,cell_without_keyword:A1|license_no_spdx_token
+gaitdb,imu,B2|B3|C3,M2,derived,HP:0002067|HP:0002375,license_token:ODC-By-1.0
+gaitndd,imu,A7|B2|C1|D3,M3,"HD|PD|controls|ALS is pyramidal, not ataxic; the ataxia code was dropped, owner ruling 2026-09-01",HP:0002072|HP:0002067,license_token:ODC-By-1.0
+hd_accel_jnet,imu,A7,M2,,HP:0002072,license_token:CC-BY-4.0
+imu_inthewild_iprognosis,imu,A1|B2,M2,,HP:0001337|HP:0002067,cell_without_keyword:A1|license_token:CC-BY-4.0
 kaggle_fog,imu,B5,M2,,HP:0031825,license_no_spdx_token
 ltmm,imu,C3,M2,,,n_subjects_nonnumeric|license_token:ODC-By-1.0
-monipar,imu,A1|B2,M2,,HP:0001337|HP:0002067,license_no_spdx_token
+monipar,imu,A1|B2,M2,,HP:0001337|HP:0002067,license_token:CC-BY-4.0
 multimodal_fog,imu,B5,M2|M5|M6,,HP:0031825,license_token:CC-BY-4.0
 nhanes_accel,imu,C1|C3,M2,age-conditioned normative,,n_subjects_nonnumeric|license_no_spdx_token
-pads,imu,A1|B2|D3,M2,"differential cohorts: ET, atypical parkinsonism, MS; is the nearest cell for the MS arm, owner ruling 2026-09-01",HP:0001337|HP:0002067,license_no_spdx_token
+pads,imu,A1|B2|D3,M2,"differential cohorts: ET, atypical parkinsonism, MS; is the nearest cell for the MS arm, owner ruling 2026-09-01",HP:0001337|HP:0002067,license_token:CC-BY-NC-SA-4.0
 pd_biostamprc21,imu,B2|B3,M2,,HP:0002067|HP:0002375,license_no_spdx_token
-physionet_gaitpdb,imu,B2|B3,M3,,HP:0002067|HP:0002375,license_no_spdx_token
-tremordb,imu,A1,M2,adjacent (velocity aux),HP:0001337,keyword_without_cell:B?(parkinson)|n_subjects_nonnumeric|license_no_spdx_token
+physionet_gaitpdb,imu,B2|B3,M3,,HP:0002067|HP:0002375,license_token:ODC-By-1.0
+tremordb,imu,A1,M2,adjacent (velocity aux),HP:0001337,keyword_without_cell:B?(parkinson)|n_subjects_nonnumeric|license_token:ODC-By-1.0
 weargait_pd,imu,B2|B3|C1,M2|M3,age-matched controls,HP:0002067|HP:0002375,license_token:CC-BY-4.0
 sixmwt_lifespan,imu,C1|C3,M2,explicit age conditioning,,license_token:CC-BY-4.0
 nonan_gaitprint,imu,C3,M2,,,n_subjects_nonnumeric|license_token:CC-BY-4.0
@@ -51,7 +51,7 @@ hubu_fis_fingertap,pose,B2,M1,video,HP:0002067,modality_keyword_without_code:M12
 koa_pd_nm,pose,B2|B3|C1|E4,M4,,HP:0002067|HP:0002375,modality_keyword_without_code:M1(video/pose)|license_no_spdx_token
 li_taati,pose,B2|A7|A4|E6,M1,L-DOPA dyskinesia ( / + ),HP:0002067|HP:0002072|HP:0001332,n_subjects_approx|license_token:CC-BY-4.0
 mini_rgbd,pose,C2,M1,,,n_subjects_nonnumeric|license_no_spdx_token
-modys_video,pose,A4|A6|A7|D3,M1,pediatric dyskinetic CP is choreoathetosis; DIS scores athetosis explicitly; covers the spastic component,HP:0001332|HP:0002305|HP:0002072,license_no_spdx_token
+modys_video,pose,A4|A6|A7|D3,M1,pediatric dyskinetic CP is choreoathetosis; DIS scores athetosis explicitly; covers the spastic component,HP:0001332|HP:0002305|HP:0002072,license_token:CC-BY-4.0
 park_fingertap,pose,B2,M1,features,HP:0002067,n_subjects_nonnumeric|license_token:MIT
 remap_open,pose,B2|B3,M1,,HP:0002067|HP:0002375,license_token:CC-BY-4.0
 tim_tremor,pose,A1,M1,multi-etiology incl. functional and enhanced physiological,HP:0001337,license_token:CC-BY
@@ -145,7 +145,7 @@ opensim_wrist_tremor,emg,A1|B2,M2|M5,context,HP:0001337|HP:0002067,license_no_sp
 mrc_lfp_dystonia,eeg,A4,M2|M5|M7,cervical dystonia,HP:0001332,n_subjects_nonnumeric|license_token:CC-BY-SA-4.0
 dystonia_coalition,video,A4,M1,all focal dystonias,HP:0001332,keyword_without_cell:A1(tremor)|n_subjects_nonnumeric|license_no_spdx_token
 mobilityapp_atypical,imu,B1|B2|B3|B4,M2,atypical,HP:0002063|HP:0002067|HP:0002375|HP:0002304,range_expanded:B1-B4|n_subjects_nonnumeric|license_token:CC-BY-4.0
-psp_msa_vowels,auxdata,,M8,B atypical speech-motor context,,cells_empty|modality_only|class_only:B|modality_family_mismatch:M8|keyword_without_cell:B?(parkinson)|modality_keyword_without_code:M11(voice/writing)|n_subjects_empty|license_token:CC-BY-4.0
+psp_msa_vowels,auxdata,B2,M11,"proxy (synthesized sustained vowels of PD, MSA and PSP speakers)",HP:0002067,n_subjects_empty|license_token:CC-BY-4.0
 lancaster_prehd,eeg,A7,M5|M6,prodromal,HP:0002072,license_no_spdx_token
 enroll_hd_family,auxdata,A7,M1|M8,incl. premanifest|context,HP:0002072,modality_family_mismatch:M1|modality_family_mismatch:M8|n_subjects_nonnumeric|license_no_spdx_token
 nsrr_plm_psg,eeg,,M6,RLS/PLM context,,cells_empty|modality_only|keyword_without_cell:D6(sleep)|n_subjects_nonnumeric|license_no_spdx_token
@@ -162,7 +162,7 @@ dabi_movement_ephys,eeg,B1|B2|B3|B4|B5|A1|A3|A4,M7,context (paediatric archive),
 dryad_vim_et_intraop,eeg,A1,M7,essential tremor,HP:0001337,n_subjects_empty|license_token:CC0-1.0
 dryad_pd_5imu_adl,imu,B1|B2|B3,M2,,HP:0002063|HP:0002067|HP:0002375,range_expanded:B1-B3|n_subjects_empty|license_token:CC0-1.0
 dryad_stn_kinematics,eeg,B1|B2,M1|M7,,HP:0002063|HP:0002067,range_expanded:B1-B2|modality_family_mismatch:M1|n_subjects_empty|license_token:CC0-1.0
-dryad_irbd_smartphone,imu,,M2|M8,B prodromal,,cells_empty|modality_only|class_only:B|modality_family_mismatch:M8|keyword_without_cell:B?(parkinson)|n_subjects_empty|license_token:CC0-1.0
+dryad_irbd_smartphone,imu,B1|B2|B3|B4|D6|C1,M2|M11,PD|prodromal (iRBD)|controls,HP:0002063|HP:0002067|HP:0002375|HP:0002304,range_expanded:B1-B4|modality_family_mismatch:M11|n_subjects_empty|license_token:CC0-1.0
 natmeg_pd,eeg,B1|B2|B3|B4,M5|M6|M8,,HP:0002063|HP:0002067|HP:0002375|HP:0002304,range_expanded:B1-B4|modality_family_mismatch:M8|n_subjects_empty|license_no_spdx_token
 ebrains_rat_lfp_atlas,animal,,M7,animal PD models,,cells_empty_nonhuman|n_subjects_nonnumeric|license_token:CC-BY-4.0
 openneuro_pd_rest_eeg_768,eeg,B1|B2|B3|B4,M6,,HP:0002063|HP:0002067|HP:0002375|HP:0002304,range_expanded:B1-B4|license_token:CC0-1.0

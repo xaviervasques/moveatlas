@@ -378,11 +378,12 @@ def _gen_taxonomy():
             f"taxonomy drift: codes without a name {missing}; names without "
             f"a code {extra} (build_taxonomy_map.py vs build_portal.py)")
 
-    hpo = {}
+    hpo, hpo_release = {}, ""
     with open(os.path.join(_REPO, "docs", "hpo_movement_terms.csv"),
               newline="", encoding="utf-8") as f:
         for r in _csv.DictReader(f):
-            for c in (r.get("moamb_cells") or "").split("|"):
+            hpo_release = r.get("hpo_release") or hpo_release
+            for c in (r.get("moveatlas_cells") or r.get("moamb_cells") or "").split("|"):
                 c = c.strip()
                 if c:
                     hpo.setdefault(c, []).append((r["hpo_id"], r["name"]))
@@ -420,6 +421,11 @@ def _gen_taxonomy():
     parts.append(f"<p class=\"ma-count-note\">{n_terms} HPO term-to-cell "
                  f"links over {len(hpo)} cells, from docs/hpo_movement_terms.csv."
                  "</p>")
+    # attribution the HPO licence asks for, with the release shown
+    parts.append("<p class=\"ma-count-note\">This service uses the Human "
+                 "Phenotype Ontology (release "
+                 f"{_html.escape(hpo_release or 'unknown')}). Find out more at "
+                 "<a href=\"https://hpo.jax.org/\">hpo.jax.org</a>.</p>")
     with open(os.path.join(out_dir, "taxonomy_cells.html"), "w",
               encoding="utf-8", newline="\n") as f:
         f.write("\n".join(parts) + "\n")

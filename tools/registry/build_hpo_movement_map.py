@@ -65,6 +65,16 @@ def main():
     args = ap.parse_args()
     obo = os.path.join(args.repo, "datasets", "ontology", "hpo", "raw", "hp.obo")
     terms = parse_obo(obo)
+    # the HPO licence asks that the version be shown wherever the terms
+    # are displayed (hpo.jax.org/license): carried on every row
+    release = ""
+    with open(obo, encoding="utf-8") as f:
+        for line in f:
+            if line.startswith("data-version:"):
+                release = line.split(":", 1)[1].strip().rsplit("/", 1)[-1]
+                break
+            if line.startswith("[Term]"):
+                break
     print(f"{len(terms)} active terms parsed")
     children = defaultdict(list)
     for t in terms.values():
@@ -99,11 +109,11 @@ def main():
     with open(out, "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
         w.writerow(["hpo_id", "name", "depth_under_HP0100022", "parents",
-                    "moveatlas_cells"])
+                    "moveatlas_cells", "hpo_release"])
         for hid in sorted(depth, key=lambda h: (depth[h], h)):
             t = terms[hid]
             w.writerow([hid, t["name"], depth[hid], "|".join(t["is_a"]),
-                        "|".join(sorted(cell_of.get(hid, [])))])
+                        "|".join(sorted(cell_of.get(hid, []))), release])
     anchored = sum(1 for h in depth if cell_of.get(h))
     print(f"movement subtree: {len(depth)} terms, {anchored} inside a MoveAtlas "
           f"anchor subtree -> {out}")
