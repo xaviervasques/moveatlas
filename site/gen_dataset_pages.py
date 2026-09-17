@@ -362,6 +362,10 @@ def page(r):
                 v = v[:cap].rstrip() + "..."
             if v:
                 lines.append(f"| **{label}** | {esc(v)} |")
+    rec = RECORDS.get(rid)
+    if rec:
+        lines.append(f"| **MoveAtlas record** | [{rec['doi']}]"
+                     f"(https://doi.org/{rec['doi']}) |")
     lines.append("")
     lines += ["Cell codes are defined on the {doc}`taxonomy page "
               "</taxonomy>`.", ""]
@@ -412,6 +416,9 @@ def page(r):
     return "\n".join(lines)
 
 
+# the published record of each hosted dataset (moveatlas/data/zenodo_records.json)
+from moveatlas.registry import records_table as _records_table
+RECORDS = _records_table()
 rows = moveatlas.list_datasets()
 # a page whose id is no longer a dataset (a software row, a merged id)
 # would stay behind as an orphan document: remove it

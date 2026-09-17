@@ -15,11 +15,11 @@ needs. This tree starts with a single authored commit.
 | configs | 14 |
 | datasets | 204 |
 | docs | 35 |
-| moveatlas | 30 |
+| moveatlas | 31 |
 | site | 262 |
 | tests | 15 |
 | tools | 64 |
-| **total** | **637** |
+| **total** | **638** |
 
 ## Deliberately excluded
 
