@@ -199,6 +199,17 @@ def test_force_frame_columns_and_masks():
     assert df.isna().sum().sum() == N * 8
 
 
+def test_force_sample_valid_becomes_nan():
+    rec = _force_record()
+    sv = np.ones((N, 2), bool)
+    sv[:3, 0] = False
+    rec["sample_valid"] = sv
+    df = to_frame(rec)
+    assert df["left"].iloc[:3].isna().all().all()
+    assert not df[("left", "total")].iloc[3:].isna().any()
+    assert not df[("right", "total")].isna().any()
+
+
 # -- silhouette ---------------------------------------------------------------
 
 def _silhouette_record(n=N):

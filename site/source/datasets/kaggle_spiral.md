@@ -6,7 +6,7 @@
  "@context": "https://schema.org",
  "@type": "Dataset",
  "name": "NIATS spiral + wave drawings",
- "description": "NIATS spiral + wave drawings. MoveAtlas auxdata family. 408 images (not per-subject) subjects. licence Kaggle/UCI mirror terms.",
+ "description": "NIATS spiral + wave drawings. MoveAtlas auxdata family. 204 images, each stored twice (408 files; not per-subject) subjects. licence Kaggle/UCI mirror terms.",
  "identifier": "https://www.kaggle.com/datasets/kmader/parkinsons-drawings",
  "license": "Kaggle/UCI mirror terms (verify before redistribution)",
  "sdPublisher": {
@@ -37,7 +37,7 @@
 | | |
 |---|---|
 | **Taxonomy cells** | A1 proxy, B2 proxy; M11 |
-| **Subjects** | 408 images (not per-subject) |
+| **Subjects** | 204 images, each stored twice (408 files; not per-subject) |
 | **Status** | acquired |
 | **License** | Kaggle/UCI mirror terms (verify before redistribution) |
 
@@ -80,9 +80,9 @@ The dataset's card, factual lines; the full card with its verification dates, do
 - **family**: auxdata
 - **MoveAtlas cells**: A1 proxy, B2 proxy; M11
 - **population**: PD patients + healthy, drawing tests
-- **n_subjects**: 408 images (not per-subject)
+- **n_subjects**: 204 images, each stored twice (408 files; not per-subject)
 - **signal**: spiral/wave drawing images
 - **license**: Kaggle/UCI mirror terms (verify before redistribution); redistribution: no, no written licence found (the Kaggle page is JS-only, the mirror chain unclear); pointer to Kaggle
 - **access**: downloaded
 - **link**: https://www.kaggle.com/datasets/kmader/parkinsons-drawings
-- **citation**: source study: Zham et al., Front. Neurol. 2017, doi 10.3389/fneur.2017.00435
+- **citation**: the Kaggle page credits Zham et al., Front. Neurol. 2017, doi 10.3389/fneur.2017.00435; the images are the NIATS/UFU spiral and wave drawings and very likely do not come from that study, which recruited in Melbourne with a tablet and gives no data availability statement (inference, checked 2026-09-24)

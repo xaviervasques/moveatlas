@@ -137,8 +137,9 @@ The dataset's card, factual lines; the full card with its verification dates, do
 - **MoveAtlas cells**: B2, B3; M1
 - **population**: 12 PD (mean 61.25 y) + 12 controls (mean 59.25 y); home free-living + clinical assessment; PD on/off labels
 - **n_subjects**: 24
-- **signal**: coarsened 2D skeletons (sit-to-stand + turns) and coarsened 3D (turns)
+- **signal**: coarsened 2D skeletons (sit-to-stand + turns) and coarsened 3D (turns), video captured at 30 frames per second per the source readme (stored as fps on every record, marked nominal in fps_provenance)
 - **license**: CC BY 4.0 (warranty disclaimer); redistribution: yes
 - **access**: direct_download (single 351.4 MiB zip; fetch_p2_lot.py --only remap_open)
 - **link**: https://data.bris.ac.uk/data/dataset/21h9f9e30v9cl2fapjggz4q1x7
 - **citation**: Sci Data 2023, doi 10.1038/s41597-023-02663-5
+- **known issues**: the turning CSVs carry no time column and the sit-to-stand time column is generated as frame / 30, not from a clock; the source readme states that the video was captured at 30 frames per second and warns that frame timing may be uneven, and the turning clip lengths fit 30 frames per second of the labelled turn durations; the 3,901 records built from 2026-09-29 carry fps 30.0, marked nominal in fps_provenance (earlier records stored no rate for the 3,498 turning records, 1,749 episodes in 2D and 3D)

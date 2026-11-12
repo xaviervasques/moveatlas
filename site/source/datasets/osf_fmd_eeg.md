@@ -6,7 +6,7 @@
  "@context": "https://schema.org",
  "@type": "Dataset",
  "name": "FMD perception-action hyperbinding EEG (OSF 7ke6r)",
- "description": "FMD perception-action hyperbinding EEG (OSF 7ke6r). MoveAtlas eeg family. licence NO EXPLICIT LICENCE on the OSF project.",
+ "description": "FMD perception-action hyperbinding EEG (OSF 7ke6r). MoveAtlas eeg family. 37 subjects. licence NO EXPLICIT LICENCE on the OSF project.",
  "identifier": "https://osf.io/7ke6r",
  "license": "NO EXPLICIT LICENCE on the OSF project",
  "sdPublisher": {
@@ -36,7 +36,7 @@
 | | |
 |---|---|
 | **Taxonomy cells** | D7 (functional); M6 |
-| **Subjects** | ~56 |
+| **Subjects** | 37 |
 | **Status** | acquired (2026-09-05) |
 | **License** | NO EXPLICIT LICENCE on the OSF project |
 
@@ -62,3 +62,5 @@ ds.info   # recipe: get_data() explains the route
 The dataset's card, factual lines; the full card with its verification dates, download journal and processing notes is in the repository.
 
 - **MoveAtlas cells**: D7 (functional); M6
+- **population**: 18 patients with functional movement disorder and 19 matched healthy controls in the shared EEG files (Data_to_Share.csv, 37 scalp TFC files); Pastoetter et al. 2024 (Brain Commun, doi 10.1093/braincomms/fcae301) enrolled 21 and 21 and excluded 3 patients and 2 controls for EEG artefacts
+- **n_subjects**: 37 (corrected 2026-09-28; the registry said ~56, which no source supports)

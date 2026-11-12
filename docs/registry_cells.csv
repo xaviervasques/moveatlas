@@ -42,10 +42,10 @@ nonan_gaitprint_young,imu,C1|C3,M2,young end of the age axis,,license_token:CC0-
 gaitrec,imu,E4,M3,,,license_token:CC0-1.0
 clinical_gait_signals_2025,imu,D3|D4|E6|E4,M2,stroke|chemo-induced neuropathy,,license_token:CC-BY-4.0|license_multiple_tokens:CC-BY-4.0/CC-BY-NC-ND
 osdb,imu,D1,M2,,,n_subjects_nonnumeric|license_no_spdx_token
-ataxie_kinect_dib,pose,D2,M1,table only on disk,,license_no_spdx_token
+ataxie_kinect_dib,pose,D2,M1,table only on disk,,license_token:CC-BY-4.0
 babypose,pose,C2,M1,,,license_no_spdx_token
 care_pd,pose,B2|B3,M1,,HP:0002067|HP:0002375,license_token:CC-BY-NC-ND-4.0|license_multiple_tokens:CC-BY-NC-ND-4.0/CC-BY-4.0/MIT
-fog_turning_filho,pose,B5,M1|M2,video + IMU synchronized,HP:0031825,license_token:CC-BY-4.0|license_multiple_tokens:CC-BY-4.0/CC0-1.0
+fog_turning_filho,pose,B5,M1|M2,source video and IMU; MoveAtlas holds the IMU only,HP:0031825,license_token:CC-BY-4.0|license_multiple_tokens:CC-BY-4.0/CC0-1.0
 gavd,pose,,M1,multi-pathology labels|annotations only,,cells_empty|modality_only|n_subjects_nonnumeric|license_token:MIT
 hubu_fis_fingertap,pose,B2,M1,video,HP:0002067,modality_keyword_without_code:M12(clinical scales)|n_subjects_nonnumeric|license_token:CC-BY-4.0
 koa_pd_nm,pose,B2|B3|C1|E4,M4,,HP:0002067|HP:0002375,modality_keyword_without_code:M1(video/pose)|license_no_spdx_token
@@ -152,11 +152,11 @@ nsrr_plm_psg,eeg,,M6,RLS/PLM context,,cells_empty|modality_only|keyword_without_
 svd_spasmodic_dysphonia,auxdata,A4,M11,laryngeal dystonia,HP:0001332,n_subjects_nonnumeric|license_token:CC-BY-4.0
 uncommonvoice,auxdata,A4,M11,laryngeal dystonia,HP:0001332,n_subjects_nonnumeric|license_token:CC-BY-NC-SA-4.0
 meei_voice_db,auxdata,A4,M11,context (laryngeal disorders),HP:0001332,cell_without_keyword:A4|n_subjects_approx|license_no_spdx_token
-osf_fmd_eeg,eeg,D7,M6,functional,,n_subjects_approx|license_no_spdx_token
+osf_fmd_eeg,eeg,D7,M6,functional,,license_no_spdx_token
 osf_fmd_kinematics,imu,D7,M2,functional,,n_subjects_empty|license_no_spdx_token
 obf_psychiatric,imu,E6,M2,drug-exposed context,,keyword_without_cell:E7(psychiatric)|license_token:CC-BY-4.0
-mobile_gaitlab,pose,D3|C1,M1,cerebral palsy,,license_no_spdx_token
-leuven_cp_gait,pose,D3,M1|M3,cerebral palsy,,n_subjects_empty|license_no_spdx_token
+mobile_gaitlab,pose,D3|C1,M1,cerebral palsy,,license_token:CC-BY-NC|license_multiple_tokens:CC-BY-NC/Apache-2.0
+leuven_cp_gait,pose,D3,M1|M3,cerebral palsy,,license_token:CC0-1.0
 nbia_tircon,auxdata,A4,M9,genetic context,HP:0001332,n_subjects_approx|license_no_spdx_token
 dabi_movement_ephys,eeg,B1|B2|B3|B4|B5|A1|A3|A4,M7,context (paediatric archive),HP:0002063|HP:0002067|HP:0002375|HP:0002304|HP:0031825|HP:0001337|HP:0100033|HP:0001332,range_expanded:B1-B5|keyword_without_cell:D6(sleep)|n_subjects_empty|license_no_spdx_token
 dryad_vim_et_intraop,eeg,A1,M7,essential tremor,HP:0001337,n_subjects_empty|license_token:CC0-1.0

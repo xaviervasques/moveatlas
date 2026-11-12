@@ -60,7 +60,7 @@ care_pd,care_pd:3DGait:1,vid0077_0061,3,30,312,3d_meter
 | subject_ns | str | namespaced subject id | `amass:ACCAD:ACCAD_Female1Gestures_c3d` |
 | take | str | the recording / clip / trial id within the subject | `vid0073_0055`, `S001C003P004R002A038` |
 | dim | int | native dimensionality, 2 or 3; never lifted | `3` |
-| fps | float or blank | native frame rate; blank when undeclared and unmeasurable | `30`, `120.0`, blank for li_taati / modys / remap_open |
+| fps | float or blank | native frame rate; blank when the record stores none (the source may still state one in a document) | `30`, `120.0`, blank for modys and 1,409 amass records (GRAB, SOMA) |
 | n_frames | int | frames in the record | `204` |
 | modality | str | source space token: `2d_pixel` or `3d_meter` | `3d_meter` |
 
@@ -68,7 +68,9 @@ Written by: build_canonical.py (li_taati, care_pd, cody),
 build_canonical_amass.py, build_canonical_motionx.py, build_canonical_ntu.py,
 build_canonical_modys.py, ingest_vidimu.py, ingest_infant_pose_chambers.py,
 and the remap_open / stroke_gait / gait120 pose ingest scripts that append
-rows with the same header.
+rows with the same header (ingest_remap_open.py replaces its own rows in
+place since 2026-09-29); set_stated_fps.py fills the fps cells of the li_taati
+rows (2026-09-29).
 
 Record dict (configs/canonical_skeleton.yaml), as observed:
 
@@ -80,6 +82,7 @@ Record dict (configs/canonical_skeleton.yaml), as observed:
 | valid_mask | bool [n_frames, 15] | per-frame, per-joint validity (missing detections, NaN-filled joints); the family's honesty mechanism |
 | dim | int | 2 or 3 |
 | fps | float or None | native frame rate |
+| fps_provenance | str, optional | where fps comes from when it is declared or stated rather than read from the data (remap_open, li_taati) |
 | modality | str | `2d_pixel` or `3d_meter` |
 | source | str | dataset name |
 | subject_ns | str | namespaced subject id |
@@ -249,6 +252,8 @@ Record dict (configs/canonical_force.yaml), as observed:
 |---|---|---|
 | force | float32 [n_frames, 2, 9] | feet (L, R) x [8 canonical insole positions + per-foot total], Newtons; absent sensors zero |
 | sensor_mask | bool [2, 9] | which positions are real per foot (totals-only sources mask the 8 positions) |
+| sample_valid | bool [n_frames, 2], optional | per-foot validity, False where a present sensor had no value (weargait_pd insole dropouts, stored as 0); present only on records with a dropout |
+| dropout_fraction | float, optional | 1 - mean(sample_valid) |
 | fps | float | native rate |
 | subject_ns, task, source | str | ids |
 | n_frames | int | samples |
@@ -320,10 +325,14 @@ Record dict (configs/canonical_silhouette.yaml), as observed:
 5. Silhouette subject ids use underscores (`koa_KOA_EL_001`), every other
    family uses the colon namespace; and cody_external records add
    `labels` / `label_raters` / `label_phenoms` the config does not list.
-6. fps is None on li_taati, modys, remap_open pose records and on
-   hd_accel_jnet IMU records (the configs mark these as unknown, so this
-   is consistent, but consumers must treat fps as nullable in pose and
-   IMU; the hour totals in Figure 2 exclude such records and say so).
+6. fps is None on the modys pose records and on 1,409 amass records (GRAB
+   and SOMA; CNRS and WEIZMANN were filled on 2026-11-10); no
+   IMU record lacks a rate since hd_accel_jnet was rebuilt at 100 Hz on
+   2026-09-17. The li_taati and remap_open records carry, since 2026-09-29, the
+   30 frames per second their sources state in a document, marked nominal in
+   fps_provenance (see their data cards); consumers must treat fps as
+   nullable in pose, and the hour totals in Figure 2 exclude such records and
+   say so.
 7. IMU `label` dtype is not fixed (float64 / int64 across sources) while
    EEG labels are int8; the contracts state no label dtype.
 8. Force records carry no label field although canonical_force.yaml lists

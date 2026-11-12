@@ -11,8 +11,8 @@
 - MoveAtlas cells: A4 (all focal dystonias); M1
 
 ## Retrieval notes
-RE-VERIFY at fetch. mrc_lfp_dystonia: needs the owner's MRC portal
-login (queue with oxford_stn_onoff_dbs - one session collects both).
+RE-VERIFY at fetch. mrc_lfp_dystonia: superseded 2026-09-24, it is
+oxford_dystonia_lfp, already on disk since 2026-08-25.
 dystonia_coalition: application tier - owner decision (no-emails
 policy).
 

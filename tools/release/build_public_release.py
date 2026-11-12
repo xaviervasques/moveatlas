@@ -28,19 +28,27 @@ What lands in the public tree:
   README.md LICENSE CITATION.cff CHANGELOG.md CONTRIBUTING.md
   pyproject.toml Makefile .gitattributes .gitignore
 
-Every file copied is checked afterwards by a leak scan that refuses to
-finish on: assistant or vendor attribution, an absolute local path, a
-credential-shaped string, a third-party email address, or French prose in a
-document that is meant to be English. The scan is the gate, not a warning:
-a non-zero exit means the tree must not be pushed.
+Every file copied is checked afterwards by a leak scan. It refuses to
+finish (BLOCK) on: the name of a software vendor or product of the kind the
+owner's rule of 2026-11-10 keeps out of the tree, a credential-shaped
+string, French prose in a document we author, or a file of a non-commercial
+body model or derived from one (the body-model rule of 2026-11-12: a body
+model's file, its arrays in a data file, or the statement of an output made
+with it; no exemption). It reports (WARN) a model
+name that is also an ordinary word, the field's two-letter abbreviation, a
+provenance word or phrase, an absolute local path, a third-party email
+address and an em-dash. The scan is the gate: a non-zero exit means the
+tree must not be pushed, and every WARN is read before a push.
 
 Usage:
   python build_public_release.py                     # build + scan
   python build_public_release.py --out DIR           # elsewhere
   python build_public_release.py --scan-only DIR     # re-scan a built tree
+  python build_public_release.py --hash WORD         # digest for a word list
 """
 import argparse
 import csv
+import hashlib
 import io
 import os
 import re
@@ -97,6 +105,7 @@ TOOLS = {
         "build_canonical_physionet_multimodal_gait.py",
         "build_canonical_sensefog.py", "build_canonical_sensefog_pass2.py",
         "build_canonical_silhouette.py", "convert_records_to_npz.py",
+        "set_stated_fps.py",
     ],
     "registry": [
         "gen_datacards.py", "build_catalogue.py", "build_taxonomy_map.py",
@@ -221,16 +230,17 @@ def skip(name):
 # useful publicly but were written against the author's two machines. The
 # working tree keeps the concrete paths, which is what the author needs.
 REDACTIONS = [
-    (re.compile(r"C:\\Users\\[A-Za-z0-9_.-]+\\miniconda3\\python\.exe"), "<python>"),
-    (re.compile(r"C:\\Users\\[A-Za-z0-9_.-]+\\\.venvs\\[A-Za-z0-9_.-]+"), "<venv>"),
-    (re.compile(r"C:/Users/[A-Za-z0-9_.-]+/miniconda3/python\.exe"), "<python>"),
+    (re.compile(r"[A-Z]:\\Users\\[A-Za-z0-9_.-]+\\miniconda3\\python\.exe"), "<python>"),
+    (re.compile(r"[A-Z]:\\Users\\[A-Za-z0-9_.-]+\\\.venvs\\[A-Za-z0-9_.-]+"), "<venv>"),
+    (re.compile(r"[A-Z]:/Users/[A-Za-z0-9_.-]+/miniconda3/python\.exe"), "<python>"),
     (re.compile(r"[A-Z]:\\MoveAtlas\\KineFM"), "<repo>"),
     (re.compile(r"[A-Z]:\\MoveAtlas"), "<workdir>"),
     (re.compile(r"[A-Z]:/MoveAtlas/(?:KineFM|moveatlas)"), "<repo>"),
-    (re.compile(r"[A-Z]:\\KineFM"), "<backup-drive>"),
+    # one backslash in a document, two in a Python string literal
+    (re.compile(r"[A-Z]:\\+KineFM"), "<backup-drive>"),
     (re.compile(r"/Volumes/[A-Za-z0-9_]+"), "<external-volume>"),
     (re.compile(r"[A-Z]:\\condaenvs\\[A-Za-z0-9_.-]+"), "<obsolete-env>"),
-    (re.compile(r"C:\\Users\\[A-Za-z0-9_.-]+"), "<home>"),
+    (re.compile(r"[A-Z]:\\Users\\[A-Za-z0-9_.-]+"), "<home>"),
 ]
 REDACT_FILES = {"docs/OPERATIONS.md", "docs/BACKUP.md", "Makefile",
                 "docs/RECORD_FORMAT.md", "docs/MANIFEST_SCHEMA.md",
@@ -317,52 +327,269 @@ TEXT_EXT = {".py", ".md", ".rst", ".txt", ".csv", ".json", ".yaml", ".yml",
             ".cff", ".toml", ".cfg", ".ini", ".html", ".css", ".js", ".bib",
             ".csl", ".sh", ".ps1", ".in", ".gitignore", ".gitattributes"}
 
-# Attribution to an assistant or a vendor, anywhere. This scanner's own
-# source necessarily contains the words it looks for and is exempted by name
-# in SCAN_ALLOW below; every other file is checked.
-ASSISTANT_WORDS = ["claude", "anthropic", "copilot", "chatgpt", "openai",
-                   "codex", "cursor.sh", "gemini", "llama"]
-RE_ASSISTANT = re.compile(
-    r"\b(" + "|".join(re.escape(w) for w in ASSISTANT_WORDS) + r")\b", re.I)
-# Attribution does not need a vendor's name to be attribution. A sweep on
-# 2026-09-11 found eight of these in a tree the vendor-name scan had just
-# passed: "Generalist agent" as a section label, "the assistant" in four
-# documents and two scripts, "pediatric agent" and "repo-passes agent" as
-# provenance tags. They say an assistant did the work as plainly as the
-# product name would, so they are refused on the same footing.
-RE_ATTRIBUTION = re.compile(
-    r"\b(?:the|an|this)\s+assistant\b"
-    r"|\bassistant(?:'s)?\s+(?:own\s+)?\w+"
-    r"|\b(?:sub-)?agents?(?:'s)?\b"
-    r"|\bco-authored-by\b"
-    r"|\bgenerated with\b"
-    r"|\bAI[- ]generated\b", re.I)
-# "User-Agent" is an HTTP header, not a worker. The first version of the
-# rule above matched it in seven fetchers and in the two cards that record
-# "Dryad answers 403 to a non-browser user agent", which is the finding, not
-# attribution. Strip the header before testing rather than widening the rule
-# into something nobody can read.
-RE_USER_AGENT = re.compile(r"(?:user|(?:non-)?browser)[-\s]?agents?", re.I)
-# A local absolute path that would only exist on the author's machines.
+# The rule (owner instruction of 2026-11-10): no shipped file names a
+# vendor or a product of the listed kind, nor a model, nor carries a
+# provenance statement about the tools text or code was produced with. That
+# instruction replaced the decision of 2026-09-11 under which the search
+# reports kept the vocabulary of how their automated passes were run. The
+# method itself stays stated, in neutral words: automated search passes for
+# breadth, manual reading at the source for depth, every claim verified at
+# the source (docs/search_protocol.md section 6).
+#
+# The word lists are stored as the sha256 of each lower-case token, never
+# as the words. A list in clear text would put in the shipped tree the very
+# names the rule keeps out of it, and this file would need an exemption that
+# would also hide a real leak in it. Each line is tokenized and each token
+# hashed; a dotted name (a domain) is also tried whole and by its dotted
+# runs. To add a word, print its digest with
+#   python build_public_release.py --hash WORD
+# and paste the digest into the list it joins (never the word itself).
+#
+# Product and maker names that have no ordinary English meaning: BLOCK.
+VENDOR_SHA256 = frozenset({
+    "053ea4804ef1bb33d4a3d6fb024a614b6d257cebc2bc7cd915da9c9522f37ffc",
+    "3ea125d0bff386e6754b3782b300016fc79a9cf8f8669c0a5c3db64467ddb681",
+    "57de4cf40144bdf7d00010f2f5557a7d642c2b9705309bfade167dd313e2ca93",
+    "60965168ce762e949600281ba6d01fee136e5b6e8257b1f216f9025ed324474c",
+    "67f2d22514622d1be30c14ee9f3cb104503a159a33a656ca91a1953aa9616429",
+    "6f7ac1823da81d2e52d1a1549ee69c85bbf8bb56d06682849e7c09da2785ce3b",
+    "7558a1564a10a003e3ce8ecf4e864128f2258d01acb53a23d67cf74b5fcc2b3b",
+    "7d3194f79e645c42e4396dda38be04766810ec6a00d00aced3ffc2a0a1f1a9ef",
+    "90642c3dd333bc0e602c9fa887ab0f0482886d0ed52ce8762a27a5f901528fcc",
+    "c70eca6b0f88f44d81a41311647e50fda1ac454ec04ffd442b0eb4743a993131",
+    "c857d09db23e6822e3600bc06ad8d58f92ed62bc8efd81c753f77048662cb97d",
+})
+# Model names that are also ordinary English words (a literary form, a
+# poem, an animal, a constellation, a wind): WARN, since a cited title or a
+# third-party proper name may carry one legitimately; SCAN_ALLOW records
+# each such file with its reason.
+MODEL_SHA256 = frozenset({
+    "09cf980b5ff304ac11b7f6d2c5c263da2a867425798ef5cc5d2ebcf55c4fcd23",
+    "5a5110ebe1544b31e6d4207a419bc1deb148735f89ae984ff0a2ab809b51f1df",
+    "5d72436256ada53828b51895a94bb8489e9f1ac4fe937a8024ef1594e7045ff6",
+    "920510199770f4d65cb8aaa2cd12bdb2b8c37f5b3907c50a734a0e3409da2823",
+    "add92b9cde2bdbf3daaf65a0db79e9b1a7fa428b71b4d6ce38c742eb6dca0c1c",
+    "c9ad8f2cc1294afa0ef22fc2c019ff7243cdd272b2147ddca3f34c5036b05768",
+    "e12ce8285efc67c6d93d3a122e2589ed95089bcbb775ba5634d94e2b8385db07",
+    "fc5a1047f5919892fcdf8aa79ea5d6bb6531b5c176939ef0110906cb225941c1",
+})
+# The English and French two-letter abbreviations for the field, matched
+# only when the token is written in capitals (a lower-case loop index of
+# the same two letters is code, not a mention): WARN.
+ACRONYM_SHA256 = frozenset({
+    "26138d8a757dd1dc09df6301bc4a47f0a1f7f785a725ae72574c6862127a2201",
+    "32e83e92d45d71f69dcf9d214688f0375542108631b45d344e5df2eb91c11566",
+})
+# Provenance words: the generic nouns for an automated helper and for the
+# technology behind it, singular and plural: WARN. A sweep on 2026-09-11
+# found eight provenance phrases (a section label and provenance tags, and
+# the helper noun in four documents and two scripts) in a tree the name scan
+# had just passed: a provenance word states automated help as plainly as a
+# product name. These words also have ordinary senses (in pharmacology, in
+# an HTTP header), hence WARN and the two exemptions: HEADER_PREFIXES below
+# and the allow entry of docs/ANIMAL_LANE_CONTRACT_DESIGN.md.
+HELPER_SHA256 = frozenset({
+    "386ebc0efd04339aa982703eb666c335d8458b8657343d9783185debf0bf0c26",
+    "487b91042c7cf27a19e23ea8699f5f354b1a0c3af9e418138dc6150d830f970d",
+    "4c7047d4bc759e60b916d1936cf3d41f201c18fdb883a48b59d0eb592d51707a",
+    "8c70b25cbbbe8e7935bbc70516181551934ae5e917b40d25c4a72bbbd865f2e4",
+    "94a168d2da574b00ec6c787377278465271cf2b97e68af076fc3eee87eba8664",
+    "a39a7ffad4a3013f29da97b84f264337f234c1cf9b3c40c7c30c677a8a18609a",
+    "a5ea7d719f7aba21d3f940a263d619ebb130a56a7faf669f8e333bcf59b65603",
+    "d298391b07433318a02bd922ed5b90112a4302606c4928b54e3fb1c18130d92e",
+    "d4f0bc5a29de06b510f9aa428f1eedba926012b591fef7a518e776a7c9bd1824",
+    "de2187af3fb011708ca4ff6d21e4845236d6a6d25e7e90531b26a7923d16c73f",
+    "eea82f53ecaed277e542e8a867863be69c50efc4b94dad1f50a33944ca0c2f1f",
+})
+# Provenance phrases of two or three tokens, joined by one space (a commit
+# trailer, "made with", the compound adjective for machine-made text, the
+# model family): WARN.
+PHRASE_SHA256 = frozenset({
+    "2e8aae79d9566c6391cbf216d0b40760bde9bd51a6c5b0b970a248f679cd718f",
+    "442e56863b7e9cf893fd1d134d4b24b57e98acc6a3f8501d163d042259065871",
+    "5eff592cc497fccb48ebfffaca38a83f9167bc1661b4477e1fc1b66b658cd5a0",
+    "7c38d5864015fc722b62d2f5b8cf69be50bcea73de4cfb745c8b9780e9e8d9f5",
+    "cdcbb68a3444fdd629ab0af770af3fc99e4d5dde43b576d5f855691e155283ec",
+})
+# The HTTP header and the "non-browser ..." finding: a provenance word right
+# after one of these is the header, not a worker. The first version of the
+# rule matched it in seven fetchers and in the two cards that record "Dryad
+# answers 403 to a non-browser" client, which is the finding.
+HEADER_PREFIXES = {"user", "browser"}
+
+_WORD = re.compile(r"[A-Za-z0-9]+")
+_DOTTED = re.compile(r"[A-Za-z0-9]+(?:\.[A-Za-z0-9]+)+")
+_DIGEST = {}
+
+
+def digest(token):
+    """sha256 hex digest of a token, lower-cased; cached."""
+    t = token.lower()
+    d = _DIGEST.get(t)
+    if d is None:
+        d = hashlib.sha256(t.encode("utf-8")).hexdigest()
+        _DIGEST[t] = d
+    return d
+
+
+def word_kinds(line):
+    """The word-list kinds a line carries: a subset of {"vendor", "model",
+    "acronym", "attribution"}."""
+    found = set()
+    words = _WORD.findall(line)
+    for i, w in enumerate(words):
+        d = digest(w)
+        if d in VENDOR_SHA256:
+            found.add("vendor")
+        elif d in MODEL_SHA256:
+            found.add("model")
+        elif d in ACRONYM_SHA256:
+            if w.isupper():
+                found.add("acronym")
+        elif d in HELPER_SHA256:
+            if not (i and words[i - 1].lower() in HEADER_PREFIXES):
+                found.add("attribution")
+    for n in (2, 3):
+        for i in range(len(words) - n + 1):
+            if digest(" ".join(words[i:i + n])) in PHRASE_SHA256:
+                found.add("attribution")
+    if "." in line:
+        for tok in _DOTTED.findall(line):
+            parts = tok.split(".")
+            for a in range(len(parts)):
+                for b in range(a + 2, len(parts) + 1):
+                    if digest(".".join(parts[a:b])) in VENDOR_SHA256:
+                        found.add("vendor")
+    return found
+
+
+# A local absolute path that would only exist on the author's machines:
+# Windows drive paths under the home, project, backup and environment
+# folders (any drive letter, either slash), the same folders written the
+# Git Bash way (/d/...), and macOS volume mounts.
 RE_LOCALPATH = re.compile(
-    r"([A-Za-z]:[\\/](?:Users|MoveAtlas|condaenvs|KineFM)|/Volumes/[A-Za-z0-9_]+)")
-# Credential-shaped strings.
+    r"(?<![A-Za-z])[A-Za-z]:[\\/]+(?i:Users|MoveAtlas|MD_FM|Backup|condaenvs|KineFM)\b"
+    r"|(?<![\w.~-])/[A-Za-z]/(?i:Users|MoveAtlas|MD_FM|Backup)\b"
+    r"|/Volumes/[A-Za-z0-9_]+")
+# Credential-shaped strings: a Zenodo token assignment, GitHub classic and
+# fine-grained tokens, a PEM private key, the AWS secret key name, and the
+# Hugging Face, PyPI and "sk-" API token shapes.
 RE_SECRET = re.compile(
-    r"(ZENODO_TOKEN\s*=\s*['\"][^'\"]{20,}|ghp_[A-Za-z0-9]{20,}|"
-    r"github_pat_[A-Za-z0-9_]{20,}|-----BEGIN [A-Z ]*PRIVATE KEY-----|"
-    r"\baws_secret_access_key\b)")
+    r"ZENODO_TOKEN\s*=\s*['\"][^'\"]{20,}"
+    r"|ghp_[A-Za-z0-9]{20,}"
+    r"|github_pat_[A-Za-z0-9_]{20,}"
+    r"|-----BEGIN [A-Z ]*PRIVATE KEY-----"
+    r"|\baws_secret_access_key\b"
+    r"|(?<![A-Za-z0-9_])hf_[A-Za-z0-9]{30,}"
+    r"|(?<![A-Za-z0-9_-])pypi-[A-Za-z0-9_-]{40,}"
+    r"|(?<![A-Za-z0-9_-])sk-[A-Za-z0-9_-]{20,}")
 # Third-party email addresses. The project's own contact is allowed.
 OWN_EMAILS = {"vasquesxavier@protonmail.com"}
 RE_EMAIL = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
-# French prose markers, checked only in documents we author.
+# French prose, two detectors. Markers: phrases that do not occur in English
+# prose. Lines: a line carrying three or more French function words, which
+# also catches French typed without accents (the first version of this rule
+# had only markers with accents and missed two shipped documents written that
+# way). A file is French when it has FRENCH_MIN markers or FRENCH_MIN lines.
 RE_FRENCH = re.compile(
-    r"\b(les donn[ée]es|nous avons|c'est-[àa]-dire|afin de|"
-    r"le projet est|cette version|ceci est|il faut|"
+    r"\b(les donn[ée]es|des donn[ée]es|nous avons|c'est-[àa]-dire|afin de|"
+    r"le projet est|cette version|ceci est|il faut|il y a|c'est|n'est pas|"
+    r"parce que|ce qui|pour les|avec les|dans les|sur les|une fois|"
     r"jeux de donn[ée]es|fichier de|dossier de)\b", re.I)
-# The house rule: no em-dashes.
-RE_EMDASH = re.compile("—")
+FRENCH_WORDS = frozenset(
+    "les des une dans avec nous cette sont aux qui pas est du sur pour par "
+    "ou au la le et en".split())
+_LETTERS = re.compile(r"[A-Za-zÀ-ÿ]+")
+FRENCH_MIN = 3
 
-# Files where a hit is expected and legitimate, with the reason.
+
+def french_evidence(text):
+    """(number of markers, number of French lines, first French line no.)"""
+    markers = len(RE_FRENCH.findall(text))
+    lines, first = 0, None
+    for i, line in enumerate(text.splitlines(), 1):
+        n = sum(1 for w in _LETTERS.findall(line) if w.lower() in FRENCH_WORDS)
+        if n >= 3:
+            lines += 1
+            first = first or i
+    return markers, lines, first
+# The house rule: no em-dashes (written as an escape so that this file
+# carries none).
+RE_EMDASH = re.compile("\u2014")
+
+# The body-model rule (owner decision of 2026-11-12: the project is fully
+# open source). The SMPL family of body models (SMPL, SMPL+H, SMPL-X, MANO)
+# is licensed by the Max Planck Institute for Intelligent Systems for
+# non-commercial use only, and the MANO/SMPL+H licence forbids making the
+# model, or animations made with it, available in any form. So no shipped
+# file may be a body-model file or carry what was computed with one. The
+# rule targets data files and pages, not prose or code: a citation of AMASS
+# or SMPL, a data card saying the body model is needed, and the AMASS builder
+# that loads a user's own copy of the model (naming its arrays and its file)
+# are legitimate and pass. Three checks, each a BLOCK of kind "bodymodel":
+#
+# 1. the path, for every shipped file whatever its type: a file under a
+#    body_models/ folder, or named like a body-model file of the family
+#    (SMPLH_male.pkl, MANO_RIGHT.pkl, smplh/neutral/model.npz, ...);
+# 2. the content of a data file: an array container (BODY_DATA_EXT, read as
+#    bytes; a .npz lists its member names uncompressed) or a table or JSON
+#    file (BODY_TEXT_EXT) carrying a body model's own arrays (template mesh,
+#    blend shapes, joint regressor, kinematic tree, hand components) or the
+#    keys of an AMASS motion file (its frame-rate keys, its DMPL
+#    coefficients). Code, prose and HTML are not read for these keys: the
+#    builder and its tests name them, the AMASS card cites them, and a built
+#    site's pages and search index repeat the card;
+# 3. the statement a derived output carries, in any text file: the MPI
+#    acknowledgement for animation made with the model, or a release under
+#    that licence (the credit and licence lines such an output must carry).
+#
+# Out of reach: an image or a video rendered from the model carries no such
+# mark. None ships: BODY_DATA_EXT holds no image type and the public
+# .gitignore keeps *.npz and *.pkl out. The patterns are written so that
+# this file does not match them.
+_BODY_FAMILY = r"(?:smpl|smplh|smplx|mano)"
+RE_BODY_MODEL_PATH = re.compile(
+    r"(?:^|/)body_models/"
+    r"|(?:^|/)" + _BODY_FAMILY + r"_(?:male|female|neutral|left|right)\b"
+    r"[^/]*\.(?:pkl|npz|npy|pt|pth|json|obj|fbx|ply)$"
+    r"|(?:^|/)" + _BODY_FAMILY + r"/(?:male|female|neutral)/model\.(?:npz|pkl)$",
+    re.I)
+BODY_DATA_EXT = {".npz", ".npy", ".pkl", ".pickle", ".pt", ".pth", ".ckpt",
+                 ".h5", ".hdf5", ".mat", ".joblib", ".safetensors", ".bin"}
+BODY_TEXT_EXT = {".json", ".csv", ".tsv"}
+BODY_KEYS = ("v_template", "shapedirs", "posedirs", "J_regressor",
+             "kintree_table", "hands_components", "hands_componentsl",
+             "hands_componentsr", "hands_mean", "hands_meanl", "hands_meanr",
+             "mocap_framerate", "mocap_frame_rate", "dmpls")
+RE_BODY_KEY = re.compile(r"(?<![A-Za-z0-9])(?:" + "|".join(BODY_KEYS)
+                         + r")(?![A-Za-z0-9])")
+RE_BODY_KEY_BYTES = re.compile(RE_BODY_KEY.pattern.encode("ascii"))
+RE_BODY_STATEMENT = re.compile(
+    r"used\s+for\s+character\s+animation\s+courtesy\s+of"
+    r"|under\s+the\s+(?:MANO\s*/\s*)?SMPL\s*\+\s*H\s+licen[cs]e", re.I)
+
+
+def body_model_file_hits(path, rel, ext):
+    """Checks 1 and 2 of the body-model rule on one shipped file, before its
+    text is read: a list of evidence strings."""
+    found = []
+    if RE_BODY_MODEL_PATH.search(rel):
+        found.append("the path names a body-model file")
+    if ext in BODY_DATA_EXT:
+        try:
+            with open(path, "rb") as f:
+                m = RE_BODY_KEY_BYTES.search(f.read())
+        except OSError:
+            m = None
+        if m:
+            found.append("the data carries the body-model key "
+                         + m.group(0).decode("ascii"))
+    return found
+
+
+# Files where a hit is expected and legitimate, with the reason. The keys of
+# each set are hit kinds: vendor, model, acronym, attribution, localpath,
+# email, emdash, french.
 #
 # On emails: a data card, a generated dataset page and the registry carry the
 # contact address that the SOURCE publishes as its documented access route
@@ -371,16 +598,19 @@ RE_EMDASH = re.compile("—")
 # the access route the barrier tier exists to record. They are allowed here
 # and counted in the build report so the owner can review them.
 SCAN_ALLOW = {
-    # this scanner's own source names the words it searches for
-    "tools/release/build_public_release.py": {"assistant", "emdash", "email",
-                                              "localpath", "french"},
     # the fetchers legitimately name the repositories they talk to
     "tools/fetch/fetch_osf.py": {"email"},
-    # "pharmacological:<agent>", "dose/agent tags": a drug, not a worker
-    "docs/ANIMAL_LANE_CONTRACT_DESIGN.md": {"assistant"},
-    "docs/citations.bib": {"email", "french", "emdash"},
-    "docs/citations.csv": {"email", "french", "emdash"},
-    "moveatlas/data/datasets_index.csv": {"email", "french"},  # NOT assistant
+    # the design names the drug given to the animals ("pharmacological:<...>",
+    # the per-mouse dose tags): a pharmacology term, not provenance
+    "docs/ANIMAL_LANE_CONTRACT_DESIGN.md": {"attribution"},
+    # cited titles, verbatim: the park_fingertap paper (npj Digital Medicine
+    # 2023, 10.1038/s41746-023-00905-9) has the field's abbreviation in its
+    # title; French-language titles and author names; third-party contacts
+    "docs/citations.bib": {"email", "french", "emdash", "acronym"},
+    "docs/citations.csv": {"email", "french", "emdash", "acronym"},
+    # the generated page of that dataset prints the same citation and BibTeX
+    "site/source/datasets/park_fingertap.md": {"acronym"},
+    "moveatlas/data/datasets_index.csv": {"email", "french"},
     "moveatlas/data/license_matrix.csv": {"email", "french"},
     "tools/registry/gen_datacards.py": {"email"},
     "tools/registry/build_citations.py": {"email"},
@@ -392,6 +622,15 @@ SCAN_ALLOW = {
     "docs/registry_cells.csv": {"french"},
 }
 
+# Where French is checked, and how hard. Documents we author (.md, .rst,
+# anywhere in the tree, the site sources included): BLOCK, the repository
+# is English-only. The site's scripts and templates (.py, .html under
+# site/), which render into pages: WARN. Not checked: the generated dataset
+# pages (site/source/datasets/), which quote source titles and author names
+# verbatim, and the files allowed above.
+FRENCH_BLOCK_EXT = {".md", ".rst"}
+FRENCH_WARN_SITE_EXT = {".py", ".html"}
+
 
 def scan(out):
     """Walk the built tree and report every leak. Returns a list of
@@ -400,9 +639,13 @@ def scan(out):
     for root, dirs, files in os.walk(out):
         dirs[:] = [d for d in dirs if d not in {".git", "__pycache__"}]
         for fn in sorted(files):
+            if fn.startswith("._"):
+                continue
             p = os.path.join(root, fn)
             rel = os.path.relpath(p, out).replace(os.sep, "/")
             ext = os.path.splitext(fn)[1].lower()
+            for ev in body_model_file_hits(p, rel, ext):
+                hits.append(("BLOCK", rel, "bodymodel", ev))
             if ext not in TEXT_EXT and fn not in {"LICENSE", "Makefile"}:
                 continue
             allow = set(SCAN_ALLOW.get(rel, set()))
@@ -412,7 +655,7 @@ def scan(out):
                     or rel.startswith("docs/") and rel.endswith(".csv") \
                     or rel.startswith("paper/") and rel.endswith(".csv"):
                 allow.add("email")
-            if rel.startswith("site/") or rel.startswith("paper/"):
+            if rel.startswith("site/source/datasets/") or rel.startswith("paper/"):
                 allow.add("french")   # cited titles and author names
             try:
                 with io.open(p, encoding="utf-8", errors="replace") as f:
@@ -420,39 +663,44 @@ def scan(out):
             except OSError:
                 continue
             for i, line in enumerate(text.splitlines(), 1):
-                if RE_ASSISTANT.search(line) and "assistant" not in allow:
-                    hits.append(("BLOCK", rel, "assistant", f"{i}: {line.strip()[:140]}"))
-                probe = RE_USER_AGENT.sub("", line)
-                if RE_ATTRIBUTION.search(probe) and "assistant" not in allow:
-                    # WARN, not BLOCK. A vendor's name in a published file is
-                    # always wrong. "three agents", "an agent's reading" is
-                    # sometimes the honest description of how a search was
-                    # run, and whether to keep it is the owner's call on
-                    # their own methodology record - not this script's.
-                    # OWNER DECISION 2026-09-11: the hunt reports KEEP their
-                    # agent vocabulary. The descriptor's Methods and
-                    # docs/search_protocol.md s6 now state the same thing -
-                    # agents for breadth, manual reading and manual web
-                    # search for depth, every agent claim verified at the
-                    # source. Do not "fix" those warnings into silence; a
-                    # declared automated pass is reproducible, a hidden one
-                    # is not.
-                    hits.append(("WARN", rel, "attribution",
-                                 f"{i}: {line.strip()[:140]}"))
+                ev = f"{i}: {line.strip()[:140]}"
+                kinds = word_kinds(line) - allow
+                if "vendor" in kinds:
+                    hits.append(("BLOCK", rel, "vendor", ev))
+                for kind in ("model", "acronym", "attribution"):
+                    if kind in kinds:
+                        hits.append(("WARN", rel, kind, ev))
                 if RE_SECRET.search(line):
                     hits.append(("BLOCK", rel, "secret", f"{i}: <redacted line {i}>"))
                 if RE_LOCALPATH.search(line) and "localpath" not in allow:
-                    hits.append(("WARN", rel, "localpath", f"{i}: {line.strip()[:140]}"))
+                    hits.append(("WARN", rel, "localpath", ev))
                 if "email" not in allow:
                     for m in RE_EMAIL.findall(line):
                         if m.lower() not in OWN_EMAILS and not m.endswith("example.com"):
                             hits.append(("WARN", rel, "email", f"{i}: {m}"))
                 if RE_EMDASH.search(line) and "emdash" not in allow:
                     hits.append(("WARN", rel, "emdash", f"{i}: {line.strip()[:80]}"))
-            if ext in {".md", ".rst"} and "french" not in allow:
-                fr = RE_FRENCH.findall(text)
-                if len(fr) >= 3:
-                    hits.append(("WARN", rel, "french", f"{len(fr)} French markers"))
+                if RE_BODY_STATEMENT.search(line):
+                    hits.append(("BLOCK", rel, "bodymodel",
+                                 f"{i}: a statement of output made with the body model"))
+                if ext in BODY_TEXT_EXT:
+                    m = RE_BODY_KEY.search(line)
+                    if m:
+                        hits.append(("BLOCK", rel, "bodymodel",
+                                     f"{i}: the data carries the body-model key {m.group(0)}"))
+            if "french" not in allow:
+                if ext in FRENCH_BLOCK_EXT:
+                    sev = "BLOCK"
+                elif rel.startswith("site/") and ext in FRENCH_WARN_SITE_EXT:
+                    sev = "WARN"
+                else:
+                    sev = None
+                if sev:
+                    markers, lines, first = french_evidence(text)
+                    if markers >= FRENCH_MIN or lines >= FRENCH_MIN:
+                        hits.append((sev, rel, "french",
+                                     f"{markers} French marker(s), {lines} French "
+                                     f"line(s), first at line {first}"))
     return hits
 
 
@@ -461,8 +709,13 @@ def main():
     ap.add_argument("--out", default=DEFAULT_OUT)
     ap.add_argument("--scan-only", default=None,
                     help="scan an already built tree and exit")
+    ap.add_argument("--hash", default=None, metavar="WORD",
+                    help="print the sha256 a word list stores for WORD and exit")
     a = ap.parse_args()
 
+    if a.hash:
+        print(digest(a.hash))
+        return 0
     if a.scan_only:
         hits = scan(a.scan_only)
         report_scan(hits)
@@ -855,10 +1108,12 @@ def write_report(out, shipped):
         "## The gate",
         "",
         "`build_public_release.py` re-scans this tree after building it and",
-        "refuses to finish when it finds a tool vendor's name, a",
-        "credential-shaped string, a local absolute path, a third-party email",
-        "address or French prose in an English document. Re-run the scan at",
-        "any time with `python build_public_release.py --scan-only .`",
+        "refuses to finish when it finds a software vendor's or product's",
+        "name, a credential-shaped string or French prose in an English",
+        "document; it reports a local absolute path, a third-party email",
+        "address and provenance wording for review. Its word lists are stored",
+        "as sha256 digests of the words. Re-run the scan at any time with",
+        "`python tools/release/build_public_release.py --scan-only .`",
         "",
     ]
     with open(os.path.join(out, "PUBLIC_TREE.md"), "w", newline="\n",

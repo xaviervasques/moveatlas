@@ -90,59 +90,59 @@ clean pass is run.
 
 ---
 
-## 5. VERSION 2 (2026-08-22) : extension a la taxonomie MoveAtlas v2
+## 5. VERSION 2 (2026-08-22): extension to the MoveAtlas v2 taxonomy
 
-La refonte MoveAtlas (taxonomie v2, plan de projet v2) etend le perimetre de recherche. Cette section
-remplace les criteres de la section 3 pour toute passe posterieure au 2026-08-22 ; les sections 1 a 4
-restent valables comme historique de la passe v1.
+The MoveAtlas redesign (taxonomy v2, project plan v2) widens the search scope. This section
+replaces the criteria of section 3 for every pass after 2026-08-22; sections 1 to 4
+remain valid as the record of the v1 pass.
 
-### 5.1 Criteres d'inclusion v2
+### 5.1 Inclusion criteria v2
 
-- Sujets humains.
-- Series temporelles de mouvement (pose video, IMU, mocap, force, silhouette) OU toute modalite du
-  360 MoveAtlas portant un phenomene moteur : EMG, EEG, LFP / ECoG, polysomnographie, actimetrie,
-  ecriture / frappe, voix motrice.
-- Population pathologique de n'importe quelle case de la taxonomie (classes A, B, comorbidites D et E),
-  OU referentiel normal conditionne a l'age (C1 adulte, C2 nourrisson / enfant, C3 sujet age).
-- Publiquement liste, meme si l'acces est sous demande, EULA ou dossier.
+- Human subjects.
+- Movement time series (video pose, IMU, mocap, force, silhouette) OR any modality of the
+  MoveAtlas 360 view that carries a motor phenomenon: EMG, EEG, LFP / ECoG, polysomnography,
+  actimetry, handwriting / typing, motor voice.
+- A pathological population from any cell of the taxonomy (classes A, B, comorbidities D and E),
+  OR an age-conditioned normal reference (C1 adult, C2 infant / child, C3 older adult).
+- Publicly listed, even when access is on request, under an EULA or by application.
 
-Exclusions inchangees (pas de series temporelles du tout ; outils sans corpus ; donnees simulees par
-des sujets sains imitant une pathologie) plus : videos de cas cliniques publiees en article (licence
-article, pas corpus).
+Exclusions unchanged (no time series at all; tools without a corpus; data simulated by
+healthy subjects imitating a pathology) plus: clinical case videos published with an article
+(article licence, not a corpus).
 
-### 5.2 Termes de recherche par case (utilises lors de la passe P1 du 2026-08-22)
+### 5.2 Search terms per cell (used in pass P1 of 2026-08-22)
 
-- A1 video : tremor video dataset pose hand public download camera smartphone assessment
-- A2 : myoclonus dataset EMG EEG recordings public download movement disorder
-- A3 : Tourette syndrome tic video dataset public machine learning detection
-- A4 capteurs : cervical dystonia wearable IMU EMG sensor dataset public recordings torticollis
-- A5 : self-stimulatory behavior dataset autism video stereotypy SSBD ESBD public download
-- A8 : hemiballismus ballism video recordings dataset public
-- B1 : Parkinson rigidity quantification robotic passive movement torque dataset public instrumented
-- B4 : mPower Parkinson smartphone dataset Sage Bionetworks access Levodopa Response Study wearable
-- C2 : infant general movements assessment video dataset pose estimation public preterm fidgety ;
+- A1 video: tremor video dataset pose hand public download camera smartphone assessment
+- A2: myoclonus dataset EMG EEG recordings public download movement disorder
+- A3: Tourette syndrome tic video dataset public machine learning detection
+- A4 sensors: cervical dystonia wearable IMU EMG sensor dataset public recordings torticollis
+- A5: self-stimulatory behavior dataset autism video stereotypy SSBD ESBD public download
+- A8: hemiballismus ballism video recordings dataset public
+- B1: Parkinson rigidity quantification robotic passive movement torque dataset public instrumented
+- B4: mPower Parkinson smartphone dataset Sage Bionetworks access Levodopa Response Study wearable
+- C2: infant general movements assessment video dataset pose estimation public preterm fidgety;
   MINI-RGBD BabyPose infant dataset download request preterm NICU depth video
-- C3 : elderly long-term movement monitoring accelerometer dataset PhysioNet fallers daily activity public
-- D1 : epileptic seizure accelerometer wearable movement dataset public download detection
-- D6 : CAP sleep database PhysioNet RBD REM behavior disorder polysomnography public dataset
-- D7 : functional tremor psychogenic movement disorder accelerometer dataset public entrainment
-- M5 : surface EMG public dataset walking gait patients PhysioNet clinical neurology
-- E3 : diabetic peripheral neuropathy gait plantar pressure dataset public download
+- C3: elderly long-term movement monitoring accelerometer dataset PhysioNet fallers daily activity public
+- D1: epileptic seizure accelerometer wearable movement dataset public download detection
+- D6: CAP sleep database PhysioNet RBD REM behavior disorder polysomnography public dataset
+- D7: functional tremor psychogenic movement disorder accelerometer dataset public entrainment
+- M5: surface EMG public dataset walking gait patients PhysioNet clinical neurology
+- E3: diabetic peripheral neuropathy gait plantar pressure dataset public download
 
-### 5.3 Passes executees et datees
+### 5.3 Passes run, with their dates
 
-- Passe P1 : 2026-08-22, moteur web generaliste (index US), 14 requetes. Resultats, candidats et
-  absences documentes dans MoveAtlas/MoveAtlas_Chasse_P1_2026-08-22.md (disque projet) ; candidats integres a
-  MoveAtlas_Matrice_couverture_v2.xlsx avec le statut "Identifie chasse P1". Bilan : 12 sources nouvelles,
-  7 absences confirmees (A1 video, A2, A3, A8, B1, D7, E3).
-- Prochaine passe : apres depouillement des revues (Pecoraro 2025, Martinez-Garcia-Pena 2025,
-  dyskinesies paroxystiques 2025) et des hubs (NeoVault, meta-liste EEG GitHub), et apres retour des
-  demandes deposees.
+- Pass P1: 2026-08-22, general web search engine (US index), 14 queries. Results, candidates and
+  absences documented in MoveAtlas/MoveAtlas_Chasse_P1_2026-08-22.md (project disk); candidates entered in
+  MoveAtlas_Matrice_couverture_v2.xlsx with the status "Identifie chasse P1". Outcome: 12 new sources,
+  7 confirmed absences (A1 video, A2, A3, A8, B1, D7, E3).
+- Next pass: after screening the reviews (Pecoraro 2025, Martinez-Garcia-Pena 2025,
+  paroxysmal dyskinesias 2025) and the hubs (NeoVault, the GitHub EEG meta-list), and after the
+  replies to the requests filed.
 
-### 5.4 Repositories ajoutes a la liste de la section 2
+### 5.4 Repositories added to the list of section 2
 
-OpenNeuro ; National Sleep Research Resource / PhysioNet sommeil ; Temple TUH EEG Corpus ; Sage
-Bionetworks / Synapse (mPower) ; CDC NHANES ; hubs neonataux (NeoVault) ; Epilepsy Ecosystem.
+OpenNeuro; National Sleep Research Resource / PhysioNet sleep; Temple TUH EEG Corpus; Sage
+Bionetworks / Synapse (mPower); CDC NHANES; neonatal hubs (NeoVault); Epilepsy Ecosystem.
 
 ---
 
@@ -154,10 +154,10 @@ must agree.
 
 Three instruments, and the dated reports say which found each row:
 
-- **Automated search agents** ran the breadth passes, web-search based,
+- **Automated search passes** supplied the breadth, web-search based,
   over repository APIs and search pages. Three campaigns:
   `HUNT_2026-09-01.md` (gap-targeted), `HUNT_CLOSING_2026-09-04.md`
-  (three parallel agents on the under-covered axes: non-English
+  (three parallel passes on the under-covered axes: non-English
   repositories, generalist repositories, recency),
   `HUNT_DEEPDIVE_2026-09-05.md` (eight passes past the protocol's edges,
   paediatric and genetic-rare phenotypes, systematic per-repository
@@ -167,8 +167,8 @@ Three instruments, and the dated reports say which found each row:
 - **Manual web search** covered registries and institutional portals
   that answer no API.
 
-The rule that makes agent breadth usable: **no agent result enters the
-catalogue unchecked.** Every claim is a reading of a record page or of a
+The rule that makes automated breadth usable: **no automated result enters
+the catalogue unchecked.** Every claim is a reading of a record page or of a
 repository API, its licence verified on the hosting page; a curation pass
 removes rows already held (two on 2026-09-01); every catalogued row
 carries RE-VERIFY-AT-FETCH, and the fetch-time read is what settles it -

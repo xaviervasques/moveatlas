@@ -44,6 +44,11 @@ def ms():
     return _load_script("mask_statistics.py")
 
 
+@pytest.fixture(scope="module")
+def bcf():
+    return _load_script("build_canonical_force.py", "tools/canonical")
+
+
 def _imu(T=100, L=1, nan_at=None, zeros=False, acc_scale=1.0):
     sig = (np.random.rand(T, L, 9).astype(np.float32) * 0.5 + 0.7) * acc_scale
     sig[:, :, 3:6] = 30.0     # gyro deg/s, in band
@@ -224,6 +229,30 @@ def test_rec_family_and_usability(ms):
     assert ms.rec_family(pose) == "pose" and ms.usability(pose, "pose") == 0.5
     assert ms.rec_family({"x": 1}) is None
     assert ms.usability({"coords": 1}, "pose") is None   # no mask: None, never a guess
+    force = {"force": np.ones((10, 2, 9), np.float32), "sensor_mask": np.ones((2, 9), bool)}
+    assert ms.rec_family(force) == "force" and ms.usability(force, "force") == 1.0
+    force["sample_valid"] = np.ones((10, 2), bool)
+    force["sample_valid"][:5, 0] = False
+    assert abs(ms.usability(force, "force") - 0.75) < 1e-9
+
+
+def test_force_make_record_marks_dropouts(bcf):
+    tmask = np.zeros(9, bool)
+    tmask[8] = True                                    # totals only
+    footL = np.zeros((5, 9))
+    footR = np.zeros((5, 9))
+    footL[:, 8] = [np.nan, np.nan, 10, 20, 30]
+    footR[:, 8] = [np.nan, 5, 5, 5, 5]
+    rec = bcf.make_record(footL, footR, tmask, tmask, 100.0, "toy:S1", "walk", "toy")
+    assert np.isfinite(rec["force"]).all() and rec["force"][0, 0, 8] == 0
+    assert rec["force"][:, 0, 8].tolist() == [0, 0, 10, 20, 30]
+    assert rec["sample_valid"].tolist() == [[False, False], [False, True], [True, True],
+                                            [True, True], [True, True]]
+    assert rec["dropout_fraction"] == pytest.approx(0.3)
+    footL[:, 8] = 1.0
+    footR[:, 8] = 1.0
+    clean = bcf.make_record(footL, footR, tmask, tmask, 100.0, "toy:S1", "walk", "toy")
+    assert "sample_valid" not in clean and "dropout_fraction" not in clean
 
 
 def test_iter_records_walks_every_container_kind_and_marks_sampling(ms, tmp_path):
@@ -330,3 +359,122 @@ def test_hashes(staging):
     import hashlib
     assert md5 == hashlib.md5(p.read_bytes()).hexdigest()
     assert sha == hashlib.sha256(p.read_bytes()).hexdigest()
+
+
+# -- set_stated_fps.py and the build_canonical.py guard (2026-09-29) ----------
+
+PROV = "30 fps stated by a toy data paper: nominal, not measured"
+
+
+@pytest.fixture()
+def ssf(monkeypatch, tmp_path):
+    mod = _load_script("set_stated_fps.py", "tools/canonical")
+    monkeypatch.setattr(mod, "REPO", str(tmp_path))
+    return mod
+
+
+def _pose(source, ns, take, T, fps=None):
+    return {"coords": np.zeros((T, 15, 3), np.float32), "fps": fps, "source": source,
+            "subject_ns": ns, "take": take, "n_frames": T, "dim": 2}
+
+
+def _toy_repo(root, crlf_rows=True):
+    """A list container of two sources, an LF pooled manifest and a CRLF per-source one."""
+    recs = [_pose("toy", "toy:S1", "walk_1", 5), _pose("other", "other:S1", "walk_1", 6),
+            _pose("toy", "toy:S2", "walk_1", 7), _pose("toy", "toy:S1", "sts_1", 8, 30.0)]
+    records.save(str(root / "c.npz"), recs)
+    head = ["source", "subject_ns", "take", "dim", "fps", "n_frames", "modality"]
+    pooled = [head, ["toy", "toy:S1", "walk_1", "2", "", "5", "2d_pixel"],
+              ["other", "other:S1", "walk_1", "2", "", "6", "2d_pixel"],
+              ["toy", "toy:S1", "sts_1", "2", "30.0", "8", "2d_pixel"]]
+    own = [head] + ([["toy", "toy:S2", "walk_1", "2", "", "7", "2d_pixel"]] if crlf_rows else [])
+    for name, rows, eol in (("m_lf.csv", pooled, "\n"), ("m_crlf.csv", own, "\r\n")):
+        with open(root / name, "w", newline="", encoding="utf-8") as f:
+            csv.writer(f, lineterminator=eol).writerows(rows)
+    return ["c.npz", "m_lf.csv", "m_crlf.csv"]
+
+
+def _state(root, names):
+    import hashlib
+    return {n: (hashlib.sha256((root / n).read_bytes()).hexdigest(),
+                os.stat(root / n).st_mtime_ns) for n in names}
+
+
+def _args(extra=()):
+    return ["--container", "c.npz", "--manifest", "m_lf.csv", "--manifest", "m_crlf.csv",
+            "--source", "toy", "--take-prefix", "walk_", "--fps", "30",
+            "--provenance", PROV] + list(extra)
+
+
+def test_set_stated_fps_patches_only_the_source_and_refuses_a_second_run(ssf, tmp_path):
+    names = _toy_repo(tmp_path)
+    before = _state(tmp_path, names)
+    lf0 = (tmp_path / "m_lf.csv").read_bytes()
+    crlf0 = (tmp_path / "m_crlf.csv").read_bytes()
+    assert ssf.main(_args()) == 0                              # dry run
+    assert _state(tmp_path, names) == before
+    assert ssf.main(_args(["--yes"])) == 0
+    recs = records.load(str(tmp_path / "c.npz"))
+    assert [r["fps"] for r in recs] == [30.0, None, 30.0, 30.0]
+    assert [r.get("fps_provenance") for r in recs] == [PROV, None, PROV, None]
+    assert recs[0]["coords"].shape == (5, 15, 3) and recs[1]["n_frames"] == 6
+    lf1 = (tmp_path / "m_lf.csv").read_bytes()
+    crlf1 = (tmp_path / "m_crlf.csv").read_bytes()
+    assert b"\r" not in lf1 and crlf1.count(b"\r\n") == 2      # line endings kept
+    assert lf1 == lf0.replace(b"walk_1,2,,5,", b"walk_1,2,30.0,5,")
+    assert crlf1 == crlf0.replace(b"walk_1,2,,7,", b"walk_1,2,30.0,7,")
+    after = _state(tmp_path, names)
+    with pytest.raises(SystemExit, match="already has fps"):
+        ssf.main(_args(["--yes"]))
+    assert _state(tmp_path, names) == after
+
+
+def test_set_stated_fps_refuses_a_missing_manifest_row(ssf, tmp_path):
+    names = _toy_repo(tmp_path, crlf_rows=False)
+    before = _state(tmp_path, names)
+    with pytest.raises(SystemExit, match="no manifest row"):
+        ssf.main(_args(["--yes"]))
+    assert _state(tmp_path, names) == before
+
+
+def test_set_stated_fps_refuses_a_different_n_frames(ssf, tmp_path):
+    names = _toy_repo(tmp_path)
+    p = tmp_path / "m_lf.csv"
+    p.write_bytes(p.read_bytes().replace(b"walk_1,2,,5,", b"walk_1,2,,9,"))
+    before = _state(tmp_path, names)
+    with pytest.raises(SystemExit, match="n_frames"):
+        ssf.main(_args(["--yes"]))
+    assert _state(tmp_path, names) == before
+
+
+def test_set_stated_fps_take_prefix_leaves_other_takes_alone(ssf, tmp_path):
+    _toy_repo(tmp_path)
+    recs = records.load(str(tmp_path / "c.npz"))
+    recs[3]["fps"] = None                                    # an sts_ take without a rate
+    records.save(str(tmp_path / "c.npz"), recs)
+    assert ssf.main(_args(["--yes"])) == 0
+    recs = records.load(str(tmp_path / "c.npz"))
+    assert recs[3]["fps"] is None and "fps_provenance" not in recs[3]
+    assert "toy,toy:S1,sts_1,2,30.0,8" in (tmp_path / "m_lf.csv").read_text(encoding="utf-8")
+
+
+def test_build_canonical_main_refuses_to_run(tmp_path, monkeypatch):
+    for d in ("", "tools/canonical"):
+        p = os.path.join(REPO, d, "build_canonical.py")
+        if os.path.exists(p):
+            break
+    else:
+        pytest.skip("build_canonical.py is not in this tree")
+    if not os.path.exists(os.path.join(os.path.dirname(p), "configs", "canonical_skeleton.yaml")):
+        pytest.skip("build_canonical.py reads configs/ beside it; they are not there")
+    bc = _load_script("build_canonical.py", "tools/canonical")
+
+    def called(*a, **k):
+        raise AssertionError("an ingest function ran")
+
+    for name in [n for n in dir(bc) if n.startswith("ingest_")]:
+        monkeypatch.setattr(bc, name, called)
+    monkeypatch.setattr(bc, "REPO", str(tmp_path))
+    with pytest.raises(SystemExit, match="refuses to run"):
+        bc.main()
+    assert list(tmp_path.iterdir()) == []

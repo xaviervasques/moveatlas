@@ -12,4 +12,4 @@
 - link: https://zenodo.org/records/15075076
 - citation: Sci Data 2023, doi 10.1038/s41597-023-02554-9
 - ingestion: ingest_vidimu.py -> canonical.pkl (skeleton contract) + streams_pose_imu.pkl (stage B alignment asset; quaternions are NOT the 9-channel IMU contract) + audit + manifest
-- notes: one of the two real pose<->IMU pairs of the stage B table
+- notes: the one real pose<->IMU pair on disk (quaternion streams in processed/streams_pose_imu.npz); fog_turning_filho holds its IMU only

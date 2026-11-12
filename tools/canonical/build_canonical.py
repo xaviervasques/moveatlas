@@ -30,6 +30,11 @@ CFG = yaml.safe_load(open(os.path.join(REPO, "configs", "canonical_skeleton.yaml
 CANON = CFG["canonical_joints"]
 ROOT_I = CANON.index(CFG["root_joint"])
 REF_A, REF_B = [CANON.index(j) for j in CFG["reference_segment"]]
+LI_TAATI_FPS = 30.0
+LI_TAATI_FPS_PROVENANCE = ("30 fps: the video capture rate stated by the data paper (Li et al. "
+                           "2018, J NeuroEng Rehabil 15:97, doi:10.1186/s12984-018-0446-z, "
+                           "Methods); the paper does not say whether every frame was posed and "
+                           "the export has no time field: nominal, not measured")
 
 
 def resolve(rule, idx, coords):
@@ -146,9 +151,11 @@ def ingest_li_taati(manifest):
             canon = to_canonical("li_taati", names, coords)
             ns = f"li_taati:{task}:{r.get('subject')}"
             take = f"{task}_{r.get('take')}"
-            rec = make_record("li_taati", ns, take, canon, 2, None)
+            rec = make_record("li_taati", ns, take, canon, 2, LI_TAATI_FPS)
+            rec["fps_provenance"] = LI_TAATI_FPS_PROVENANCE
             out.append(rec)
-            manifest.append([rec["source"], ns, take, 2, "", rec["n_frames"], "2d_pixel"])
+            manifest.append([rec["source"], ns, take, 2, LI_TAATI_FPS, rec["n_frames"],
+                             "2d_pixel"])
     save = os.path.join(REPO, "datasets/pose/li_taati/processed/canonical.pkl")
     pickle.dump(out, open(save, "wb"))
     return len(out)
@@ -211,6 +218,13 @@ def ingest_cody(manifest):
 
 
 def main():
+    raise SystemExit(
+        "build_canonical.py refuses to run (2026-09-29): its inputs are .npz now "
+        "(care_pd/processed/*_positions.npz, li_taati/processed/*_pose.npz), so it "
+        "would ingest 0 care_pd and 0 li_taati records, write empty canonical.pkl "
+        "lists beside the .npz containers, re-ingest CODY from the raw xlsx and "
+        "rewrite datasets/_canonical_manifest.csv with 51 rows. The records it once "
+        "wrote stay as they are (li_taati fps: set_stated_fps.py).")
     manifest = []
     n_care = ingest_care_pd(manifest)
     n_li = ingest_li_taati(manifest)

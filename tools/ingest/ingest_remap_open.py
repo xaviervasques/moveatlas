@@ -8,8 +8,11 @@ Two activity streams, verified on the real download 2026-08-25:
       <episode>/input_3D/keypoints3d.csv               (T, 51) H36M-17 x 3
   SitToStand/Data/STS_2D_skeletons_coarsened/<episode>.csv
       (T, 52) = frame index + timestamp(s) + OpenPose BODY_25 x 2; missing
-      keypoints are (0,0); the timestamp column yields each episode's own
-      measured fps. Identification evidence for both conventions is in
+      keypoints are (0,0); the timestamp column yields each episode's fps,
+      which is the stated 30 (the source writes the column as frame / 30).
+      The turning CSVs have no time column: their records carry the 30 fps
+      the deposit readme states. Both streams say so in fps_provenance.
+      Identification evidence for both conventions is in
       configs/canonical_skeleton.yaml.
 
 Joint convention: Human3.6M-17 in VideoPose3D order; the identification
@@ -20,9 +23,10 @@ control group is a cohort attribute plus an eval-only label; it never enters
 pretraining (R1).
 
 Outputs:
-  datasets/pose/remap_open/processed/canonical.pkl
+  datasets/pose/remap_open/processed/canonical.npz
   datasets/pose/remap_open/processed/remap_ingest_audit.csv
-  rows merged into datasets/_canonical_manifest.csv (dedup by source)
+  rows merged into datasets/_canonical_manifest.csv in place of the source's
+  earlier rows
 
 Usage: python ingest_remap_open.py [--repo PATH] [--limit N]
 """
@@ -30,7 +34,6 @@ import argparse
 import csv
 import glob
 import os
-import pickle
 
 import numpy as np
 
@@ -38,6 +41,18 @@ from build_canonical import CFG, make_record, to_canonical
 
 H36M = CFG["sources"]["h36m17_remap"]["joint_order"]
 BODY25 = CFG["sources"]["body25_remap_sts"]["joint_order"]
+
+# Frame rate. The deposit readme.txt (doi:10.5523/bris.21h9f9e30v9cl2fapjggz4q1x7)
+# states that the video was captured at 30 frames per second and warns that
+# frame timing may be uneven. The turning CSVs have no time column; the
+# sit-to-stand time column equals frame / 30 within 3.3e-05 s (checked
+# 2026-09-28). Both streams carry the stated rate, marked nominal.
+REMAP_FPS = 30.0
+FPS_PROVENANCE_TURN = ("30 fps stated by the deposit readme.txt (video captured at 30 "
+                       "frames per second, frame timing possibly uneven); the turning "
+                       "CSVs carry no time column: nominal, not measured")
+FPS_PROVENANCE_STS = ("30 fps stated by the deposit readme.txt; the file time column "
+                      "equals frame / 30 and restates that rate: nominal, not a clock")
 
 
 def load_kp(path, dims):
@@ -58,8 +73,8 @@ def load_kp(path, dims):
 
 
 def load_sts(path):
-    """(T,52) -> (kp (T,25,2) with NaN for missing, fps measured from the
-    file's own timestamp column)."""
+    """(T,52) -> (kp (T,25,2) with NaN for missing, fps derived from the
+    file's timestamp column, which the source writes as frame / 30)."""
     a = np.loadtxt(path, delimiter=",")
     if a.ndim == 1:
         a = a[None, :]
@@ -133,13 +148,14 @@ def main():
                 continue
             canon = to_canonical("h36m17_remap", H36M, kp)
             rec = make_record("remap_open", ns, f"turn_{ep}_{suffix}",
-                              canon, dims, None)
+                              canon, dims, REMAP_FPS)
             rec["group"] = group
             rec["label"] = np.int8(1 if group == "pd" else 0)
+            rec["fps_provenance"] = FPS_PROVENANCE_TURN
             if dims == 3:
                 rec["lift_provenance"] = "videopose3d_by_source"
             out.append(rec)
-            manifest.append(["remap_open", ns, rec["take"], dims, "",
+            manifest.append(["remap_open", ns, rec["take"], dims, REMAP_FPS,
                              rec["n_frames"], rec["modality"]])
             audit.append(["turning", e, dims, rec["n_frames"], group])
 
@@ -167,6 +183,7 @@ def main():
         rec = make_record("remap_open", ns, f"sts_{ep}", canon, 2, fps)
         rec["group"] = group
         rec["label"] = np.int8(1 if group == "pd" else 0)
+        rec["fps_provenance"] = FPS_PROVENANCE_STS
         out.append(rec)
         manifest.append(["remap_open", ns, rec["take"], 2, fps or "",
                          rec["n_frames"], rec["modality"]])
@@ -174,8 +191,8 @@ def main():
 
     procd = os.path.join(R, "datasets", "pose", "remap_open", "processed")
     os.makedirs(procd, exist_ok=True)
-    with open(os.path.join(procd, "canonical.pkl"), "wb") as f:
-        pickle.dump(out, f)
+    from moveatlas import records as _records
+    _records.save(os.path.join(procd, "canonical.npz"), out)
     with open(os.path.join(procd, "remap_ingest_audit.csv"), "w", newline="",
               encoding="utf-8") as f:
         w = csv.writer(f, lineterminator="\n")
@@ -185,18 +202,31 @@ def main():
     mp = os.path.join(R, "datasets", "_canonical_manifest.csv")
     with open(mp, newline="", encoding="utf-8") as f:
         rows = [r for r in csv.reader(f)]
-    head, body = rows[0], [r for r in rows[1:] if r and r[0] != "remap_open"]
+    # the source's rows are replaced where they stood, every other row keeps
+    # its place (the logic of build_canonical_force._merge_in_place)
+    head, merged, placed = rows[0], [], False
+    for r in rows[1:]:
+        if not r:
+            continue
+        if r[0] == "remap_open":
+            if not placed:
+                merged.extend(manifest)
+                placed = True
+            continue
+        merged.append(r)
+    if not placed:
+        merged.extend(manifest)
     with open(mp, "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f, lineterminator="\n")
         w.writerow(head)
-        w.writerows(body + manifest)
+        w.writerows(merged)
     subs = {m[1] for m in manifest}
     groups = {}
     for r in out:
         groups.setdefault(r["group"], set()).add(r["subject_ns"])
     print(f"\n{len(out)} canonical records / {len(subs)} subjects "
           f"({len(groups.get('pd', ()))} PD, {len(groups.get('control', ()))} "
-          f"controls); manifest now {len(body) + len(manifest)} rows")
+          f"controls); manifest now {len(merged)} rows")
 
 
 if __name__ == "__main__":

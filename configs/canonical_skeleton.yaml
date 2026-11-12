@@ -287,8 +287,10 @@ sources:
       VideoPose3D; our no-lifting policy is about lifting WE would do, so both
       streams are ingested with the 3D records carrying
       lift_provenance=videopose3d_by_source, and the pretraining pool config
-      decides what uses them. Coordinates are coarsened (privacy grid), fps not
-      declared in the deposit: fps stays None until the data descriptor settles it.
+      decides what uses them. Coordinates are coarsened (privacy grid). fps 30:
+      the deposit readme.txt states the video is captured at 30 frames per second
+      (checked 2026-09-28); the turning CSVs carry no time column, so the rate is
+      nominal and each record says so in fps_provenance (2026-09-29).
 
   body25_remap_sts:
     space: 2d
@@ -302,7 +304,9 @@ sources:
     # heights under this reading are anatomically monotone head -> feet, with
     # the six toe/heel points at the bottom and the eyes 93 percent missing
     # (filmed from behind). Missing keypoints are (0,0), OpenPose convention.
-    # The timestamp column gives each episode its own measured fps.
+    # The timestamp column is generated from the nominal rate (time = frame / 30
+    # in all 403 files, checked 2026-09-28): the stored fps is the stated 30,
+    # marked nominal in each record's fps_provenance (2026-09-29).
     joint_order: [Nose, Neck, RShoulder, RElbow, RWrist, LShoulder, LElbow,
                   LWrist, MidHip, RHip, RKnee, RAnkle, LHip, LKnee, LAnkle,
                   REye, LEye, REar, LEar, LBigToe, LSmallToe, LHeel, RBigToe,
@@ -386,13 +390,15 @@ dimensionality:
 sampling:
   policy: no_global_decimation
   fps: per_sample_attribute            # store native fps with each sample
+  fps_provenance: optional_record_attribute   # a sentence saying where fps comes from (declared by the source, measured from a time column, or a nominal rate stated in its documentation); physionet_multimodal_gait since 2026-09-08, remap_open and li_taati since 2026-09-29
   rationale: >
     A myoclonic jerk lasts 20-100 ms; resampling to 25-30 fps erases it. Preserve
     high-frequency subsets. Any resampling is opt-in and recorded per sample.
   known_fps:
     cody: 33.3                         # dt = 0.03 s, measured
-    li_taati: unknown                  # to confirm per record
+    li_taati: 30.0                     # video rate stated by the data paper (doi:10.1186/s12984-018-0446-z), nominal; fps_provenance on each record (2026-09-29)
     care_pd: unknown                   # mocap-derived; confirm per cohort
+    remap_open: 30.0                   # stated by the deposit readme, nominal
 
 # ---------------------------------------------------------------------------
 # Normalization / harmonization pipeline (applied after mapping).

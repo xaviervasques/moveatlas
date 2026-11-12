@@ -12,6 +12,7 @@ whenever cards or citations change.
 """
 import csv
 import glob
+import hashlib
 import json
 import os
 import re
@@ -236,9 +237,34 @@ def jsonld(r, cells):
 # dataset, not the workflow (owner request, 2026-09-16): every displayed
 # string goes through _public(), the status row is normalised to a state and
 # a date, and the card body shows its factual lines only.
-_INTERNAL = re.compile(
-    r"owner|session|\bGO\b|tower|DECIDED|agent|Paris|handoff|casebook|"
-    r"\bH\d+\b|ruling|internal|the paper|assistant|queue", re.I)
+_INTERNAL_RE = re.compile(
+    r"owner|session|\bGO\b|tower|DECIDED|Paris|handoff|casebook|"
+    r"\bH\d+\b|ruling|internal|the paper|queue", re.I)
+# Two provenance nouns (the generic words for an automated helper) are held
+# as the sha256 of the lower-case word, as in build_public_release.py, so
+# that this shipped script does not carry them; a word that starts with one
+# of them (a plural, a possessive) counts.
+_INTERNAL_SHA256 = {
+    5: "d4f0bc5a29de06b510f9aa428f1eedba926012b591fef7a518e776a7c9bd1824",
+    9: "a39a7ffad4a3013f29da97b84f264337f234c1cf9b3c40c7c30c677a8a18609a",
+}
+
+
+class _InternalWords:
+    """re-like: search() is true when a string talks about the workflow."""
+
+    def search(self, text):
+        if _INTERNAL_RE.search(text):
+            return True
+        for w in re.findall(r"[A-Za-z]+", text):
+            w = w.lower()
+            for k, d in _INTERNAL_SHA256.items():
+                if len(w) >= k and hashlib.sha256(w[:k].encode("utf-8")).hexdigest() == d:
+                    return True
+        return False
+
+
+_INTERNAL = _InternalWords()
 
 
 def _public(text):

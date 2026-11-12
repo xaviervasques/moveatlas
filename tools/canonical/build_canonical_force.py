@@ -3,6 +3,7 @@
 Contract: configs/canonical_force.yaml. Per sample:
     force        (T, 2, 9)  float32   feet x [8 insole positions + total]; absent -> 0
     sensor_mask  (2, 9)     bool      which positions present per foot
+    sample_valid (T, 2)  bool      per-foot validity (dropouts); only on records with a dropout, with dropout_fraction
     fps          float
     subject_ns, task, source, label(optional)
 
@@ -28,13 +29,27 @@ NPOS = 9
 
 def make_record(footL, footR, maskL, maskR, fps, subject_ns, task, source,
                 extra=None):
+    """A non-finite sample of a PRESENT sensor is a dropout (weargait_pd:
+    LTotalForce or RTotalForce NaN while an insole is not streaming). It is
+    stored as 0, so force stays finite, and marked False in sample_valid
+    (T, 2), per foot; dropout_fraction = 1 - mean(sample_valid). Both keys are
+    written only on a record with a dropout (unlike
+    build_canonical_imu.make_record, which writes sample_valid on every
+    record), so a record without them is valid throughout and gaitpdb and
+    gaitndd records are unchanged. Nothing is interpolated. Until 2026-09-29
+    nan_to_num wrote these samples as 0 with no mask (and an inf as float32
+    inf)."""
     T = footL.shape[0]
-    force = np.zeros((T, 2, NPOS), np.float32)
-    force[:, 0, :] = np.nan_to_num(footL)
-    force[:, 1, :] = np.nan_to_num(footR)
     mask = np.stack([maskL, maskR])
+    feet = np.stack([footL, footR], axis=1).astype(float)          # (T, 2, NPOS)
+    finite = np.isfinite(feet)
+    valid = np.all(finite | ~mask[None], axis=2)                     # (T, 2)
+    force = np.where(finite, feet, 0.0).astype(np.float32)
     rec = {"force": force, "sensor_mask": mask, "fps": fps,
            "subject_ns": subject_ns, "task": task, "source": source, "n_frames": T}
+    if not valid.all():
+        rec["sample_valid"] = valid
+        rec["dropout_fraction"] = float(1.0 - valid.mean())
     if extra:
         rec.update(extra)
     return rec

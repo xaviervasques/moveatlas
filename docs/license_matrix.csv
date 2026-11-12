@@ -42,7 +42,7 @@ nonan_gaitprint_young,"CC0 (verified per article on the figshare API, 2026-08-28
 gaitrec,"CC0 (all 23 figshare collection items, verified 2026-08-22)",yes,host_copy_ok_with_attribution
 clinical_gait_signals_2025,"CC BY 4.0. DISCREPANCY RESOLVED 2026-08-23, same cause as cervical_motion: the CC BY-NC-ND belongs to the Scientific Data ARTICLE, not to the figshare deposit 28806086, whose item licence is CC BY 4.0 and which is what governs the data",yes,host_copy_ok_with_attribution
 osdb,custom CC-Share-Alike variant + publish-back obligation,no,pointer_only
-ataxie_kinect_dib,Data in Brief (Elsevier supplementary; no explicit data licence),"no, DECIDED 2026-08-28: pointer to the article",pointer_only
+ataxie_kinect_dib,"CC BY 4.0 (the Data in Brief article, whose data are its supplementary table mmc1.xlsx: Data accessibility With the article; the article licence is CC BY 4.0 per Crossref and Europe PMC PMC7498847, read 2026-11-10)",yes (with attribution to Summa et al. 2020),host_copy_ok_with_attribution
 babypose,on request from the VRAI lab,no (until granted),pointer_only
 care_pd,"CC BY-NC-ND 4.0, SETTLED 2026-08-25 by the official NeurIPS 2025 site (neurips2025.care-pd.ca): 'Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 ... may be used for non-commercial research and educational purposes with appropriate citation but may not be modified or redistributed in altered form'. The old tag-vs-README ambiguity (pinned 2026-08-22) is resolved in the tag's favour. Per-cohort originals differ (BMCLab and DNE are CC BY 4.0); the GitHub MIT covers the CODE only","NO: ND. Harmonized/derived tensors must never be redistributed, and training that publishes a model is a derivative-work risk: EVAL ONLY",pointer_only
 fog_turning_filho,CC BY 4.0 (figshare item 14984667; the API states CC BY 4.0; verified 2026-09-16; an earlier CC0 reading was wrong),yes,host_copy_ok_with_attribution
@@ -110,3 +110,5 @@ infant_pose_chambers,CC BY 4.0 (confirmed via the figshare API at fetch 2026-09-
 drummer_tremor_model,etalab 2.0 (VERIFIED at fetch 2026-09-05 from the dataset version),yes (etalab 2.0: attribution obligatoire - fetch-verified 2026-09-05),host_copy_ok_with_attribution
 physionet_multimodal_gait,CC BY 4.0 (page-verified at fetch 2026-09-07; open access),yes,host_copy_ok_with_attribution
 sensefog,CC BY 4.0 (verified at fetch 2026-09-07: DataCite + record page),yes,host_copy_ok_with_attribution
+merk_neumann_ecog_lfp,CC0 1.0 (Harvard Dataverse doi:10.7910/DVN/IO2FLM; the API states CC0 1.0; verified 2026-09-24; inversion testbed folder datasets/inversion_testbed/merk_neumann_ecog_lfp; no registry row by design; rule R1: evaluation target only),yes,host_copy_ok_with_attribution
+leuven_cp_gait,"CC0 1.0 (figshare 10.6084/m9.figshare.4877432; the figshare API states CC0, read 2026-11-10; also API-verified at download 2026-09-06)",yes,host_copy_ok_with_attribution

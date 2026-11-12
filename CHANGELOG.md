@@ -6,6 +6,110 @@ the project has not yet made a public release, so every section below is
 pre-launch. Dataset counts are the value measured on the date of the entry
 (rows of `docs/datasets_index.csv`), not a running total.
 
+## [Unreleased] (2026-11-10)
+
+### Fixed
+
+- Licence rows: `ataxie_kinect_dib` is CC BY 4.0, the licence of its Data
+  in Brief article, whose data are released with it as the supplementary
+  table (Data accessibility: with the article); redistribution yes with
+  attribution, portal action `host_copy_ok_with_attribution` (it was
+  "no explicit data licence", pointer only). `leuven_cp_gait` gains its
+  missing licence row, CC0 1.0 as the figshare record states, and its
+  registry licence and redistribution fields (they read "verify at fetch"
+  and unknown). Both registry copies, both licence matrix copies, the
+  snapshot row count (113 licence rows) and the two data cards; the access
+  cases do not change (neither dataset has a published record).
+- `weargait_pd` known-issue line: the source files of the control WHC026
+  carry its lateral shank and mid-thigh sensors under the labels of the
+  other leg (all 10 inertial records); the records keep the source labels.
+- AMASS frame rates: the 79 CNRS and 1,426 WEIZMANN records carry the
+  120.0 their stage-II files state, in the records and in both manifests
+  (`build_canonical_amass.py --only CNRS WEIZMANN --fill-fps`; no
+  coordinate changed). The 1,409 GRAB and SOMA records keep fps None.
+- `amass` known-issue line: CNRS and WEIZMANN stay in the canonical pool,
+  flagged, until a build with the SMPL-X body model; the builder's file
+  name filter leaves out 796 WEIZMANN S-shaped walks and 4 DanceDB
+  dances, to be added at the next release. No count changes.
+- `ataxie_kinect_dib` data card: Data in Brief volume 32, not 33.
+
+## [Unreleased] (2026-10-05)
+
+### Fixed
+
+- `weargait_pd` known-issue line: the source CONTROLS demographic table
+  gives the control HC134 a height of 47 in (1.194 m) with 54 kg, an adult
+  height only in rare short-stature conditions; the table is kept as
+  published.
+- AMASS frame rates: `build_canonical_amass.py` reads the rate of the
+  MoSh++ stage-II files (`*_stageii.npz`, key `mocap_frame_rate`) as well
+  as that of the SMPL+H release files (`mocap_framerate`). The 2,914
+  stage-II records of GRAB (1,340), SOMA (69), CNRS (79) and WEIZMANN
+  (1,426) were built with fps None; `--only <subsets> --fill-fps` gives
+  them the rate their files state and fills their manifest cells. The
+  shards are not rebuilt yet; the `amass` known-issue line says so.
+- `amass` known-issue line: CNRS and WEIZMANN (1,505 records) are SMPL-X
+  fits whose joints were computed with the SMPL+H model, so their bone
+  proportions are not those of the fitted bodies.
+- `fog_turning_filho` cells text: `B5; M1, M2 (source video and IMU;
+  MoveAtlas holds the IMU only)` instead of `video + IMU synchronized`
+  (the source describes no synchronisation), in both registry copies, the
+  data card and `docs/taxonomy_map.csv`. The cells and modality codes do
+  not change.
+
+## [Unreleased] (2026-09-28)
+
+### Fixed
+
+- Registry corrections of 2026-09-24 (f2e6f99): `modys_video` counts 34
+  children, `fog_turning_filho` 35 patients, `mrc_lfp_dystonia` is marked
+  a duplicate of `oxford_dystonia_lfp`, and `merk_neumann_ecog_lfp` has its
+  CC0 licence row.
+- Registry and data-card corrections of 2026-09-28. Stated frame rates:
+  the `remap_open` turning episodes were filmed at 30 frames per second
+  per the source readme, and the 30.0 stored on its sit-to-stand records
+  is the rate the source states, not a measured clock; the `li_taati`
+  videos were captured at 30 frames per second per its data paper.
+  Subject counts: `leuven_cp_gait` 356, `osf_fmd_eeg` 37, `kaggle_spiral`
+  204 images, each stored twice. Status and licence wording of
+  `mobile_gaitlab`, `ataxie_kinect_dib` and `fog_turning_filho`.
+  Known-issue lines on `remap_open`, `li_taati`, `fog_turning_filho`,
+  `weargait_pd`, `amass` and `mrc_lfp_dystonia`, and
+  `docs/MANIFEST_SCHEMA.md` on which records lack a frame rate.
+- AMASS canonical records: 404 records of ACCAD (38), BMLhandball (242) and
+  BMLmovi (124), every record of 1,261 frames or more in those three shards,
+  were not rigid skeletons (coefficient of variation of a bone length over
+  frames from 0.15 to 9.8). The three shards were kept from the first build,
+  which ran on Apple MPS until the builder was forced to CPU and resumed; in
+  them every forward pass of more than 65,536 joint rotations (52 per frame)
+  returned wrong joints. `build_canonical_amass.py` now computes the joints
+  on CPU with the joint path of the SMPL+H model (no human_body_prior or
+  smplx), refuses a skeleton whose bones change length, writes `.npz` shards,
+  and rebuilds existing shards in place with `--only`. The three shards were
+  rebuilt on 2026-09-29: records, order, frame counts, frame rates and the
+  manifests are unchanged; coords and scale of the 404 records are replaced
+  (list in `_paris_logs/amass_rebuild_2026-09-29.csv`). Anything computed from
+  these takes before the rebuild, such as a pose pretraining pool, used
+  non-rigid joints. Found by a bone-length check of every canonical AMASS
+  record.
+- `weargait_pd` force records: where an insole was not streaming (the
+  source totals are missing, 8.6 percent of the foot samples) the samples
+  are still stored as 0 and are now marked False in a per-foot
+  `sample_valid` (T, 2), with a `dropout_fraction`; the force values are
+  unchanged. `mask_statistics.py` and `moveatlas.frames.to_frame` read the
+  mask.
+- Frame rates stored in the records: the 3,498 `remap_open` turning
+  records and the 643 `li_taati` records carry fps 30.0, the rate their
+  sources state, and every `remap_open` and `li_taati` record says where
+  its rate comes from in `fps_provenance` (nominal, not a clock); the
+  manifests carry 30.0 in their fps cells.
+  `ingest_remap_open.py` writes `.npz`, keeps the source's manifest rows
+  in place and was rerun; the `li_taati` records were patched in place by
+  the new `set_stated_fps.py`, which checks every other field against the
+  container as written. `build_canonical.py` states the rate and refuses
+  to run, since its inputs moved to `.npz` and a run would rewrite the
+  pooled pose manifest.
+
 ## [Unreleased] (2026-09-15)
 
 ### Added

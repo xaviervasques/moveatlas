@@ -6,7 +6,7 @@
  "@context": "https://schema.org",
  "@type": "Dataset",
  "name": "MODYS-video (dyskinetic cerebral palsy)",
- "description": "MODYS-video (dyskinetic cerebral palsy). MoveAtlas pose family. 63 subjects. licence CC BY 4.0.",
+ "description": "MODYS-video (dyskinetic cerebral palsy). MoveAtlas pose family. 34 subjects. licence CC BY 4.0.",
  "identifier": "https://zenodo.org/records/5638470",
  "license": "https://creativecommons.org/licenses/by/4.0/",
  "sdPublisher": {
@@ -73,7 +73,7 @@
 | | |
 |---|---|
 | **Taxonomy cells** | A4, A6, A7, D3 (pediatric dyskinetic CP is choreoathetosis; DIS scores athetosis explicitly; D3 covers the spastic component); M1 |
-| **Subjects** | 63 |
+| **Subjects** | 34 |
 | **Status** | harmonized |
 | **License** | CC BY 4.0 (stated on the source Zenodo record, read through DataCite 2026-09-16) |
 | **MoveAtlas record** | [10.5281/zenodo.22313479](https://doi.org/10.5281/zenodo.22313479) |
@@ -117,8 +117,8 @@ The dataset's card, factual lines; the full card with its verification dates, do
 - **dataset**: modys_video
 - **family**: pose
 - **MoveAtlas cells**: A4, A6, A7, D3 (pediatric dyskinetic CP is choreoathetosis; DIS scores athetosis explicitly; D3 covers the spastic component); M1
-- **population**: 63 children/adolescents with dyskinetic CP; clinical scoring in README xlsx
-- **n_subjects**: 63
+- **population**: 34 children and young adults with dyskinetic CP (Zenodo 5638470: 188 videos of 34 children; each child filmed lying and sitting at up to three time points, T0, T3, T12); clinical scoring in data_clinical_scoring.xlsx (column ID is the child, column video the video number)
+- **n_subjects**: 34 (corrected 2026-09-24; 63 was the row count of the variable dictionary README_data_clinical_scoring.xlsx; the canonical subject_ns is the video number, 94 ids for 34 children)
 - **signal**: stick-figure pose video derivatives (Zenodo 5638470)
 - **license**: CC BY 4.0 (stated on the source Zenodo record, read through DataCite 2026-09-16); redistribution: yes
 - **access**: downloaded

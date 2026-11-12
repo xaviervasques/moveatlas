@@ -10,16 +10,9 @@ needs. This tree starts with a single authored commit.
 
 | area | files |
 |---|---|
-| (root) | 12 |
-| .github | 1 |
-| configs | 14 |
-| datasets | 204 |
-| docs | 35 |
-| moveatlas | 31 |
-| site | 262 |
-| tests | 15 |
-| tools | 64 |
-| **total** | **638** |
+| (root) | 640 |
+| docs | 1 |
+| **total** | **641** |
 
 ## Deliberately excluded
 
@@ -55,7 +48,9 @@ and the builder refuses to finish if a row still says `aux`.
 ## The gate
 
 `build_public_release.py` re-scans this tree after building it and
-refuses to finish when it finds a tool vendor's name, a
-credential-shaped string, a local absolute path, a third-party email
-address or French prose in an English document. Re-run the scan at
-any time with `python build_public_release.py --scan-only .`
+refuses to finish when it finds a software vendor's or product's
+name, a credential-shaped string or French prose in an English
+document; it reports a local absolute path, a third-party email
+address and provenance wording for review. Its word lists are stored
+as sha256 digests of the words. Re-run the scan at any time with
+`python tools/release/build_public_release.py --scan-only .`

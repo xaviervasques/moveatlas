@@ -246,7 +246,7 @@ compromises that the atlas documents rather than blends.
   nigra and subthalamic queries return 404 despite such neurons
   existing under other region spellings. Coverage claims made through
   an API are lower bounds.
-- **Two agent-reported "discoveries" were already ours.** WearGait-PD
+- **Two "discoveries" of an automated sweep were already ours.** WearGait-PD
   and the figshare turning deposit surfaced as misses in an automated
   sweep and were caught by id/DOI cross-checks in curation; automated
   hunts need the same duplicate discipline as registries (see the

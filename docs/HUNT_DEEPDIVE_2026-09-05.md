@@ -1,4 +1,4 @@
-# The deep-dive sweep (2026-09-05): eight agents past the protocol's edges
+# The deep-dive sweep (2026-09-05): eight search passes past the protocol's edges
 
 Sequel to HUNT_CLOSING_2026-09-04. Three axes the closing sweep did not
 touch: clinical-phenotype depth (14 fine phenotypes), big-cohort
@@ -6,7 +6,7 @@ platforms, neglected modalities - then pediatric/genetic-rare and
 systematic per-repository passes (EBRAINS, DABI, OpenNeuro, PhysioNet,
 Dryad, GIN, Synapse). Owner grants: autonomous fetch of in-criteria
 finds and integration up to Zenodo DRAFTS. Every catalogued row carries
-RE-VERIFY-AT-FETCH; fetch-time reads again corrected agent guesses
+RE-VERIFY-AT-FETCH; fetch-time reads again corrected the passes' guesses
 (the day's score: several licences and one order of magnitude - the
 "31 MB" MobilityAPP is 31 KB of derived parameters).
 
@@ -78,7 +78,7 @@ licence adjudications, and the request-tier contact list (Duke WC,
 STOPme Rett, Gupta A-T, Aravamuthan WashU - one contact covers
 GNAO1 + CP-dystonia).
 
-Assistant recommendation on the internal-only tier (2026-09-07, for
+Recommendation on the internal-only tier (2026-09-07, for
 the owner pass): (1) highest-leverage action is a one-line author
 contact for asdpose and the FMD pair asking for an explicit data
 licence (both OSF FMD nodes re-checked via API 2026-09-07: license
@@ -100,9 +100,9 @@ ds005849 (DBS fMRI), healthy walking-EEG ds001971/ds004475/ds007222/
 ds007788.
 
 ## Method note
-Two waves; wave two was killed mid-flight by the session usage limit
-(~17:30) and relaunched as single agents - sub-agent sprawl is a
-budget hazard, mono-agent passes complete. Agent claims were spot-
+Two waves; wave two was killed mid-flight by a compute usage limit
+(~17:30) and relaunched as single passes - many parallel passes are a
+budget hazard, single passes complete. The passes' claims were spot-
 corrected at fetch time all day; nothing enters the registry as
 verified unless a fetch or an API read confirmed it.
 

@@ -14,12 +14,15 @@ feet: [foot_L, foot_R]
 #   force        (T, 2, 9)  float32   feet x [8 insole positions + total]; absent -> 0
 #   sensor_mask  (2, 9)     bool      which positions present per foot
 #   fps          float                native rate
+#   sample_valid (T, 2)  bool      per-foot validity (dropouts); present only on a record with a dropout
+#   dropout_fraction     float     1 - mean(sample_valid), with it
 #   subject_ns, source, labels(optional)
 units:
   force: N            # canonical force unit (Newtons); convert per dataset if needed
 # A record whose source force is not in newtons says so at record level
 # (2026-09-17): unit "unknown" plus a "calibration" string (gaitndd:
 # "uncalibrated force-sensitive resistor output"). Never rescaled.
+# A present sensor with a missing sample (weargait_pd: LTotalForce/RTotalForce NaN while an insole is not streaming) is a dropout: stored as 0 so force stays finite, marked False in sample_valid, never interpolated (2026-09-29). A record without sample_valid is valid throughout.
 sampling:
   policy: native_per_sample
 tokenization:
@@ -44,6 +47,7 @@ sources:
     file: "**/CSV files/*.csv (347 cols), 100 Hz"; note: instrumented insoles
     columns: "LPressure1..16, RPressure1..16, LTotalForce, RTotalForce, L/R CoP_X/Y"
     map: "LTotalForce -> foot_L total, RTotalForce -> foot_R total"
+    # totals NaN while an insole is not streaming -> 0 in force, False in sample_valid (2026-09-29)
     sensors_present: totals_only   # 16 per-foot pressure cells have UNDOCUMENTED
                                     # cell->anatomy layout -> NOT mapped (mis-map risk);
                                     # only the unambiguous per-foot total is ingested.

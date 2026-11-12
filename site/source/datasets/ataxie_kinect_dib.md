@@ -6,9 +6,9 @@
  "@context": "https://schema.org",
  "@type": "Dataset",
  "name": "Ataxia gait Kinect (Summa 2020)",
- "description": "Ataxia gait Kinect (Summa 2020). MoveAtlas pose family. 51 subjects. licence Data in Brief.",
+ "description": "Ataxia gait Kinect (Summa 2020). MoveAtlas pose family. 51 subjects. licence CC BY 4.0.",
  "identifier": "https://doi.org/10.1016/j.dib.2020.106307",
- "license": "Data in Brief (Elsevier supplementary; no explicit data licence)",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
  "sdPublisher": {
   "@type": "Organization",
   "name": "MoveAtlas"
@@ -19,7 +19,7 @@
   "M1 Pose / video"
  ],
  "url": "https://doi.org/10.1016/j.dib.2020.106307",
- "isAccessibleForFree": false,
+ "isAccessibleForFree": true,
  "measurementTechnique": "pose",
  "includedInDataCatalog": {
   "@type": "DataCatalog",
@@ -88,7 +88,7 @@
 | **Taxonomy cells** | D2; M1 (table only on disk) |
 | **Subjects** | 51 |
 | **Status** | catalogued |
-| **License** | Data in Brief (Elsevier supplementary; no explicit data licence) |
+| **License** | CC BY 4.0 (the Data in Brief article, whose data are its supplementary table mmc1.xlsx: Data accessibility With the article; the article licence is CC BY 4.0 per Crossref and Europe PMC PMC7498847, read 2026-11-10) |
 
 Cell codes are defined on the {doc}`taxonomy page </taxonomy>`.
 
@@ -102,8 +102,8 @@ ds.info   # recipe: get_data() explains the route
 
 ## License and access
 
-- **License**: Data in Brief (Elsevier supplementary; no explicit data licence)
-- **Redistribution**: no (fetch from the article)
+- **License**: CC BY 4.0 (the Data in Brief article, whose data are its supplementary table mmc1.xlsx: Data accessibility With the article; the article licence is CC BY 4.0 per Crossref and Europe PMC PMC7498847, read 2026-11-10)
+- **Redistribution**: yes (with attribution to Summa et al. 2020)
 - **Access route**: downloaded (table only)
 - **Source**: <https://doi.org/10.1016/j.dib.2020.106307>
 
@@ -129,9 +129,9 @@ The dataset's card, factual lines; the full card with its verification dates, do
 - **dataset**: ataxie_kinect_dib
 - **family**: pose
 - **MoveAtlas cells**: D2; M1 (table only on disk)
-- **population**: ataxia patients + controls, SARA-scored
+- **population**: 31 patients with ataxia (15 progressive, 16 chronic) and 20 healthy controls, SARA-scored (Summa et al. 2020, Data in Brief 32:106307)
 - **n_subjects**: 51
-- **signal**: clinical table (supplementary mmc1.xlsx); Kinect skeleton signal NOT downloaded
-- **license**: Data in Brief (Elsevier supplementary; no explicit data licence); redistribution: no, pointer to the article
+- **signal**: clinical table (the article's supplementary mmc1.xlsx, on disk as raw/gait_parameters_ataxia_kinect.xlsx: spatio-temporal gait parameters, group, diagnosis and SARA for 51 participants); the Kinect v2 skeleton signal was never published
+- **license**: CC BY 4.0 (the Data in Brief article, whose data are its supplementary table mmc1.xlsx: Data accessibility With the article; the article licence is CC BY 4.0 per Crossref and Europe PMC PMC7498847, read 2026-11-10); redistribution: yes (with attribution to Summa et al. 2020)
 - **access**: downloaded (table only)
 - **link**: https://doi.org/10.1016/j.dib.2020.106307

@@ -4,7 +4,7 @@
 Run this ON A MACHINE WITH REAL NETWORK AND THE DISK (the iMac Terminal is fine:
     cd <external-volume>/KineFM && python3 run_local_pipeline.py --all
 or on the tower:
-    cd G:\\KineFM && python run_local_pipeline.py --all
+    cd <backup-drive> && python run_local_pipeline.py --all
 ).
 
 It chains, in order, everything the cloud session prepared and code-tested, and

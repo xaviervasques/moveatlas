@@ -45,7 +45,7 @@ osdb,D1,M2,accelerometrie crises epileptiques montre (application)
 ataxie_kinect_dib,D2,M1,table SARA seule sur disque
 babypose,C2,M1,prematures NICU profondeur ; sur demande (chasse P1)
 care_pd,B2;B3,M1,marche Parkinson 3D multi-cohortes
-fog_turning_filho,B5,M1;M2,paire video + IMU synchronisee
+fog_turning_filho,B5,M1;M2,source video and IMU; MoveAtlas holds the IMU only
 gavd,,M1,annotations videos marche pathologique
 hubu_fis_fingertap,B2,M1,234 videos finger tapping UPDRS (queued)
 koa_pd_nm,B2;B3;C1;E4,M4,silhouettes KOA + PD + normaux

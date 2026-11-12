@@ -1,17 +1,17 @@
-# The closing sweep (2026-09-04): three agents before the paper freeze
+# The closing sweep (2026-09-04): three search passes before the paper freeze
 
 Purpose: bound the completeness claim. The paper can only say
 "exhaustive under protocol P at date D"; this sweep re-dates D, probes
 the axes the original protocol under-covered (non-English
 repositories, generalist repositories, recency), and re-verifies the
-confirmed absences. Three parallel session agents, web-search based;
-every claim below is an agent's reading of a record page or API -
+confirmed absences. Three parallel automated search passes, web-search
+based; every claim below is a pass's reading of a record page or API -
 catalogue-tier rows carry RE-VERIFY AT FETCH flags.
 
 ## Headline results
 
 1. COMPLETENESS HELD BETTER THAN FEARED: the large majority of
-   everything the three agents surfaced was ALREADY catalogued
+   everything the three passes surfaced was ALREADY catalogued
    (weargait_pd, fog_star, multimodal_fog, li_taati, tlvmc, daphnet,
    care_pd, gavd, visionmd, modys, hd_accel_jnet, ds006395, tim_tremor,
    pads mirrors...). The sweep's genuinely-new yield: 16 catalogued
@@ -52,8 +52,8 @@ catalogue-tier rows carry RE-VERIFY AT FETCH flags.
 
 ## Catalogued from this sweep (16 rows, all catalogue-tier)
 
-Recency agent: asdpose.
-Non-English agent: piet_essential_tremor, open_dbs_pd,
+Recency pass: asdpose.
+Non-English pass: piet_essential_tremor, open_dbs_pd,
 shanghai_child_gait3d, aihub_path_gait, aihub_pd_imaging, pearl_pd,
 stil_orthosis_tremor, haspa_spasticity, drummer_tremor_model.
 Open-web pass: mindts_tourette, osf_tic_video_46vxm,
@@ -76,8 +76,8 @@ pair (scope-adjacent), drummer/archery physiological-tremor extras.
 
 ## Method notes for reproducibility
 
-Agents probed: ScienceDB + RDG via DataCite (anti-bot), DANS via its
+The passes probed: ScienceDB + RDG via DataCite (anti-bot), DANS via its
 Dataverse API, J-STAGE/AIHub via live browsing, Mendeley/OSF/Kaggle/
 GitHub/Dataverse via their public APIs + web search; native-language
-terms tried where supported. Full agent transcripts are session
-artifacts; this file is the durable record.
+terms tried where supported. The passes' full working logs are
+not published; this file is the durable record.

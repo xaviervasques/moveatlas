@@ -83,7 +83,7 @@ paper.
 ## Phenotype-level absences (2026-09-05 deep-dive sweep)
 
 Finer-grained than the A-cell absences above; each verified by a
-dedicated sub-agent against Zenodo/figshare/Mendeley/OSF/PhysioNet/
+dedicated automated search pass against Zenodo/figshare/Mendeley/OSF/PhysioNet/
 OpenNeuro/IEEE DataPort + the papers' own availability statements:
 - BLEPHAROSPASM: no openly downloadable patient EMG/video/blink
   dataset anywhere; the npj Digit Med 2025 paper (847+179 videos,

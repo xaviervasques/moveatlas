@@ -9,7 +9,8 @@ family the usability metric is the family's own honesty mechanism:
   imu         mean of sample_valid over present locations when the
               record carries it, else finite fraction over channels
               the channel_mask declares present
-  force       finite fraction over sensors the sensor_mask declares
+  force       mean of sample_valid (per foot) when the record carries it,
+              else finite fraction over sensors the sensor_mask declares
   eeg         1 - bad_channels/n_channels (declared-bad channels) and
               finite fraction
   emg         finite fraction (the family has no mask by design; unit
@@ -80,6 +81,8 @@ def usability(rec, fam):
             vals = sig[:, cm]
             return float(np.mean(np.isfinite(vals))) if vals.size else 0.0
         if fam == "force":
+            if "sample_valid" in rec:
+                return float(np.mean(rec["sample_valid"]))
             sig, sm = rec["force"], rec["sensor_mask"]
             vals = sig[:, sm]
             return float(np.mean(np.isfinite(vals))) if vals.size else 0.0

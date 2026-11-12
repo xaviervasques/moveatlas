@@ -49,7 +49,7 @@
 
 ## Retrieval notes
 Not yet fetched. Found by the 2026-09-04 closing sweep (recency
-agent), which also surfaced a Sept-2025 bioRxiv quantifying SMMs
+pass), which also surfaced a Sept-2025 bioRxiv quantifying SMMs
 across pose + accelerometer modalities (10.1101/2025.09.03.674008) -
 a candidate second source for A5.
 

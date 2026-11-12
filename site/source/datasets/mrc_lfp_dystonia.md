@@ -39,7 +39,7 @@
 |---|---|
 | **Taxonomy cells** | A4 (cervical dystonia); M2 M5 M7 |
 | **Subjects** | 7 patients / 12 hemispheres |
-| **Status** | catalogued (2026-09-05) |
+| **Status** | catalogued (2026-09-24) |
 | **License** | CC BY-SA 4.0 (verified on the portal record; SA clause: licence-matrix check before redistribution); free registration/login then direct download |
 
 Cell codes are defined on the {doc}`taxonomy page </taxonomy>`.
@@ -64,3 +64,4 @@ ds.info   # recipe: get_data() explains the route
 The dataset's card, factual lines; the full card with its verification dates, download journal and processing notes is in the repository.
 
 - **MoveAtlas cells**: A4 (cervical dystonia); M2 M5 M7
+- **known issues**: this entry is the same deposit as oxford_dystonia_lfp (MRC BNDU, DOI 10.5287/bodleian:QRNQjNpV7, 7 patients, 12 hemispheres); fetch and count it once, as oxford_dystonia_lfp

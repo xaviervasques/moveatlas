@@ -24,7 +24,10 @@ fetch:
 	@ls fetch_*.py pads_mirror.py verify_dandi_local.py
 
 # 2. harmonization: the builders that take no per-dataset argument;
-#    the ingest_*.py family is dataset-specific and is listed only
+#    the ingest_*.py family is dataset-specific and is listed only.
+#    build_canonical.py refuses to run since 2026-09-29 (its inputs moved to .npz
+#    and a run would rewrite the pooled pose manifest), so this target stops
+#    at its first line, before the force and IMU builders run without --only.
 canonical:
 	$(PY) build_canonical.py
 	$(PY) build_canonical_imu.py

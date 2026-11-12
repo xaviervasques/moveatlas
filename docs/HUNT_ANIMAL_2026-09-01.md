@@ -1,7 +1,7 @@
 # Animal-lane hunt report (2026-09-01, standing owner GO)
 
 Owner directive: explore animal movement/symptom data and include it
-if it exists. Agent sweep with page-verified licences, curated same
+if it exists. Automated search sweep with page-verified licences, curated same
 day; acquisitions started immediately under the standing GO.
 CONVENTION adopted: animal registry entries carry NO bare A-E or M
 codes (free-text "analog" mapping instead) so clinical symptom and

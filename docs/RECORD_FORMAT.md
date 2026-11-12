@@ -95,10 +95,11 @@ way, so adapters written before the migration keep working.
 
 ## What still writes pickle (to migrate at their next run)
 
-build_canonical_imu.py, build_canonical_force.py,
 build_canonical_silhouette.py, build_canonical*.py for pose
-(amass/ntu/motionx/modys), the ingest_*.py that dump lists, and
-build_canonical_drummer.py. build_canonical_eeg.py (and sensefog,
-which imports its write_record) already write .npz. Until each is
+(ntu/motionx/modys), the ingest_*.py that dump lists (ingest_remap_open.py
+writes .npz since 2026-09-29), and build_canonical_drummer.py.
+build_canonical_imu.py and build_canonical_force.py (since 2026-09-17),
+build_canonical_amass.py (since 2026-09-29) and build_canonical_eeg.py (and
+sensefog, which imports its write_record) already write .npz. Until each is
 switched, run convert_records_to_npz.py after an ingestion; the
 readers accept both.

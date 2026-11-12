@@ -1,6 +1,13 @@
 Release notes
 =============
 
+In development (2026-11-12)
+---------------------------
+
+- A movement gallery (synthetic movements of the MD_FM synthetic patient, sign by sign, each clip beside its
+  level 0) is in preparation. It joins the site once it is rebuilt on an openly licensed body model, so that the
+  movements and the page can be released under an open licence.
+
 In development (2026-09-08)
 ---------------------------
 

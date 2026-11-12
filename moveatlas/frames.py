@@ -90,6 +90,9 @@ def to_frame(rec):
         f = np.asarray(rec["force"], float).copy()
         T = f.shape[0]
         f[:, ~rec["sensor_mask"]] = np.nan
+        sv = rec.get("sample_valid")
+        if sv is not None:
+            f[~np.asarray(sv, bool)] = np.nan              # dropouts -> NaN
         sensors = [f"s{i}" for i in range(1, f.shape[2])] + ["total"]
         cols = pd.MultiIndex.from_product([["left", "right"], sensors],
                                           names=["foot", "sensor"])
