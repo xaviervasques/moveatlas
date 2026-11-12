@@ -39,7 +39,7 @@
 | **Taxonomy cells** | D3 (cerebral palsy); M1 M3 |
 | **Subjects** | 356 |
 | **Status** | acquired (2026-09-06) |
-| **License** | CC0 1.0 (figshare 4877432; the figshare API states CC0; read 2026-11-10) |
+| **License** | CC0 1.0 |
 
 Cell codes are defined on the {doc}`taxonomy page </taxonomy>`.
 
@@ -53,7 +53,7 @@ ds.info   # recipe: get_data() explains the route
 
 ## License and access
 
-- **License**: CC0 1.0 (figshare 4877432; the figshare API states CC0; read 2026-11-10)
+- **License**: CC0 1.0
 - **Redistribution**: yes
 - **Access route**: figshare 4877432
 - **Source**: <https://doi.org/10.6084/m9.figshare.4877432>

@@ -2,7 +2,7 @@
 
 - Modality: family 'pose'
 - Source / URL: https://doi.org/10.6084/m9.figshare.4877432
-- License / access: CC0 1.0 (figshare 4877432; the figshare API states CC0; read 2026-11-10); redistribution: yes
+- License / access: CC0 1.0 (figshare 4877432; the figshare API states CC0; read 2026-11-10; validated by the owner 2026-11-12); redistribution: yes
 - Version / retrieval date: catalogued 2026-09-05 (deep-dive sweep,
   pediatric/genetic-rare pass); downloaded 2026-09-06 (figshare 4877432 v1, one 35.8 MB workbook)
 - Status (2026-09-28): DOWNLOADED 2026-09-06: 35.8 MB xlsx (stratified fold kinematic parameters + curves), CC0 API-verified, server-md5 verified. NOTE: parameters/curves workbook, not raw marker trajectories - card the content verdict. CATALOGUED 2026-09-05: Vicon Plug-In-Gait 3D kinematics, spastic uni/bilateral CP 3-18 y GMFCS I-III - mocap complement to mobile_gaitlab
