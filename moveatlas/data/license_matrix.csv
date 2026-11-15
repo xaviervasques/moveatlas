@@ -112,3 +112,19 @@ physionet_multimodal_gait,CC BY 4.0 (page-verified at fetch 2026-09-07; open acc
 sensefog,CC BY 4.0 (verified at fetch 2026-09-07: DataCite + record page),yes,host_copy_ok_with_attribution
 merk_neumann_ecog_lfp,CC0 1.0 (Harvard Dataverse doi:10.7910/DVN/IO2FLM; the API states CC0 1.0; verified 2026-09-24; inversion testbed folder datasets/inversion_testbed/merk_neumann_ecog_lfp; no registry row by design; rule R1: evaluation target only),yes,host_copy_ok_with_attribution
 leuven_cp_gait,"CC0 1.0 (figshare 10.6084/m9.figshare.4877432; the figshare API states CC0, read 2026-11-10; also API-verified at download 2026-09-06; validated by the owner 2026-11-12)",yes,host_copy_ok_with_attribution
+cmu_mocap,"CMU Graphics Lab Motion Capture Database terms (mocap.cs.cmu.edu, read at fetch 2026-11-12): free for all uses; may be copied, modified or redistributed without permission (FAQ); may not be resold directly, even in converted form (home page). Not a Creative Commons licence. No NC condition (commercial use is allowed; only resale of the data itself is excluded) and no ND condition (modification and conversion are allowed): open under the program's definition, with the no-resale sentence carried into any release","yes (no direct resale of the data, even converted; the no-resale sentence travels with any copy)",host_copy_ok_with_attribution
+ceti_age_kinematics,"CC BY 4.0 (figshare 10.6084/m9.figshare.26983645.v2, read at fetch 2026-11-12)",yes,host_copy_ok_with_attribution
+lex3d,"CC BY 4.0 (OSF cv276 node licence, read at fetch 2026-11-12)",yes,host_copy_ok_with_attribution
+horst_gait_fullbody,"CC BY 4.0 (Mendeley Data svx74xcrjr v3, DataCite, read at fetch 2026-11-12)",yes,host_copy_ok_with_attribution
+schreiber_moissenet_gait,"CC BY 4.0 (figshare 7734767 v8, read at fetch 2026-11-12)",yes,host_copy_ok_with_attribution
+lencioni_gait_stairs,"CC BY 4.0 applied: every figshare item of collection 10.6084/m9.figshare.c.4494755 states CC0, the data paper states CC BY 4.0 (read at fetch 2026-11-12); the stricter, attribution-requiring CC BY 4.0 is applied","yes (with attribution, CC BY 4.0 applied)",host_copy_ok_with_attribution
+push_recovery_perturbations,"CC BY 4.0 (Zenodo 10512652, read at fetch 2026-11-12)",yes,host_copy_ok_with_attribution
+moore_perturbed_gait,"CC0 1.0 (Zenodo 13030, read at fetch 2026-11-12)",yes,host_copy_ok_with_attribution
+shida_pd_gait,"CC BY 4.0 (figshare 14896881 v4, read at fetch 2026-11-12)",yes,host_copy_ok_with_attribution
+deepdance,"CC BY 4.0 (Zenodo 7950401, read at fetch 2026-11-12)",yes,host_copy_ok_with_attribution
+umons_taichi,"CC BY 4.0 (Zenodo 2784581, read at fetch 2026-11-12)",yes,host_copy_ok_with_attribution
+notredame_noncyclic,"CC BY 4.0 (CurateND 10.7274/28689221.v1, read at fetch 2026-11-12; the article is CC BY-NC-ND and covers the article only, not the data)",yes,host_copy_ok_with_attribution
+style100,"CC BY 4.0 (Zenodo 8127870, read at fetch 2026-11-12)",yes,host_copy_ok_with_attribution
+sign_language_mocap_archive,"CC BY 4.0 applied: the Zenodo snapshot 24149408 states CC BY 4.0, the GitHub repository states CC0-1.0 (read at fetch 2026-11-12); the stricter, attribution-requiring CC BY 4.0 is applied","yes (with attribution, CC BY 4.0 applied)",host_copy_ok_with_attribution
+vanderzee_walking,"CC0 1.0 (figshare collection 10.6084/m9.figshare.c.5897423, read at fetch 2026-11-12)",yes,host_copy_ok_with_attribution
+anny_body_model,"code Apache-2.0 and model data CC0 1.0 (the MakeHuman assets it ships); Anny 0.6.2, NAVER LABS Europe, read at its release 2026-10-26: the body model of the MD_FM synthetic patient and of the movement gallery, not a dataset of the atlas; the gallery's movements are generated (no motion-capture take, no SMPL family model) and ship as joint positions under CC BY 4.0","yes (the gallery ships joint positions only: no mesh, shape coefficient or model array)",host_copy_ok_with_attribution

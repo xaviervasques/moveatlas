@@ -10,9 +10,9 @@ needs. This tree starts with a single authored commit.
 
 | area | files |
 |---|---|
-| (root) | 640 |
+| (root) | 679 |
 | docs | 1 |
-| **total** | **641** |
+| **total** | **680** |
 
 ## Deliberately excluded
 

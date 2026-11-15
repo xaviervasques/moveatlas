@@ -85,6 +85,7 @@ TOOLS = {
         "fetch_physionet.py", "fetch_tappy.py", "fetch_neuromorpho.py",
         "fetch_cody_zenodo.py", "fetch_asdpose.py", "fetch_rat7m_videos.py",
         "fetch_p2_lot.py", "pads_mirror.py", "verify_dandi_local.py",
+        "fetch_open_mocap.py",
     ],
     "ingest": [
         "ingest_capture24.py", "ingest_cervical_motion.py",
@@ -106,6 +107,10 @@ TOOLS = {
         "build_canonical_sensefog.py", "build_canonical_sensefog_pass2.py",
         "build_canonical_silhouette.py", "convert_records_to_npz.py",
         "set_stated_fps.py",
+        # the open motion-capture lot of 2026-11-12: the ingest imports
+        # build_canonical and mocap_readers as siblings, and
+        # tests/test_mocap_readers.py looks for the readers here
+        "ingest_open_mocap.py", "mocap_readers.py",
     ],
     "registry": [
         "gen_datacards.py", "build_catalogue.py", "build_taxonomy_map.py",
@@ -219,11 +224,27 @@ SKIP_NAMES = {"__pycache__", ".DS_Store", ".pytest_cache", ".ipynb_checkpoints",
               # on every build; it is an :orphan: nothing links to, and
               # shipping it publishes one machine's run times as if they
               # were documentation
-              "sg_execution_times.rst"}
+              "sg_execution_times.rst",
+              # the movement gallery's page and manifest, copied into the site
+              # source by site/gen_movement_gallery.py: a large generated page
+              # (CC BY 4.0 motion data on the open Anny body model, since
+              # 2026-11-15), served by the site and never committed to the
+              # BSD-3-Clause code tree
+              "movement_gallery"}
 
 
 def skip(name):
     return name in SKIP_NAMES or name.startswith("._") or name.endswith(".pyc")
+
+
+# The two files of site/source/_generated/ that ship. The rest of that folder
+# is rebuilt by site/source/conf.py at every Sphinx build, from the registry a
+# clone carries. These two are written by site/gen_movement_gallery.py from
+# the gallery's manifest, which a clone does not carry, and movement_gallery.rst
+# includes them: without them the page cannot build. The .gitignore written
+# below lets exactly these two through.
+GENERATED_SHIPPED = ["movement_gallery_counts.rst",
+                     "movement_gallery_groups.html"]
 
 
 # Machine-specific paths are redacted at copy time in the documents that are
@@ -803,6 +824,10 @@ def main():
     print("site")
     nsite = copy_tree(os.path.join(REPO, "site"), os.path.join(out, "site"),
                       shipped)
+    for f in GENERATED_SHIPPED:
+        nsite += cp(os.path.join(REPO, "site", "source", "_generated", f),
+                    os.path.join(out, "site", "source", "_generated", f),
+                    shipped, out)
     print(f"  {nsite} files")
 
     # the access log: the prospective acquisition journal the paper reports on
@@ -1057,7 +1082,10 @@ def write_gitignore(out):
             "", "# build and cache",
             "__pycache__/", "*.pyc", "*.egg-info/", "build/", "dist/",
             ".pytest_cache/", "site/_build/", "site/source/auto_examples/",
-            "site/source/_generated/", "paper/_doi_cache.json",
+            "site/source/_generated/*",
+            *("!site/source/_generated/" + f for f in GENERATED_SHIPPED),
+            "site/source/_static/movement_gallery/",
+            "paper/_doi_cache.json",
             "", "# operating system",
             ".DS_Store", "._*", "Thumbs.db", "",
         ]))

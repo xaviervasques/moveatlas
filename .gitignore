@@ -13,7 +13,10 @@ dist/
 .pytest_cache/
 site/_build/
 site/source/auto_examples/
-site/source/_generated/
+site/source/_generated/*
+!site/source/_generated/movement_gallery_counts.rst
+!site/source/_generated/movement_gallery_groups.html
+site/source/_static/movement_gallery/
 paper/_doi_cache.json
 
 # operating system

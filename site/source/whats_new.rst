@@ -1,12 +1,13 @@
 Release notes
 =============
 
-In development (2026-11-12)
+In development (2026-11-15)
 ---------------------------
 
-- A movement gallery (synthetic movements of the MD_FM synthetic patient, sign by sign, each clip beside its
-  level 0) is in preparation. It joins the site once it is rebuilt on an openly licensed body model, so that the
-  movements and the page can be released under an open licence.
+- The :doc:`movement_gallery` page is back: synthetic movements of the MD_FM synthetic patient, sign by sign, each
+  clip beside its level 0, organized by group and graded on the scale items it illustrates, rebuilt on the open Anny
+  body model (code Apache-2.0, model data CC0 1.0). Joint positions only, generated movements only (no motion-capture
+  take), released under CC BY 4.0. Its counts are read from the gallery's manifest by ``site/gen_movement_gallery.py``.
 
 In development (2026-09-08)
 ---------------------------

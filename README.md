@@ -6,7 +6,7 @@ API. MoveAtlas answers a practical question: which movement data actually
 exist for a given phenotype and modality, which of it can a stranger obtain,
 and in what shape.
 
-- **170 catalogued datasets** (159 human, 11 animal), one
+- **185 catalogued datasets** (174 human, 11 animal), one
   data card each, licence verified at acquisition time with its date.
 - **46 of them harmonized** into pose, inertial, force, surface EMG,
   EEG and silhouette records: **302,463 records** measured exhaustively.

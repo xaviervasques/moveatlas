@@ -169,3 +169,18 @@ openneuro_pd_rest_eeg_768,eeg,B1|B2|B3|B4,M6,,HP:0002063|HP:0002067|HP:0002375|H
 openneuro_cd_ctbs_174,bio,A4,M8,cervical dystonia,HP:0001332,license_no_spdx_token
 physionet_multimodal_gait,eeg,C1,M2|M3|M5|M6,,,modality_family_mismatch:M3|license_token:CC-BY-4.0
 gin_pd_rat_dbs,animal,,M7,animal PD models,,cells_empty_nonhuman|n_subjects_empty|license_token:CC-BY
+cmu_mocap,pose,C1,M1,,,license_no_spdx_token
+ceti_age_kinematics,pose,C1|C3,M1|M2,older adults,,license_token:CC-BY-4.0
+lex3d,pose,C1,M1,,,license_token:CC-BY-4.0
+horst_gait_fullbody,pose,C1,M1|M3,,,license_token:CC-BY-4.0
+schreiber_moissenet_gait,pose,C1,M1,,,license_token:CC-BY-4.0
+lencioni_gait_stairs,pose,C1|C2,M1|M3|M5,children from 6 y,,C2_without_infant_evidence|modality_keyword_without_code:M9(genetics)|license_token:CC-BY-4.0|license_multiple_tokens:CC-BY-4.0/CC0-1.0
+push_recovery_perturbations,pose,C1,M1,,,license_token:CC-BY-4.0
+moore_perturbed_gait,pose,C1,M1|M3|M5,,,license_token:CC0-1.0
+shida_pd_gait,pose,B2|B3|B5,M1|M3|M12,FoG-Q score and a FoG group per patient,HP:0002067|HP:0002375|HP:0031825,license_token:CC-BY-4.0
+deepdance,pose,C1,M1,,,license_token:CC-BY-4.0
+umons_taichi,pose,C1,M1,,,license_token:CC-BY-4.0
+notredame_noncyclic,pose,C1,M1|M3,,,license_token:CC-BY-4.0|license_multiple_tokens:CC-BY-4.0/CC-BY-NC-ND
+style100,pose,C1,M1,,,license_token:CC-BY-4.0
+sign_language_mocap_archive,pose,C1,M1,catalogue only,,license_token:CC-BY-4.0|license_multiple_tokens:CC-BY-4.0/CC0-1.0
+vanderzee_walking,pose,C1,M1,,,license_token:CC0-1.0

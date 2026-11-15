@@ -70,7 +70,8 @@ build_canonical_modys.py, ingest_vidimu.py, ingest_infant_pose_chambers.py,
 and the remap_open / stroke_gait / gait120 pose ingest scripts that append
 rows with the same header (ingest_remap_open.py replaces its own rows in
 place since 2026-09-29); set_stated_fps.py fills the fps cells of the li_taati
-rows (2026-09-29).
+rows (2026-09-29). ingest_open_mocap.py replaces the rows of the 13 sources of the
+open motion-capture lot (2026-11-12) line by line, every other row untouched.
 
 Record dict (configs/canonical_skeleton.yaml), as observed:
 
@@ -94,6 +95,16 @@ Record dict (configs/canonical_skeleton.yaml), as observed:
 
 Optional provenance fields observed on some sources: `analog_labels`,
 `label_prefix_stripped`, `nan_filled_joints` (stroke_gait_vancriekinge).
+The open motion-capture lot (ingest_open_mocap.py) adds `units`, `up_axis`
+and `up_axis_provenance` (the body's long axis measured on the record in its
+most extended frames; the laboratory vertical except in takes performed
+lying, swimming or upside down), `joint_map`, `unresolved_joints`,
+`far_samples_masked` and `absurd_samples_masked` (samples of a source error
+masked invalid, counted), `activity`, `condition`,
+`medication` and `group` (shida_pd_gait, eval-only), `frame_cuts`
+(style100), `same_person_as` and `same_take_as` (cmu_mocap: the AMASS CMU
+subject and take of the same person); its `joint_mask` is False for a joint
+the marker set does not carry.
 
 ## 2. IMU: datasets/_canonical_imu_manifest.csv
 

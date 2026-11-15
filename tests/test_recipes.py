@@ -92,7 +92,9 @@ def test_download_url_verifies_and_skips_complete(tmp_path, monkeypatch):
     md5 = hashlib.md5(payload).hexdigest()
     src = tmp_path / "src.bin"
     src.write_bytes(payload)
-    url = "file://" + str(src)
+    # as_uri(), not "file://" + path: on Windows the latter reads "C:" as a host name, and
+    # urllib then asks the resolver about it (a network call, about 300 s per test here)
+    url = src.as_uri()
     dest = str(tmp_path / "raw" / "src.bin")
     os.makedirs(os.path.dirname(dest))
     n, sha = transports.download_url(url, dest, size=len(payload), md5=md5)
@@ -117,7 +119,7 @@ def test_figshare_article_uses_api_listing_and_journal(tmp_path, monkeypatch):
     listing = {"title": "toy article", "license": {"name": "CC BY 4.0"},
                "files": [{"name": "IMU.zip", "size": len(payload),
                           "computed_md5": hashlib.md5(payload).hexdigest(),
-                          "download_url": "file://" + str(src)},
+                          "download_url": src.as_uri()},
                          {"name": "Videos.zip", "size": 5, "computed_md5": "x",
                           "download_url": "file:///nowhere"}]}
     monkeypatch.setattr(transports, "api_json", lambda url, tries=5: listing)

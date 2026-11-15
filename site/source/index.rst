@@ -209,6 +209,7 @@ Neurone team until then.
    dataset_summary
    modalities
    taxonomy
+   movement_gallery
    datasets/index
    getting_started
    user_guide

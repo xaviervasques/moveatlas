@@ -369,6 +369,333 @@ sources:
     dropped: [all raw markers except LSHO/RSHO, all A/L axis points, all
               angle outputs, force-plate analogs (kept for a force/EMG pass)]
 
+  # -------------------------------------------------------------------------
+  # The open motion-capture lot of 2026-11-12 (ingest_open_mocap.py). Raw surface
+  # markers: hip, knee, ankle, elbow and shoulder are anatomical PROXIES (a marker
+  # on the landmark nearest the joint, or the midpoint of the lateral and medial
+  # landmarks where the set has both), as in gait120_pig_markers. Two rules the
+  # older entries do not use, resolved by ingest_open_mocap.py only:
+  #   centroid: [a, b, ...]  mean of the listed markers
+  #   first_of: [rule, ...]  the first rule whose markers the file carries
+  #   absent: <reason>       the set has no landmark for the joint (joint_mask False)
+  # Marker identities were read from the names (ISB / Van Sint Jan landmark codes
+  # for schreiber, umons, notredame; Plug-in Gait names for cmu, push, shida,
+  # moore) and checked by segment lengths on the built records
+  # (ingest_audit.csv). up_axis is MEASURED per record (field up_axis), not set here.
+  # -------------------------------------------------------------------------
+  open_cmu_vicon41:
+    space: 3d
+    units: mm -> m at ingestion (C3D POINT:UNITS)
+    storage: "datasets/pose/cmu_mocap/raw/allc3d_*/subjects/<n>/<n>_<k>.c3d"
+    layout: "41-marker Vicon full-body set, labels '<actor>:<marker>'; up to two actors per take"
+    joint_map:
+      pelvis:         {centroid: [LFWT, RFWT, LBWT, RBWT]}
+      neck:           {midpoint: [LSHO, RSHO]}
+      head:           {centroid: [LFHD, RFHD, LBHD, RBHD]}
+      left_shoulder:  {proxy: LSHO}
+      right_shoulder: {proxy: RSHO}
+      left_elbow:     {proxy: LELB}
+      right_elbow:    {proxy: RELB}
+      left_wrist:     {midpoint: [LWRA, LWRB]}
+      right_wrist:    {midpoint: [RWRA, RWRB]}
+      left_hip:       {proxy: LFWT}
+      right_hip:      {proxy: RFWT}
+      left_knee:      {proxy: LKNE}
+      right_knee:     {proxy: RKNE}
+      left_ankle:     {proxy: LANK}
+      right_ankle:    {proxy: RANK}
+    notes: >
+      The actor prefix of the labels is stripped and never propagated (it can be a
+      performer's name); a take with two actors gives one record per actor
+      (take <trial>_actor<k>), both under the take's subject folder. Unlabelled
+      markers (*<n>) are dropped.
+
+  open_horst_gait:
+    space: 3d
+    units: mm -> m at ingestion
+    storage: "datasets/pose/horst_gait_fullbody/raw/Gait_rawdata_c3d/S<n>_<k>_Gait.c3d"
+    layout: "54 markers: head, trunk, arm landmarks; thigh and shank clusters; foot landmarks"
+    joint_map:
+      pelvis:         {centroid: [R ILIAC, L ILIAC, SACRUM]}
+      neck:           {midpoint: [L ACROMION, R ACROMION]}
+      head:           {centroid: [HEAD ANT, R HEAD, L HEAD]}
+      left_shoulder:  {proxy: L ACROMION}
+      right_shoulder: {proxy: R ACROMION}
+      left_elbow:     {midpoint: [L ELBOW LAT, L ELBOW MED]}
+      right_elbow:    {midpoint: [R ELBOW LAT, R ELBOW MED]}
+      left_wrist:     {midpoint: [L WRIST LAT, L WIRST MED]}     # spelled so in the files
+      right_wrist:    {midpoint: [R WIRST LAT, R WRITS MED]}     # spelled so in the files
+      left_hip:       {proxy: L GTROCH}
+      right_hip:      {proxy: R GTROCH}
+      left_knee:      {absent: "gait trials carry a thigh and a shank cluster, no epicondyle marker"}
+      right_knee:     {absent: "gait trials carry a thigh and a shank cluster, no epicondyle marker"}
+      left_ankle:     {absent: "gait trials carry heel and forefoot markers, no malleolus marker"}
+      right_ankle:    {absent: "gait trials carry heel and forefoot markers, no malleolus marker"}
+    notes: >
+      Knee and ankle need a cluster-to-landmark calibration from the static trials
+      (S<n>_<k>_Static.c3d); not done in the 2026-11-12 pass, so both are absent.
+
+  open_isb_schreiber:
+    space: 3d
+    units: mm -> m at ingestion
+    storage: "datasets/pose/schreiber_moissenet_gait/raw/<...>/<subject>/<subject>_C<k>_<n>.c3d"
+    layout: "52 anatomical landmarks (ISB codes), no head marker"
+    joint_map:
+      pelvis:         {centroid: [L_IAS, R_IAS, L_IPS, R_IPS]}
+      neck:           {midpoint: [L_SAE, R_SAE]}
+      head:           {absent: "no head marker in the set (CV7 and SJN only)"}
+      left_shoulder:  {proxy: L_SAE}
+      right_shoulder: {proxy: R_SAE}
+      left_elbow:     {midpoint: [L_HLE, L_HME]}
+      right_elbow:    {midpoint: [R_HLE, R_HME]}
+      left_wrist:     {midpoint: [L_RSP, L_UHE]}
+      right_wrist:    {midpoint: [R_RSP, R_UHE]}
+      left_hip:       {proxy: L_FTC}
+      right_hip:      {proxy: R_FTC}
+      left_knee:      {midpoint: [L_FLE, L_FME]}
+      right_knee:     {midpoint: [R_FLE, R_FME]}
+      left_ankle:     {midpoint: [L_FAL, L_TAM]}
+      right_ankle:    {midpoint: [R_FAL, R_TAM]}
+
+  open_isb_umons:
+    space: 3d
+    units: mm -> m at ingestion
+    storage: "datasets/pose/umons_taichi/raw/C3D/C3D/P<n>T<t>C<c>.c3d"
+    layout: "68 markers: ISB lower-limb landmarks and clusters, Plug-in Gait head and trunk"
+    joint_map:
+      pelvis:         {centroid: [L_IAS, R_IAS, L_IPS, R_IPS]}
+      neck:           {midpoint: [LAC, RAC]}
+      head:           {centroid: [LFHD, RFHD, LBHD, RBHD]}
+      left_shoulder:  {proxy: LAC}
+      right_shoulder: {proxy: RAC}
+      left_elbow:     {midpoint: [L_HLE, L_HME]}
+      right_elbow:    {midpoint: [R_HLE, R_HME]}
+      left_wrist:     {midpoint: [L_RSP, L_USP]}
+      right_wrist:    {midpoint: [R_RSP, R_USP]}
+      left_hip:       {proxy: L_FTC}
+      right_hip:      {proxy: R_FTC}
+      left_knee:      {midpoint: [L_FLE, L_FME]}
+      right_knee:     {midpoint: [R_FLE, R_FME]}
+      left_ankle:     {midpoint: [L_FAL, L_TAM]}
+      right_ankle:    {midpoint: [R_FAL, R_TAM]}
+
+  open_isb_notredame:
+    space: 3d
+    units: m (C3D POINT:UNITS)
+    storage: "datasets/pose/notredame_noncyclic/raw/AB<n>/<activity>/<k>/Data/<activity>_<k>.c3d"
+    layout: "48 to 57 landmarks (ISB codes), lateral landmarks only at elbow, knee and ankle"
+    joint_map:
+      pelvis:         {centroid: [LIAS, RIAS, LIPS, RIPS]}
+      neck:           {midpoint: [LCAJ, RCAJ]}
+      head:           {centroid: [LAH, RAH, LPH, RPH]}
+      left_shoulder:  {proxy: LCAJ}
+      right_shoulder: {proxy: RCAJ}
+      left_elbow:     {proxy: LHLE}
+      right_elbow:    {proxy: RHLE}
+      left_wrist:     {midpoint: [LRSP, LUSP]}
+      right_wrist:    {midpoint: [RRSP, RUSP]}
+      left_hip:       {proxy: LFTC}
+      right_hip:      {proxy: RFTC}
+      left_knee:      {proxy: LFLE}
+      right_knee:     {proxy: RFLE}
+      left_ankle:     {proxy: LFAL}
+      right_ankle:    {proxy: RFAL}
+
+  open_vanderzee:
+    space: 3d
+    units: mm -> m at ingestion
+    storage: "datasets/pose/vanderzee_walking/raw/<...>/p<n>_c3dfiles/p<n>_trial<k>.c3d"
+    layout: "35 markers: lower-limb landmarks and clusters, acromion, elbow and wrist; no head"
+    joint_map:
+      pelvis:         {centroid: [LASI, RASI, SACR]}
+      neck:           {midpoint: [LAC, RAC]}
+      head:           {absent: "no head marker in the set"}
+      left_shoulder:  {proxy: LAC}
+      right_shoulder: {proxy: RAC}
+      left_elbow:     {proxy: LEP}
+      right_elbow:    {proxy: REP}
+      left_wrist:     {proxy: LWR}
+      right_wrist:    {proxy: RWR}
+      left_hip:       {proxy: LGTR}
+      right_hip:      {proxy: RGTR}
+      left_knee:      {midpoint: [LLEP, LMEP]}
+      right_knee:     {midpoint: [RLEP, RMEP]}
+      left_ankle:     {midpoint: [LLML, LMML]}
+      right_ankle:    {midpoint: [RLML, RMML]}
+
+  open_push_recovery:
+    space: 3d
+    units: mm -> m at ingestion
+    storage: "datasets/pose/push_recovery_perturbations/raw/<...>/S<n>_<NI|SI>/<push>_<k>/<push>_<k>.c3d"
+    layout: "43 points: 40 body markers (Plug-in Gait head, trunk and wrist names) and 3 pole markers P1-P3"
+    joint_map:
+      pelvis:         {centroid: [LFWT, RFWT, LBWT, RBWT]}
+      neck:           {midpoint: [LSHO, RSHO]}
+      head:           {centroid: [LFHD, RFHD, LBHD, RBHD]}
+      left_shoulder:  {proxy: LSHO}
+      right_shoulder: {proxy: RSHO}
+      left_elbow:     {proxy: LHUM}
+      right_elbow:    {proxy: RHUM}
+      left_wrist:     {midpoint: [LWRA, LWRB]}
+      right_wrist:    {midpoint: [RWRA, RWRB]}
+      left_hip:       {proxy: LFWT}
+      right_hip:      {proxy: RFWT}
+      left_knee:      {midpoint: [LKNE, LKNI]}
+      right_knee:     {midpoint: [RKNE, RKNI]}
+      left_ankle:     {midpoint: [LANE, LANI]}
+      right_ankle:    {midpoint: [RANE, RANI]}
+
+  open_shida_pd:
+    space: 3d
+    units: mm -> m at ingestion
+    storage: "datasets/pose/shida_pd_gait/raw/C3Dfiles/C3Dfiles/SUB<n>_<on|off>/SUB<n>_<on|off>_walk_<k>.c3d"
+    layout: "44 markers and 27 virtual points (V_*, empty in the walking trials); no head marker"
+    joint_map:
+      pelvis:         {centroid: [L.ASIS, R.ASIS, L.PSIS, R.PSIS]}
+      neck:           {midpoint: [LSHO, RSHO]}
+      head:           {absent: "no head marker in the set"}
+      left_shoulder:  {proxy: LSHO}
+      right_shoulder: {proxy: RSHO}
+      left_elbow:     {midpoint: [LEL, LEM]}
+      right_elbow:    {midpoint: [REL, REM]}
+      left_wrist:     {midpoint: [LWL, LWM]}
+      right_wrist:    {midpoint: [RWL, RWM]}
+      left_hip:       {proxy: L.GTR}
+      right_hip:      {proxy: R.GTR}
+      left_knee:      {midpoint: [L.Knee, L.Knee.Medial]}
+      right_knee:     {midpoint: [R.Knee, R.Knee.Medial]}
+      left_ankle:     {midpoint: [L.Ankle, L.Ankle.Medial]}
+      right_ankle:    {midpoint: [R.Ankle, R.Ankle.Medial]}
+
+  open_deepdance_qtm:
+    space: 3d
+    units: mm -> m at ingestion (QTM 3D export)
+    storage: "datasets/pose/deepdance/raw/deep-dance-full/deep-dance-full/Subject<n>_<take>.tsv"
+    layout: "42 or 43 markers DD_* (QTM TSV), one dancer per take"
+    joint_map:
+      pelvis:         {centroid: [DD_WaistLFront, DD_WaistRFront, DD_WaistLBack, DD_WaistRBack]}
+      neck:           {midpoint: [DD_LShoulderTop, DD_RShoulderTop]}
+      head:           {centroid: [DD_HeadFront, DD_HeadTop, DD_HeadR, DD_HeadL]}
+      left_shoulder:  {proxy: DD_LShoulderTop}
+      right_shoulder: {proxy: DD_RShoulderTop}
+      left_elbow:     {proxy: DD_LElbowOut}
+      right_elbow:    {proxy: DD_RElbowOut}
+      left_wrist:     {midpoint: [DD_LWristIn, DD_LWristOut]}
+      right_wrist:    {midpoint: [DD_RWristIn, DD_RWristOut]}
+      left_hip:       {proxy: DD_WaistLFront}
+      right_hip:      {proxy: DD_WaistRFront}
+      left_knee:      {proxy: DD_LKneeOut}
+      right_knee:     {proxy: DD_RKneeOut}
+      left_ankle:     {proxy: DD_LAnkleOut}
+      right_ankle:    {proxy: DD_RAnkleOut}
+
+  open_style100_bvh:
+    space: 3d
+    units: BVH native (unstated by the source); kept, the normalization removes it
+    storage: "datasets/pose/style100/raw/100STYLE/100STYLE/<Style>/<Style>_<type>.bvh"
+    layout: "BVH, 23 joints; joint centres by forward kinematics (mocap_readers.bvh_positions)"
+    joint_map:
+      pelvis:         {direct: Hips}
+      neck:           {direct: Neck}
+      head:           {direct: Head}
+      left_shoulder:  {direct: LeftShoulder}
+      right_shoulder: {direct: RightShoulder}
+      left_elbow:     {direct: LeftElbow}
+      right_elbow:    {direct: RightElbow}
+      left_wrist:     {direct: LeftWrist}
+      right_wrist:    {direct: RightWrist}
+      left_hip:       {direct: LeftHip}
+      right_hip:      {direct: RightHip}
+      left_knee:      {direct: LeftKnee}
+      right_knee:     {direct: RightKnee}
+      left_ankle:     {direct: LeftAnkle}
+      right_ankle:    {direct: RightAnkle}
+
+  open_ceti_rokoko_bvh:
+    space: 3d
+    units: cm -> m at ingestion (the dataset README states centimetres)
+    storage: "datasets/pose/ceti_age_kinematics/raw/ceti-age-kinematics/ceti-age-kinematics/sub-d<n>/ses-<s>/bvh/*_motion.bvh"
+    layout: "BVH of an inertial suit (Rokoko Smartsuit Pro), Character1_* joints, no Head joint"
+    joint_map:
+      pelvis:         {direct: Character1_Hips}
+      neck:           {direct: Character1_Neck}
+      head:           {proxy: Character1_Neck_End}     # the End Site of the neck chain
+      left_shoulder:  {direct: Character1_LeftArm}
+      right_shoulder: {direct: Character1_RightArm}
+      left_elbow:     {direct: Character1_LeftForeArm}
+      right_elbow:    {direct: Character1_RightForeArm}
+      left_wrist:     {direct: Character1_LeftHand}
+      right_wrist:    {direct: Character1_RightHand}
+      left_hip:       {direct: Character1_LeftUpLeg}
+      right_hip:      {direct: Character1_RightUpLeg}
+      left_knee:      {direct: Character1_LeftLeg}
+      right_knee:     {direct: Character1_RightLeg}
+      left_ankle:     {direct: Character1_LeftFoot}
+      right_ankle:    {direct: Character1_RightFoot}
+    notes: >
+      An inertial suit, not an optical system: the joint centres come from the
+      suit's own body model and fixed segment lengths.
+
+  open_lencioni_mat:
+    space: 3d
+    units: m (as stored; the file states no unit)
+    storage: "datasets/pose/lencioni_gait_stairs/raw/Subject<n>.mat (s.Data(k).Marker, rows X Y Z per marker)"
+    layout: "29 markers per trial (s.MarkerVarName), rate s.KinFreq"
+    joint_map:
+      pelvis:         {centroid: [RxAsis, LxAsis, Psis]}
+      neck:           {midpoint: [LxShould, RxShould]}
+      head:           {midpoint: [LxCheec, RxCheec]}
+      left_shoulder:  {proxy: LxShould}
+      right_shoulder: {proxy: RxShould}
+      left_elbow:     {proxy: LxElbow}
+      right_elbow:    {proxy: RxElbow}
+      left_wrist:     {proxy: LxWrist}
+      right_wrist:    {proxy: RxWrist}
+      left_hip:       {proxy: LxAsis}
+      right_hip:      {proxy: RxAsis}
+      left_knee:      {proxy: LxLatCon}
+      right_knee:     {proxy: RxLatCon}
+      left_ankle:     {proxy: LxLatMal}
+      right_ankle:    {proxy: RxLatMal}
+
+  open_moore_dflow:
+    space: 3d
+    units: m (D-Flow export)
+    storage: "datasets/pose/moore_perturbed_gait/raw/perturbed-walking-data-0<k>/T<n>/mocap-<n>.txt"
+    layout: "D-Flow mocap text, <marker>.PosX/Y/Z columns; 'full' (47) or 'lower' (27) marker set"
+    joint_map:
+      pelvis:         {centroid: [LASIS, RASIS, LPSIS, RPSIS]}
+      neck:           {first_of: [{midpoint: [LSHO, RSHO]}, {absent: "lower marker set"}]}
+      head:           {first_of: [{centroid: [LHEAD, RHEAD, FHEAD, THEAD]}, {absent: "lower marker set"}]}
+      left_shoulder:  {first_of: [{proxy: LSHO}, {absent: "lower marker set"}]}
+      right_shoulder: {first_of: [{proxy: RSHO}, {absent: "lower marker set"}]}
+      left_elbow:     {first_of: [{midpoint: [LLEE, LMEE]}, {absent: "lower marker set"}]}
+      right_elbow:    {first_of: [{midpoint: [RLEE, RMEE]}, {absent: "lower marker set"}]}
+      left_wrist:     {first_of: [{midpoint: [LLW, LMW]}, {absent: "lower marker set"}]}
+      right_wrist:    {first_of: [{midpoint: [RLW, RMW]}, {absent: "lower marker set"}]}
+      left_hip:       {proxy: LGTRO}
+      right_hip:      {proxy: RGTRO}
+      left_knee:      {proxy: LLEK}
+      right_knee:     {proxy: RLEK}
+      left_ankle:     {proxy: LMALL}    # lateral malleolus, renamed at read (ingest_open_mocap.py)
+      right_ankle:    {proxy: RMALL}
+
+# Registry id -> joint map of the open motion-capture lot (ingest_open_mocap.py).
+open_mocap_sources:
+  cmu_mocap: open_cmu_vicon41
+  horst_gait_fullbody: open_horst_gait
+  schreiber_moissenet_gait: open_isb_schreiber
+  umons_taichi: open_isb_umons
+  notredame_noncyclic: open_isb_notredame
+  vanderzee_walking: open_vanderzee
+  push_recovery_perturbations: open_push_recovery
+  shida_pd_gait: open_shida_pd
+  deepdance: open_deepdance_qtm
+  style100: open_style100_bvh
+  ceti_age_kinematics: open_ceti_rokoko_bvh
+  lencioni_gait_stairs: open_lencioni_mat
+  moore_perturbed_gait: open_moore_dflow
+
 # ---------------------------------------------------------------------------
 # Dimensionality: no 2D->3D lifting (Handoff 3, decision 7.3/7.5).
 # ---------------------------------------------------------------------------

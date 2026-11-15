@@ -322,7 +322,8 @@ def test_read_staging_normalises_paths_and_filters_targets(staging):
     assert set(got) == {"ok", "gone"}            # the hf row is not zenodo's
     rel, abspath, nbytes = got["ok"][0]
     assert rel == "datasets/imu/ok/raw/a.csv" and nbytes == 60
-    assert abspath.endswith(os.path.join("imu", "ok", "raw", "a.csv"))
+    # read_staging joins the repo root and a '/' path; compare in the platform's separators
+    assert os.path.normpath(abspath).endswith(os.path.join("imu", "ok", "raw", "a.csv"))
     only = {did for did, _m, _f in uz.read_staging(only={"gone"})}
     assert only == {"gone"}
 
